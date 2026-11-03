@@ -1,6 +1,6 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import {
-  getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged
+  getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 import { firebaseConfig } from "./firebase-config.js";
 
@@ -8,11 +8,6 @@ const auth = getAuth(initializeApp(firebaseConfig));
 const form = document.getElementById('loginForm');
 const msg = document.getElementById('msg');
 const signupBtn = document.getElementById('signupBtn');
-
-// Already logged in? Go straight to the diary.
-onAuthStateChanged(auth, function (user) {
-  if (user) window.location.href = 'diary.html';
-});
 
 function friendly(code) {
   const map = {
@@ -26,12 +21,21 @@ function friendly(code) {
   return map[code] || 'Something went wrong (' + code + ').';
 }
 
+const signedOut = signOut(auth).then(function () {
+  return true;
+}).catch(function (err) {
+  msg.textContent = friendly(err.code);
+  return false;
+});
+
 async function run(action) {
-  msg.textContent = '';
   const email = document.getElementById('email').value.trim();
   const password = document.getElementById('password').value;
   try {
+    if (!await signedOut) return;
+    msg.textContent = '';
     await action(auth, email, password);
+    window.location.href = 'phase2.html';
   } catch (err) {
     msg.textContent = friendly(err.code);
   }
@@ -44,3 +48,4 @@ form.addEventListener('submit', function (e) {
 signupBtn.addEventListener('click', function () {
   if (form.reportValidity()) run(createUserWithEmailAndPassword);
 });
+console.log('auth.js loaded');
