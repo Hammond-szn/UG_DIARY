@@ -321,7 +321,9 @@
                 <input id="user-id" type="text" name="user-id" autocomplete="username" required>
                 <label for="password">Password:</label>
                 <input id="password" type="password" name="password" autocomplete="current-password" required>
+                     <p id="msg" role="alert" style="color:#b91c1c;font-weight:600;min-height:1.2em"></p>
                 <button type="submit">Open my diary</button>
+                     <button type="button" id="signupBtn" style="margin-top:10px;background:transparent;color:var(--ink)">Create account</button>
             </form>
 
             <form id="levelForm">
@@ -342,14 +344,6 @@
             </p>
         </section>
     </main>
-    <script>
-        document.getElementById("loginForm").addEventListener("submit", function (event) {
-            event.preventDefault();
-        });
-
-        document.getElementById("levelForm").addEventListener("submit", function (event) {
-            event.preventDefault();
-        });
-    </script>
+        <script type="module" src="auth.js"></script>
 </body>
 </html>

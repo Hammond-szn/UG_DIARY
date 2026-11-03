@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>My diary</title>
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600&family=Nunito:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root { --ink:#3b2a57; --pink:#ec4899; --purple:#7c3aed; --paper:#fff8fc; }
+  * { box-sizing: border-box; }
+  body { margin:0; min-height:100vh; padding:20px; background:#fde9f3;
+         font-family:'Nunito',system-ui,sans-serif; color:var(--ink); }
+  .wrap { max-width:720px; margin:0 auto; }
+  header { display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; gap:12px; }
+  header h1 { font-family:'Caveat',cursive; font-size:2.4rem; margin:0; }
+  #who { font-size:.85rem; opacity:.75; }
+  .card { background:var(--paper); border:2px solid var(--ink); border-radius:16px; padding:24px; margin-bottom:24px; }
+  label { display:block; font-weight:600; margin-bottom:6px; }
+  input, textarea, select { width:100%; padding:12px; margin-bottom:16px; border:2px solid var(--ink);
+          border-radius:10px; font:inherit; background:#fff; color:var(--ink); }
+  textarea { min-height:130px; resize:vertical; }
+  input:focus-visible, textarea:focus-visible, select:focus-visible, button:focus-visible {
+    outline:3px solid var(--purple); outline-offset:2px; }
+  button { padding:12px 20px; font:inherit; font-weight:600; color:#fff; background:var(--purple);
+           border:2px solid var(--ink); border-radius:10px; cursor:pointer; transition:transform .15s; }
+  button:hover { transform:translateY(-2px); }
+  .ghost { background:transparent; color:var(--ink); }
+  .row { display:grid; gap:0 16px; grid-template-columns:1fr; }
+  @media (min-width:560px) { .row { grid-template-columns:2fr 1fr; } }
+  .entry h2 { font-family:'Caveat',cursive; font-size:1.8rem; margin:0 0 2px; }
+  .meta { font-size:.9rem; opacity:.75; margin-bottom:10px; }
+  .entry p { white-space:pre-wrap; margin:0 0 14px; line-height:1.6; }
+  .entry button { padding:6px 12px; font-size:.9rem; }
+  .empty { text-align:center; opacity:.8; }
+  .search { margin-bottom:20px; }
+  .actions { display:flex; gap:10px; }
+  #err { color:#b91c1c; font-weight:600; min-height:1.2em; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div><h1>Dear diary,</h1><div id="who"></div></div>
+    <button class="ghost" id="logout">Log out</button>
+  </header>
+
+  <form class="card" id="entryForm">
+    <div class="row">
+      <div><label for="title">Title</label><input id="title" maxlength="80" required></div>
+      <div>
+        <label for="mood">Mood</label>
+        <select id="mood">
+          <option>Happy</option><option>Chill</option><option>Stressed</option>
+          <option>Sad</option><option>Hyped</option>
+        </select>
+      </div>
+    </div>
+    <label for="text">What happened today?</label>
+    <textarea id="text" required></textarea>
+    <div id="err" role="alert"></div>
+    <div class="actions">
+      <button type="submit" id="saveBtn">Save entry</button>
+      <button type="button" class="ghost" id="cancelEdit" hidden>Cancel</button>
+    </div>
+  </form>
+
+  <input class="search" id="search" type="search" placeholder="Search your entries" aria-label="Search entries">
+  <section id="entries" aria-live="polite"></section>
+</div>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+  import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+  import {
+    getFirestore, collection, addDoc, updateDoc, deleteDoc, doc, query, orderBy, onSnapshot
+  } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+  import { firebaseConfig } from "./firebase-config.js";
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db = getFirestore(app);
+
+  const list = document.getElementById('entries');
+  const saveBtn = document.getElementById('saveBtn');
+  const cancelBtn = document.getElementById('cancelEdit');
+  const searchBox = document.getElementById('search');
+  const errBox = document.getElementById('err');
+  let entries = [], editingId = null, col = null;
+
+  onAuthStateChanged(auth, function (user) {
+    if (!user) { window.location.href = 'htmldiary.html'; return; }
+    document.getElementById('who').textContent = user.email;
+    col = collection(db, 'users', user.uid, 'entries');
+    onSnapshot(query(col, orderBy('date', 'desc')), function (snap) {
+      entries = snap.docs.map(function (d) { return Object.assign({ id: d.id }, d.data()); });
+      render();
+    }, function () { errBox.textContent = 'Could not load entries. Check your Firestore rules.'; });
+  });
+
+  function render() {
+    const q = searchBox.value.trim().toLowerCase();
+    const shown = entries.filter(function (e) {
+      return !q || (e.title + ' ' + e.text + ' ' + e.mood).toLowerCase().includes(q);
+    });
+    list.innerHTML = '';
+    if (!shown.length) {
+      list.innerHTML = '<div class="card empty">' + (entries.length
+        ? 'No entries match your search.' : 'No entries yet. Write your first one above.') + '</div>';
+      return;
+    }
+    shown.forEach(function (e) {
+      const card = document.createElement('article');
+      card.className = 'card entry';
+      const h = document.createElement('h2'); h.textContent = e.title;
+      const m = document.createElement('div'); m.className = 'meta';
+      m.textContent = new Date(e.date).toLocaleString() + ' | Mood: ' + e.mood;
+      const p = document.createElement('p'); p.textContent = e.text;
+      const edit = document.createElement('button'); edit.textContent = 'Edit entry';
+      edit.addEventListener('click', function () {
+        editingId = e.id;
+        document.getElementById('title').value = e.title;
+        document.getElementById('mood').value = e.mood;
+        document.getElementById('text').value = e.text;
+        saveBtn.textContent = 'Update entry';
+        cancelBtn.hidden = false;
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        document.getElementById('title').focus();
+      });
+      const del = document.createElement('button'); del.className = 'ghost'; del.textContent = 'Delete entry';
+      del.addEventListener('click', async function () {
+        if (!confirm('Delete this entry?')) return;
+        try { await deleteDoc(doc(col, e.id)); }
+        catch { errBox.textContent = 'Could not delete the entry.'; }
+      });
+      const actions = document.createElement('div'); actions.className = 'actions';
+      actions.append(edit, del);
+      card.append(h, m, p, actions);
+      list.appendChild(card);
+    });
+  }
+
+  function resetForm() {
+    editingId = null;
+    document.getElementById('entryForm').reset();
+    saveBtn.textContent = 'Save entry';
+    cancelBtn.hidden = true;
+  }
+
+  document.getElementById('entryForm').addEventListener('submit', async function (ev) {
+    ev.preventDefault();
+    errBox.textContent = '';
+    const data = {
+      title: document.getElementById('title').value.trim(),
+      mood: document.getElementById('mood').value,
+      text: document.getElementById('text').value.trim()
+    };
+    try {
+      if (editingId) await updateDoc(doc(col, editingId), data);
+      else await addDoc(col, Object.assign({ date: new Date().toISOString() }, data));
+      resetForm();
+    } catch { errBox.textContent = 'Could not save. Check your connection and Firestore rules.'; }
+  });
+
+  cancelBtn.addEventListener('click', resetForm);
+  searchBox.addEventListener('input', render);
+  document.getElementById('logout').addEventListener('click', function () { signOut(auth); });
+</script>
+</body>
+</html>
