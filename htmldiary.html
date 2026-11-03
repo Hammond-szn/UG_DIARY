@@ -42,6 +42,9 @@
             display: block;
             width: 100%;
             height: auto;
+            overflow: visible;
+            -webkit-mask-image: radial-gradient(ellipse at 50% 52%, #000 44%, rgba(0, 0, 0, 0.82) 64%, transparent 88%);
+            mask-image: radial-gradient(ellipse at 50% 52%, #000 44%, rgba(0, 0, 0, 0.82) 64%, transparent 88%);
         }
 
         .card {
@@ -152,98 +155,64 @@
             color: inherit;
         }
 
-        .kid,
-        .bub,
-        .note,
-        .mouth,
-        .sun {
+        .scene .light {
             transform-box: fill-box;
-        }
-
-        .kid {
-            transform-origin: bottom center;
-            animation: bob 1.2s ease-in-out infinite;
-        }
-
-        .k2 {
-            animation-duration: 0.7s;
-        }
-
-        .k3 {
-            animation-delay: 0.3s;
-        }
-
-        .k4 {
-            animation-delay: 0.6s;
-            animation-duration: 1.5s;
-        }
-
-        @keyframes bob {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-6px); }
-        }
-
-        .mouth {
             transform-origin: center;
-            animation: yap 0.35s ease-in-out infinite alternate;
+            animation: light-shift 18s ease-in-out infinite alternate;
         }
 
-        .m3 {
-            animation-delay: 0.12s;
-        }
-
-        @keyframes yap {
-            from { transform: scaleY(0.35); }
-            to { transform: scaleY(1.1); }
-        }
-
-        .bub {
+        .scene .canopy {
+            transform-box: fill-box;
             transform-origin: bottom center;
-            opacity: 0;
-            animation: pop 6s ease-out infinite;
+            animation: canopy-sway 12s ease-in-out infinite alternate;
         }
 
-        .b2 {
-            animation-delay: 2s;
+        .scene .page-lift {
+            transform-box: fill-box;
+            transform-origin: left center;
+            animation: page-lift 9s ease-in-out infinite;
         }
 
-        .b3 {
-            animation-delay: 4s;
-        }
-
-        @keyframes pop {
-            0% { opacity: 0; transform: scale(0.2); }
-            6% { opacity: 1; transform: scale(1.08); }
-            10% { transform: scale(1); }
-            30% { opacity: 1; transform: scale(1); }
-            36%, 100% { opacity: 0; }
-        }
-
-        .note {
-            animation: float 3s ease-in-out infinite;
-        }
-
-        .n2 {
-            animation-delay: 1s;
-        }
-
-        .n3 {
-            animation-delay: 2s;
-        }
-
-        @keyframes float {
-            0% { transform: translateY(0) rotate(-8deg); opacity: 0; }
-            20% { opacity: 1; }
-            100% { transform: translateY(-34px) rotate(10deg); opacity: 0; }
-        }
-
-        .sun {
+        .scene .leaf {
+            transform-box: fill-box;
             transform-origin: center;
-            animation: spin 20s linear infinite;
+            animation: leaf-drift 13s ease-in-out infinite;
         }
 
-        @keyframes spin {
-            to { transform: rotate(360deg); }
+        .scene .leaf-b {
+            animation-delay: -6s;
+        }
+
+        .scene .ink-trace {
+            stroke-dasharray: 150;
+            stroke-dashoffset: 150;
+            animation: write-in 12s ease-in-out infinite;
+        }
+
+        @keyframes light-shift {
+            from { opacity: 0.45; transform: scale(0.96); }
+            to { opacity: 0.78; transform: scale(1.04); }
+        }
+
+        @keyframes canopy-sway {
+            from { transform: rotate(-1deg); }
+            to { transform: rotate(1.2deg); }
+        }
+
+        @keyframes page-lift {
+            0%, 100% { transform: rotate(0); }
+            48%, 62% { transform: rotate(-1.4deg); }
+        }
+
+        @keyframes leaf-drift {
+            0%, 100% { transform: translate(0, 0) rotate(-5deg); opacity: 0.48; }
+            50% { transform: translate(7px, -10px) rotate(8deg); opacity: 0.78; }
+        }
+
+        @keyframes write-in {
+            0%, 12% { stroke-dashoffset: 150; opacity: 0.25; }
+            38%, 78% { stroke-dashoffset: 0; opacity: 0.7; }
+            96%, 100% { stroke-dashoffset: 0; opacity: 0.25; }
         }
 
         @media (min-width: 760px) {
@@ -270,16 +239,12 @@
         }
 
         @media (prefers-reduced-motion: reduce) {
-            .kid,
-            .mouth,
-            .note,
-            .sun {
+            .scene .light,
+            .scene .canopy,
+            .scene .page-lift,
+            .scene .leaf,
+            .scene .ink-trace {
                 animation: none;
-            }
-
-            .bub {
-                animation: none;
-                opacity: 1;
             }
         }
     </style>
@@ -287,88 +252,62 @@
 <body>
     <main class="login">
         <div class="scene">
-            <svg viewBox="0 0 380 430" role="img" aria-label="Four students chatting on a campus lawn" xmlns="http://www.w3.org/2000/svg">
-                <circle class="sun" cx="325" cy="45" r="26" fill="#ffd966"/>
-                <ellipse cx="60" cy="40" rx="34" ry="12" fill="#fff"/>
-                <ellipse cx="82" cy="33" rx="22" ry="10" fill="#fff"/>
-                <rect y="330" width="380" height="100" fill="#a8e6a1"/>
-                <rect y="330" width="380" height="6" fill="#8ad584"/>
-                <rect x="50" y="190" width="280" height="140" rx="4" fill="#e8d5f5"/>
-                <rect x="50" y="190" width="280" height="12" fill="#c9a9e8"/>
-                <rect x="70" y="220" width="28" height="36" fill="#f5f0ff"/>
-                <rect x="120" y="220" width="28" height="36" fill="#f5f0ff"/>
-                <rect x="232" y="220" width="28" height="36" fill="#f5f0ff"/>
-                <rect x="282" y="220" width="28" height="36" fill="#f5f0ff"/>
-                <rect x="167" y="270" width="46" height="60" fill="#b58bd9"/>
+            <svg viewBox="0 0 420 460" role="img" aria-label="An open diary beneath a softly sketched campus canopy" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                    <radialGradient id="warmLight">
+                        <stop offset="0" stop-color="#f8e6c8" stop-opacity=".7"/>
+                        <stop offset="1" stop-color="#f8e6c8" stop-opacity="0"/>
+                    </radialGradient>
+                    <linearGradient id="inkWash" x1="0" x2="1" y1="0" y2="1">
+                        <stop offset="0" stop-color="#514457"/>
+                        <stop offset="1" stop-color="#73594f"/>
+                    </linearGradient>
+                </defs>
 
-                <g class="bub b1">
-                    <rect x="14" y="26" width="96" height="46" rx="12" fill="#fff"/>
-                    <path d="M40 72 L34 86 L56 72Z" fill="#fff"/>
-                    <text x="62" y="45" text-anchor="middle" font-size="12" fill="#3b2a57" font-family="sans-serif">no but fr fr</text>
-                    <text x="62" y="62" text-anchor="middle" font-size="12" fill="#3b2a57" font-family="sans-serif">hear me out</text>
-                </g>
-                <g class="bub b2">
-                    <rect x="150" y="96" width="92" height="46" rx="12" fill="#fff"/>
-                    <path d="M180 142 L176 156 L198 142Z" fill="#fff"/>
-                    <text x="196" y="115" text-anchor="middle" font-size="12" fill="#3b2a57" font-family="sans-serif">its giving</text>
-                    <text x="196" y="132" text-anchor="middle" font-size="12" fill="#3b2a57" font-family="sans-serif">main character</text>
-                </g>
-                <g class="bub b3">
-                    <rect x="268" y="96" width="98" height="46" rx="12" fill="#fff"/>
-                    <path d="M300 142 L306 156 L322 142Z" fill="#fff"/>
-                    <text x="317" y="115" text-anchor="middle" font-size="12" fill="#3b2a57" font-family="sans-serif">bro the lecture</text>
-                    <text x="317" y="132" text-anchor="middle" font-size="12" fill="#3b2a57" font-family="sans-serif">was so mid</text>
+                <ellipse class="light" cx="214" cy="210" rx="170" ry="176" fill="url(#warmLight)"/>
+
+                <g class="canopy" fill="none" stroke="#526047" stroke-linecap="round" opacity=".58">
+                    <path d="M12 328 C50 264 64 193 48 104" stroke-width="3"/>
+                    <path d="M47 187 C75 173 91 153 101 128 M45 220 C21 205 14 187 15 165 M53 156 C32 141 25 122 27 105" stroke-width="2"/>
+                    <path d="M404 333 C367 259 361 190 382 104" stroke-width="3"/>
+                    <path d="M376 204 C350 183 337 163 333 138 M373 158 C394 144 402 125 401 106 M370 245 C396 226 405 206 405 185" stroke-width="2"/>
                 </g>
 
-                <g class="kid k1">
-                    <rect x="50" y="332" width="40" height="62" rx="8" fill="#3b82f6"/>
-                    <circle cx="70" cy="302" r="26" fill="#f2c29b"/>
-                    <path d="M44 300 Q44 270 70 270 Q96 270 96 300 Q84 284 70 284 Q56 284 44 300Z" fill="#2b2b2b"/>
-                    <ellipse cx="61" cy="304" rx="3" ry="4" fill="#2b2b2b"/>
-                    <ellipse cx="79" cy="304" rx="3" ry="4" fill="#2b2b2b"/>
-                    <ellipse class="mouth" cx="70" cy="316" rx="7" ry="6" fill="#c0392b"/>
-                    <rect x="48" y="394" width="16" height="22" rx="4" fill="#1e293b"/>
-                    <rect x="76" y="394" width="16" height="22" rx="4" fill="#1e293b"/>
+                <g fill="#687456" opacity=".55">
+                    <path d="M101 129 Q82 116 84 99 Q102 104 108 122 Q111 104 129 97 Q130 116 111 130Z"/>
+                    <path d="M18 164 Q0 151 4 136 Q20 142 25 158 Q31 143 47 141 Q45 158 27 166Z"/>
+                    <path d="M333 138 Q316 124 321 108 Q337 115 340 132 Q348 116 364 116 Q361 133 342 140Z"/>
+                    <path d="M405 185 Q389 170 395 155 Q410 163 412 180 Q421 165 436 167 Q431 184 413 188Z"/>
                 </g>
 
-                <g class="kid k2">
-                    <rect x="132" y="336" width="40" height="58" rx="8" fill="#f97316"/>
-                    <circle cx="152" cy="306" r="26" fill="#8d5a3b"/>
-                    <path d="M126 302 Q126 274 152 274 Q178 274 178 302 Q166 288 152 288 Q138 288 126 302Z" fill="#1a1a1a"/>
-                    <path d="M124 298 Q152 246 180 298" fill="none" stroke="#ec4899" stroke-width="6" stroke-linecap="round"/>
-                    <rect x="119" y="294" width="10" height="18" rx="5" fill="#ec4899"/>
-                    <rect x="175" y="294" width="10" height="18" rx="5" fill="#ec4899"/>
-                    <path d="M142 306 Q146 302 150 306 M154 306 Q158 302 162 306" fill="none" stroke="#1a1a1a" stroke-width="2.5" stroke-linecap="round"/>
-                    <path d="M143 318 Q152 327 161 318" fill="none" stroke="#1a1a1a" stroke-width="2.5" stroke-linecap="round"/>
-                    <rect x="130" y="394" width="16" height="22" rx="4" fill="#475569"/>
-                    <rect x="158" y="394" width="16" height="22" rx="4" fill="#475569"/>
+                <ellipse cx="210" cy="410" rx="150" ry="15" fill="#554b4d" opacity=".12"/>
+                <path d="M55 317 Q133 279 209 310 Q288 279 365 317 L355 395 Q282 365 209 401 Q136 365 65 395Z" fill="#78645b" opacity=".32"/>
+                <path d="M65 310 Q137 278 207 309 L207 390 Q136 359 69 387Z" fill="#f3e8d7" fill-opacity=".68" stroke="#65544d" stroke-width="1.5" stroke-opacity=".7"/>
+                <path d="M213 309 Q283 278 355 310 L351 387 Q282 359 213 390Z" fill="#f3e8d7" fill-opacity=".62" stroke="#65544d" stroke-width="1.5" stroke-opacity=".7"/>
+                <path d="M209 310 C211 337 211 368 209 398" fill="none" stroke="#65544d" stroke-width="2" stroke-linecap="round" opacity=".55"/>
+
+                <g fill="none" stroke="#796a61" stroke-width="1.4" stroke-linecap="round" opacity=".56">
+                    <path d="M91 326 C124 313 153 313 180 323"/>
+                    <path d="M86 339 C120 326 152 328 180 338"/>
+                    <path d="M83 352 C116 340 150 342 180 352"/>
+                    <path d="M81 366 C116 354 150 357 179 367"/>
                 </g>
 
-                <g class="kid k3">
-                    <rect x="212" y="332" width="40" height="62" rx="8" fill="#10b981"/>
-                    <circle cx="232" cy="302" r="26" fill="#f7d3b5"/>
-                    <path d="M206 304 Q204 270 232 270 Q260 270 258 304 Q246 282 232 282 Q218 282 206 304Z" fill="#e8b04a"/>
-                    <ellipse cx="222" cy="304" rx="3" ry="4" fill="#2b2b2b"/>
-                    <ellipse cx="242" cy="304" rx="3" ry="4" fill="#2b2b2b"/>
-                    <ellipse class="mouth m3" cx="232" cy="317" rx="8" ry="7" fill="#c0392b"/>
-                    <rect x="210" y="394" width="16" height="22" rx="4" fill="#1e293b"/>
-                    <rect x="238" y="394" width="16" height="22" rx="4" fill="#1e293b"/>
+                <g class="page-lift">
+                    <path d="M213 309 Q283 278 355 310 L351 387 Q282 359 213 390Z" fill="#f3e8d7" fill-opacity=".62" stroke="#65544d" stroke-width="1.5" stroke-opacity=".7"/>
+                    <path class="ink-trace" d="M238 326 C262 315 286 315 317 326 M235 341 C263 330 290 332 322 342 M232 356 C260 345 290 347 320 357 M230 371 C260 360 287 362 316 372" fill="none" stroke="#796a61" stroke-width="1.4" stroke-linecap="round"/>
                 </g>
 
-                <g class="kid k4">
-                    <rect x="292" y="336" width="40" height="58" rx="8" fill="#a855f7"/>
-                    <circle cx="312" cy="306" r="26" fill="#c68642"/>
-                    <circle cx="312" cy="278" r="13" fill="#2b2b2b"/>
-                    <path d="M288 300 Q290 280 312 280 Q334 280 336 300 Q324 290 312 290 Q300 290 288 300Z" fill="#2b2b2b"/>
-                    <path d="M302 306 Q306 302 310 306 M314 306 Q318 302 322 306" fill="none" stroke="#1a1a1a" stroke-width="2.5" stroke-linecap="round"/>
-                    <path d="M303 318 Q312 327 321 318" fill="none" stroke="#1a1a1a" stroke-width="2.5" stroke-linecap="round"/>
-                    <rect x="290" y="394" width="16" height="22" rx="4" fill="#475569"/>
-                    <rect x="318" y="394" width="16" height="22" rx="4" fill="#475569"/>
+                <path d="M290 295 L342 267" fill="none" stroke="#514457" stroke-width="3" stroke-linecap="round" opacity=".7"/>
+                <path d="M342 267 L350 262 L346 272Z" fill="#8a6860" opacity=".8"/>
+
+                <g class="leaf" fill="#687456" opacity=".62">
+                    <path d="M78 247 C62 239 60 226 64 216 C77 220 84 231 78 247Z"/>
+                    <path d="M353 300 C369 290 372 277 368 267 C354 272 348 283 353 300Z"/>
                 </g>
 
-                <text class="note n1" x="110" y="250" font-size="20" fill="#ec4899" font-family="sans-serif">♪</text>
-                <text class="note n2" x="205" y="190" font-size="18" fill="#7c3aed" font-family="sans-serif">♫</text>
-                <text class="note n3" x="350" y="250" font-size="18" fill="#f97316" font-family="sans-serif">♪</text>
+                <path class="ink-trace" d="M144 207 C162 194 176 215 190 204 C202 195 207 185 219 187" fill="none" stroke="url(#inkWash)" stroke-width="2.2" stroke-linecap="round"/>
+                <path d="M218 187 L226 183 L223 192Z" fill="#73594f" opacity=".65"/>
             </svg>
         </div>
 
