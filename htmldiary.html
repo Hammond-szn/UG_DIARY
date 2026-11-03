@@ -1,0 +1,416 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>My HTML Diary</title>
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600&family=Nunito:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --ink: #3b2a57;
+            --purple: #7c3aed;
+            --paper: rgba(255, 248, 252, 0.94);
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            margin: 0;
+            padding: 24px;
+            display: grid;
+            place-items: center;
+            background:
+                linear-gradient(rgba(255, 247, 251, 0.3), rgba(247, 242, 226, 0.36)),
+                url("legon-tower-background.jpg") center / cover fixed no-repeat;
+            color: var(--ink);
+            font-family: "Nunito", system-ui, sans-serif;
+        }
+
+        .login {
+            display: grid;
+            gap: 24px;
+            width: 100%;
+            max-width: 880px;
+            align-items: center;
+            grid-template-columns: 1fr;
+        }
+
+        .scene svg {
+            display: block;
+            width: 100%;
+            height: auto;
+        }
+
+        .card {
+            width: 100%;
+            max-width: 440px;
+            justify-self: start;
+            padding: 28px;
+            border: 2px solid var(--ink);
+            border-radius: 16px;
+            background: var(--paper);
+            box-shadow: 0 8px 28px rgba(59, 42, 87, 0.18);
+        }
+
+        .emblem {
+            display: block;
+            width: 82px;
+            height: 82px;
+            margin: 0 auto 8px;
+            object-fit: contain;
+        }
+
+        .card h1 {
+            margin: 0 0 4px;
+            font-family: "Caveat", cursive;
+            font-size: 2.4rem;
+            text-align: center;
+        }
+
+        .card > p {
+            margin: 0 0 20px;
+            text-align: center;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: 600;
+        }
+
+        input[type="text"],
+        input[type="password"] {
+            width: 100%;
+            margin-bottom: 16px;
+            padding: 12px;
+            border: 2px solid var(--ink);
+            border-radius: 10px;
+            background: #fff;
+            color: var(--ink);
+            font: inherit;
+        }
+
+        input:focus-visible,
+        button:focus-visible {
+            outline: 3px solid var(--purple);
+            outline-offset: 2px;
+        }
+
+        button {
+            width: 100%;
+            padding: 13px;
+            border: 2px solid var(--ink);
+            border-radius: 10px;
+            background: var(--purple);
+            color: #fff;
+            cursor: pointer;
+            font: inherit;
+            font-weight: 600;
+            transition: transform 0.15s;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+        }
+
+        .levels {
+            margin: 22px 0 0;
+            padding: 16px 0 0;
+            border: 0;
+            border-top: 1px solid rgba(59, 42, 87, 0.25);
+        }
+
+        .levels legend {
+            padding: 0 8px 0 0;
+            font-weight: 600;
+        }
+
+        .level-options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px 20px;
+            margin: 4px 0 16px;
+        }
+
+        .level-options label {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            margin: 0;
+        }
+
+        .photo-credit {
+            margin: 18px 0 0;
+            font-size: 0.72rem;
+            text-align: center;
+        }
+
+        .photo-credit a {
+            color: inherit;
+        }
+
+        .kid,
+        .bub,
+        .note,
+        .mouth,
+        .sun {
+            transform-box: fill-box;
+        }
+
+        .kid {
+            transform-origin: bottom center;
+            animation: bob 1.2s ease-in-out infinite;
+        }
+
+        .k2 {
+            animation-duration: 0.7s;
+        }
+
+        .k3 {
+            animation-delay: 0.3s;
+        }
+
+        .k4 {
+            animation-delay: 0.6s;
+            animation-duration: 1.5s;
+        }
+
+        @keyframes bob {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-6px); }
+        }
+
+        .mouth {
+            transform-origin: center;
+            animation: yap 0.35s ease-in-out infinite alternate;
+        }
+
+        .m3 {
+            animation-delay: 0.12s;
+        }
+
+        @keyframes yap {
+            from { transform: scaleY(0.35); }
+            to { transform: scaleY(1.1); }
+        }
+
+        .bub {
+            transform-origin: bottom center;
+            opacity: 0;
+            animation: pop 6s ease-out infinite;
+        }
+
+        .b2 {
+            animation-delay: 2s;
+        }
+
+        .b3 {
+            animation-delay: 4s;
+        }
+
+        @keyframes pop {
+            0% { opacity: 0; transform: scale(0.2); }
+            6% { opacity: 1; transform: scale(1.08); }
+            10% { transform: scale(1); }
+            30% { opacity: 1; transform: scale(1); }
+            36%, 100% { opacity: 0; }
+        }
+
+        .note {
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .n2 {
+            animation-delay: 1s;
+        }
+
+        .n3 {
+            animation-delay: 2s;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0) rotate(-8deg); opacity: 0; }
+            20% { opacity: 1; }
+            100% { transform: translateY(-34px) rotate(10deg); opacity: 0; }
+        }
+
+        .sun {
+            transform-origin: center;
+            animation: spin 20s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        @media (min-width: 760px) {
+            .login {
+                max-width: 1040px;
+                grid-template-columns: 1.1fr 1fr;
+            }
+
+            .card {
+                grid-column: 1;
+                grid-row: 1;
+            }
+
+            .scene {
+                grid-column: 2;
+                grid-row: 1;
+            }
+        }
+
+        @media (max-width: 759px) {
+            .card {
+                justify-self: center;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .kid,
+            .mouth,
+            .note,
+            .sun {
+                animation: none;
+            }
+
+            .bub {
+                animation: none;
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+<body>
+    <main class="login">
+        <div class="scene">
+            <svg viewBox="0 0 380 430" role="img" aria-label="Four students chatting on a campus lawn" xmlns="http://www.w3.org/2000/svg">
+                <circle class="sun" cx="325" cy="45" r="26" fill="#ffd966"/>
+                <ellipse cx="60" cy="40" rx="34" ry="12" fill="#fff"/>
+                <ellipse cx="82" cy="33" rx="22" ry="10" fill="#fff"/>
+                <rect y="330" width="380" height="100" fill="#a8e6a1"/>
+                <rect y="330" width="380" height="6" fill="#8ad584"/>
+                <rect x="50" y="190" width="280" height="140" rx="4" fill="#e8d5f5"/>
+                <rect x="50" y="190" width="280" height="12" fill="#c9a9e8"/>
+                <rect x="70" y="220" width="28" height="36" fill="#f5f0ff"/>
+                <rect x="120" y="220" width="28" height="36" fill="#f5f0ff"/>
+                <rect x="232" y="220" width="28" height="36" fill="#f5f0ff"/>
+                <rect x="282" y="220" width="28" height="36" fill="#f5f0ff"/>
+                <rect x="167" y="270" width="46" height="60" fill="#b58bd9"/>
+
+                <g class="bub b1">
+                    <rect x="14" y="26" width="96" height="46" rx="12" fill="#fff"/>
+                    <path d="M40 72 L34 86 L56 72Z" fill="#fff"/>
+                    <text x="62" y="45" text-anchor="middle" font-size="12" fill="#3b2a57" font-family="sans-serif">no but fr fr</text>
+                    <text x="62" y="62" text-anchor="middle" font-size="12" fill="#3b2a57" font-family="sans-serif">hear me out</text>
+                </g>
+                <g class="bub b2">
+                    <rect x="150" y="96" width="92" height="46" rx="12" fill="#fff"/>
+                    <path d="M180 142 L176 156 L198 142Z" fill="#fff"/>
+                    <text x="196" y="115" text-anchor="middle" font-size="12" fill="#3b2a57" font-family="sans-serif">its giving</text>
+                    <text x="196" y="132" text-anchor="middle" font-size="12" fill="#3b2a57" font-family="sans-serif">main character</text>
+                </g>
+                <g class="bub b3">
+                    <rect x="268" y="96" width="98" height="46" rx="12" fill="#fff"/>
+                    <path d="M300 142 L306 156 L322 142Z" fill="#fff"/>
+                    <text x="317" y="115" text-anchor="middle" font-size="12" fill="#3b2a57" font-family="sans-serif">bro the lecture</text>
+                    <text x="317" y="132" text-anchor="middle" font-size="12" fill="#3b2a57" font-family="sans-serif">was so mid</text>
+                </g>
+
+                <g class="kid k1">
+                    <rect x="50" y="332" width="40" height="62" rx="8" fill="#3b82f6"/>
+                    <circle cx="70" cy="302" r="26" fill="#f2c29b"/>
+                    <path d="M44 300 Q44 270 70 270 Q96 270 96 300 Q84 284 70 284 Q56 284 44 300Z" fill="#2b2b2b"/>
+                    <ellipse cx="61" cy="304" rx="3" ry="4" fill="#2b2b2b"/>
+                    <ellipse cx="79" cy="304" rx="3" ry="4" fill="#2b2b2b"/>
+                    <ellipse class="mouth" cx="70" cy="316" rx="7" ry="6" fill="#c0392b"/>
+                    <rect x="48" y="394" width="16" height="22" rx="4" fill="#1e293b"/>
+                    <rect x="76" y="394" width="16" height="22" rx="4" fill="#1e293b"/>
+                </g>
+
+                <g class="kid k2">
+                    <rect x="132" y="336" width="40" height="58" rx="8" fill="#f97316"/>
+                    <circle cx="152" cy="306" r="26" fill="#8d5a3b"/>
+                    <path d="M126 302 Q126 274 152 274 Q178 274 178 302 Q166 288 152 288 Q138 288 126 302Z" fill="#1a1a1a"/>
+                    <path d="M124 298 Q152 246 180 298" fill="none" stroke="#ec4899" stroke-width="6" stroke-linecap="round"/>
+                    <rect x="119" y="294" width="10" height="18" rx="5" fill="#ec4899"/>
+                    <rect x="175" y="294" width="10" height="18" rx="5" fill="#ec4899"/>
+                    <path d="M142 306 Q146 302 150 306 M154 306 Q158 302 162 306" fill="none" stroke="#1a1a1a" stroke-width="2.5" stroke-linecap="round"/>
+                    <path d="M143 318 Q152 327 161 318" fill="none" stroke="#1a1a1a" stroke-width="2.5" stroke-linecap="round"/>
+                    <rect x="130" y="394" width="16" height="22" rx="4" fill="#475569"/>
+                    <rect x="158" y="394" width="16" height="22" rx="4" fill="#475569"/>
+                </g>
+
+                <g class="kid k3">
+                    <rect x="212" y="332" width="40" height="62" rx="8" fill="#10b981"/>
+                    <circle cx="232" cy="302" r="26" fill="#f7d3b5"/>
+                    <path d="M206 304 Q204 270 232 270 Q260 270 258 304 Q246 282 232 282 Q218 282 206 304Z" fill="#e8b04a"/>
+                    <ellipse cx="222" cy="304" rx="3" ry="4" fill="#2b2b2b"/>
+                    <ellipse cx="242" cy="304" rx="3" ry="4" fill="#2b2b2b"/>
+                    <ellipse class="mouth m3" cx="232" cy="317" rx="8" ry="7" fill="#c0392b"/>
+                    <rect x="210" y="394" width="16" height="22" rx="4" fill="#1e293b"/>
+                    <rect x="238" y="394" width="16" height="22" rx="4" fill="#1e293b"/>
+                </g>
+
+                <g class="kid k4">
+                    <rect x="292" y="336" width="40" height="58" rx="8" fill="#a855f7"/>
+                    <circle cx="312" cy="306" r="26" fill="#c68642"/>
+                    <circle cx="312" cy="278" r="13" fill="#2b2b2b"/>
+                    <path d="M288 300 Q290 280 312 280 Q334 280 336 300 Q324 290 312 290 Q300 290 288 300Z" fill="#2b2b2b"/>
+                    <path d="M302 306 Q306 302 310 306 M314 306 Q318 302 322 306" fill="none" stroke="#1a1a1a" stroke-width="2.5" stroke-linecap="round"/>
+                    <path d="M303 318 Q312 327 321 318" fill="none" stroke="#1a1a1a" stroke-width="2.5" stroke-linecap="round"/>
+                    <rect x="290" y="394" width="16" height="22" rx="4" fill="#475569"/>
+                    <rect x="318" y="394" width="16" height="22" rx="4" fill="#475569"/>
+                </g>
+
+                <text class="note n1" x="110" y="250" font-size="20" fill="#ec4899" font-family="sans-serif">♪</text>
+                <text class="note n2" x="205" y="190" font-size="18" fill="#7c3aed" font-family="sans-serif">♫</text>
+                <text class="note n3" x="350" y="250" font-size="18" fill="#f97316" font-family="sans-serif">♪</text>
+            </svg>
+        </div>
+
+        <section class="card" aria-labelledby="diary-title">
+            <img class="emblem" src="University_of_Ghana.png" alt="University of Ghana emblem">
+            <h1 id="diary-title">Dear diary,</h1>
+            <p>Log in to keep writing.</p>
+
+            <form id="loginForm">
+                <label for="user-id">USER ID:</label>
+                <input id="user-id" type="text" name="user-id" autocomplete="username" required>
+                <label for="password">Password:</label>
+                <input id="password" type="password" name="password" autocomplete="current-password" required>
+                <button type="submit">Open my diary</button>
+            </form>
+
+            <form id="levelForm">
+                <fieldset class="levels">
+                    <legend>SELECT YOUR LEVEL</legend>
+                    <div class="level-options">
+                        <label><input type="radio" name="level" value="100" required> 100</label>
+                        <label><input type="radio" name="level" value="200"> 200</label>
+                        <label><input type="radio" name="level" value="300"> 300</label>
+                        <label><input type="radio" name="level" value="400"> 400</label>
+                    </div>
+                </fieldset>
+                <button type="submit">Continue</button>
+            </form>
+            <p class="photo-credit">
+                Background photo: <a href="https://commons.wikimedia.org/wiki/File:Legon_Tower.JPG" target="_blank" rel="noopener noreferrer">Legon Tower</a>
+                by Rtevels, <a href="https://creativecommons.org/licenses/by-sa/3.0/" target="_blank" rel="noopener noreferrer">CC BY-SA 3.0</a>.
+            </p>
+        </section>
+    </main>
+    <script>
+        document.getElementById("loginForm").addEventListener("submit", function (event) {
+            event.preventDefault();
+        });
+
+        document.getElementById("levelForm").addEventListener("submit", function (event) {
+            event.preventDefault();
+        });
+    </script>
+</body>
+</html>
