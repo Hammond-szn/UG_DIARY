@@ -1,0 +1,78 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    match /posts/{postId} {
+      function validVoteUpdate() {
+        let oldVotes = resource.data.votes;
+        let newVotes = request.resource.data.votes;
+        let oldVote = oldVotes.get(request.auth.uid, 0);
+        let newVote = newVotes.get(request.auth.uid, 0);
+
+        return request.resource.data.diff(resource.data).affectedKeys()
+            .hasOnly(['votes', 'upvotes', 'downvotes'])
+          && newVotes is map
+          && newVotes.diff(oldVotes).affectedKeys().hasOnly([request.auth.uid])
+          && oldVote in [-1, 0, 1]
+          && newVote in [-1, 0, 1]
+          && request.resource.data.upvotes
+              == resource.data.upvotes + (newVote == 1 ? 1 : 0) - (oldVote == 1 ? 1 : 0)
+          && request.resource.data.downvotes
+              == resource.data.downvotes + (newVote == -1 ? 1 : 0) - (oldVote == -1 ? 1 : 0);
+      }
+
+      allow read: if signedIn();
+      allow create: if signedIn()
+        && request.resource.data.keys().hasOnly([
+          'authorId', 'category', 'campus', 'text', 'votes',
+          'upvotes', 'downvotes', 'createdAt', 'location'
+        ])
+        && request.resource.data.keys().hasAll([
+          'authorId', 'category', 'campus', 'text', 'votes',
+          'upvotes', 'downvotes', 'createdAt'
+        ])
+        && request.resource.data.authorId == request.auth.uid
+        && request.resource.data.category in [
+          'Campus', 'Question', 'Confession', 'Lost & Found', 'Opportunity'
+        ]
+        && request.resource.data.campus == 'University of Ghana'
+        && request.resource.data.text is string
+        && request.resource.data.text.size() > 0
+        && request.resource.data.text.size() <= 500
+        && request.resource.data.votes is map
+        && request.resource.data.votes.size() == 0
+        && request.resource.data.upvotes == 0
+        && request.resource.data.downvotes == 0
+        && request.resource.data.createdAt == request.time
+        && (!request.resource.data.keys().hasAny(['location'])
+          || (request.resource.data.location is map
+            && request.resource.data.location.keys().hasOnly(['latitudeCell', 'longitudeCell'])
+            && request.resource.data.location.keys().hasAll(['latitudeCell', 'longitudeCell'])
+            && request.resource.data.location.latitudeCell is int
+            && request.resource.data.location.latitudeCell >= -9000
+            && request.resource.data.location.latitudeCell <= 9000
+            && request.resource.data.location.longitudeCell is int
+            && request.resource.data.location.longitudeCell >= -18000
+            && request.resource.data.location.longitudeCell <= 18000));
+      allow update: if signedIn() && validVoteUpdate();
+      allow delete: if false;
+
+      match /comments/{commentId} {
+        allow read: if signedIn();
+        allow create: if signedIn()
+          && request.resource.data.keys().hasOnly(['authorId', 'text', 'createdAt'])
+          && request.resource.data.keys().hasAll(['authorId', 'text', 'createdAt'])
+          && request.resource.data.authorId == request.auth.uid
+          && request.resource.data.text is string
+          && request.resource.data.text.size() > 0
+          && request.resource.data.text.size() <= 300
+          && request.resource.data.createdAt == request.time;
+        allow update, delete: if false;
+      }
+    }
+  }
+}
