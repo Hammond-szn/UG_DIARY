@@ -3,20 +3,20 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="#f5f7f5">
+<meta name="theme-color" content="#f4f0e7">
 <title>Legon Loop | Campus community</title>
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
   :root {
     color-scheme: light;
-    --ink: #17251e;
-    --muted: #6d7a72;
-    --green: #176b48;
-    --green-dark: #105437;
-    --green-soft: #e6f3ec;
-    --paper: #fff;
-    --line: #e5eae6;
-    --bg: #f5f7f5;
+    --ink: #29243a;
+    --muted: #807b89;
+    --accent: #6744e8;
+    --accent-dark: #5030c8;
+    --accent-soft: #eee9ff;
+    --paper: #fffdf8;
+    --line: #ebe5d9;
+    --bg: #f4f0e7;
     --orange: #e68a48;
     --danger: #b42318;
     font-family: 'Nunito', system-ui, sans-serif;
@@ -26,23 +26,23 @@
   button, input, textarea, select { font: inherit; }
   button { cursor: pointer; }
   button:focus-visible, input:focus-visible, textarea:focus-visible, select:focus-visible {
-    outline: 3px solid #82c9a5; outline-offset: 2px;
+    outline: 3px solid #b8a8ff; outline-offset: 2px;
   }
   .topbar {
     position: sticky; z-index: 5; top: 0; display: flex; align-items: center;
     justify-content: space-between; height: 68px; padding: 0 max(22px, calc((100vw - 1180px) / 2));
-    background: rgba(255,255,255,.94); border-bottom: 1px solid var(--line); backdrop-filter: blur(12px);
+    background: rgba(255,253,248,.96); border-bottom: 1px solid var(--line); backdrop-filter: blur(12px);
   }
   .brand { display: flex; align-items: center; gap: 11px; color: var(--ink); text-decoration: none; }
   .brand-mark {
     display: grid; place-items: center; width: 38px; height: 38px; border-radius: 12px;
-    background: var(--green); color: #fff; font-size: 15px; font-weight: 800; letter-spacing: -.05em;
+    background: var(--accent); color: #fff; font-size: 15px; font-weight: 800; letter-spacing: -.05em;
   }
   .brand-name { font-size: 19px; font-weight: 800; letter-spacing: -.04em; }
-  .campus-pill { padding: 7px 12px; border-radius: 999px; background: var(--green-soft); color: var(--green-dark); font-size: 13px; font-weight: 700; }
+  .campus-pill { padding: 7px 12px; border-radius: 999px; background: var(--accent-soft); color: var(--accent-dark); font-size: 13px; font-weight: 700; }
   .account { display: flex; align-items: center; gap: 12px; }
   .anon-state { color: var(--muted); font-size: 13px; }
-  .logout { border: 0; background: transparent; color: var(--green-dark); font-weight: 800; }
+  .logout { border: 0; background: transparent; color: var(--accent-dark); font-weight: 800; }
   .layout {
     display: grid; grid-template-columns: 220px minmax(0, 620px) 250px; gap: 26px;
     max-width: 1180px; margin: 30px auto; padding: 0 20px; align-items: start;
@@ -52,10 +52,10 @@
   .category-list { display: grid; gap: 5px; }
   .category-btn {
     display: flex; align-items: center; gap: 12px; width: 100%; padding: 11px 12px;
-    border: 0; border-radius: 12px; background: transparent; color: #536159; text-align: left; font-weight: 700;
+    border: 0; border-radius: 12px; background: transparent; color: #625c70; text-align: left; font-weight: 700;
   }
-  .category-btn:hover { background: #eaf0ec; }
-  .category-btn.active { background: var(--green-soft); color: var(--green-dark); }
+  .category-btn:hover { background: #f0ecf9; }
+  .category-btn.active { background: var(--accent-soft); color: var(--accent-dark); }
   .category-icon { display: grid; place-items: center; width: 24px; font-size: 17px; }
   .side-note, .rail-card { padding: 17px; border: 1px solid var(--line); border-radius: 16px; background: var(--paper); }
   .side-note { margin-top: 24px; color: var(--muted); font-size: 13px; line-height: 1.55; }
@@ -63,53 +63,62 @@
   .feed-head { margin: 2px 0 19px; }
   .feed-head h1 { margin: 0; font-size: 27px; letter-spacing: -.05em; }
   .feed-head p { margin: 4px 0 0; color: var(--muted); font-size: 14px; }
-  .card { border: 1px solid var(--line); border-radius: 17px; background: var(--paper); box-shadow: 0 2px 6px rgba(20,40,28,.025); }
-  .composer { margin-bottom: 18px; padding: 18px; }
+  .card { border: 1px solid var(--line); border-radius: 20px; background: var(--paper); box-shadow: 0 5px 16px rgba(43,31,74,.045); }
+  .composer { margin-bottom: 18px; padding: 20px; }
   .composer-top { display: flex; align-items: center; gap: 11px; margin-bottom: 13px; }
   .avatar {
     display: grid; flex: 0 0 auto; place-items: center; width: 38px; height: 38px;
-    border-radius: 50%; background: #f5e8dc; color: #8a512c; font-size: 14px; font-weight: 800;
+    border-radius: 50%; background: #eee8ff; color: #6241dd; font-size: 14px; font-weight: 800;
   }
   .composer-prompt { font-size: 14px; font-weight: 800; }
   .composer-hint { display: block; margin-top: 1px; color: var(--muted); font-size: 12px; }
   textarea, input[type="search"], select {
-    width: 100%; border: 1px solid var(--line); border-radius: 11px; background: #fbfcfb; color: var(--ink);
+    width: 100%; border: 1px solid var(--line); border-radius: 12px; background: #fffefa; color: var(--ink);
   }
   textarea { min-height: 104px; padding: 13px; resize: vertical; line-height: 1.5; }
-  textarea::placeholder, input::placeholder { color: #99a49d; }
+  textarea::placeholder, input::placeholder { color: #a09aa8; }
   .composer-bottom { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-top: 12px; }
   .compose-options { display: flex; align-items: center; gap: 10px; min-width: 0; }
   select { width: auto; max-width: 175px; padding: 9px 28px 9px 10px; font-size: 13px; }
   .char-count { color: var(--muted); font-size: 12px; white-space: nowrap; }
+  .location-option { display: flex; align-items: center; gap: 8px; margin-top: 11px; color: #625c70; font-size: 13px; }
+  .location-option input { width: 16px; height: 16px; margin: 0; accent-color: var(--accent); }
+  .location-status { min-height: 0; margin: 5px 0 0 24px; color: var(--muted); font-size: 12px; }
+  .post-location { display: inline-flex; align-items: center; gap: 5px; margin: 0 0 12px; color: var(--accent-dark); font-size: 12px; font-weight: 800; }
+  .map-toggle { display: block; margin: 0 0 10px; padding: 0; border: 0; background: transparent; color: var(--accent-dark); font-size: 12px; font-weight: 800; }
+  .map-panel { height: 220px; margin: 0 0 12px; overflow: hidden; border: 1px solid var(--line); border-radius: 12px; background: #f1ede4; }
+  .map-panel[hidden] { display: none; }
+  .map-message { display: grid; height: 100%; place-items: center; padding: 18px; color: var(--muted); text-align: center; font-size: 13px; }
   .primary-btn {
-    padding: 10px 17px; border: 0; border-radius: 10px; background: var(--green); color: white; font-weight: 800;
+    padding: 10px 17px; border: 0; border-radius: 12px; background: var(--accent); color: white; font-weight: 800;
+    box-shadow: 0 4px 10px rgba(103,68,232,.16);
   }
-  .primary-btn:hover { background: var(--green-dark); }
+  .primary-btn:hover { background: var(--accent-dark); }
   .primary-btn:disabled { opacity: .6; cursor: wait; }
   .error { min-height: 0; margin: 0; color: var(--danger); font-size: 13px; }
   .error:not(:empty) { margin-top: 9px; }
   .feed-tools { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin: 20px 0 12px; }
-  .sort-tabs { display: flex; gap: 4px; padding: 4px; border-radius: 11px; background: #e9eeea; }
+  .sort-tabs { display: flex; gap: 4px; padding: 4px; border-radius: 12px; background: #ebe6da; }
   .sort-btn { padding: 7px 13px; border: 0; border-radius: 8px; background: transparent; color: var(--muted); font-size: 13px; font-weight: 800; }
-  .sort-btn.active { background: white; color: var(--ink); box-shadow: 0 1px 3px rgba(0,0,0,.08); }
+  .sort-btn.active { background: var(--paper); color: var(--accent-dark); box-shadow: 0 1px 4px rgba(43,31,74,.1); }
   .search { max-width: 220px; padding: 9px 12px; font-size: 13px; }
-  .post { margin-bottom: 12px; padding: 17px; }
+  .post { margin-bottom: 13px; padding: 19px; }
   .post-head { display: flex; align-items: center; gap: 10px; }
-  .post-head .avatar { width: 36px; height: 36px; background: #e9f1eb; color: var(--green); }
+  .post-head .avatar { width: 36px; height: 36px; background: #eee8ff; color: var(--accent-dark); }
   .post-author { font-size: 13px; font-weight: 800; }
   .post-meta { margin-top: 1px; color: var(--muted); font-size: 12px; }
-  .tag { margin-left: auto; padding: 5px 9px; border-radius: 999px; background: #f1f4f2; color: #5d6a62; font-size: 11px; font-weight: 800; }
+  .tag { margin-left: auto; padding: 5px 9px; border-radius: 999px; background: #f2eee5; color: #625c70; font-size: 11px; font-weight: 800; }
   .post-text { margin: 14px 0 15px; white-space: pre-wrap; overflow-wrap: anywhere; line-height: 1.65; font-size: 15px; }
-  .post-actions { display: flex; align-items: center; gap: 8px; border-top: 1px solid #eff2ef; padding-top: 11px; }
-  .vote-group { display: flex; align-items: center; gap: 2px; padding: 3px; border-radius: 10px; background: #f4f7f4; }
+  .post-actions { display: flex; align-items: center; gap: 8px; border-top: 1px solid #f0ebdf; padding-top: 11px; }
+  .vote-group { display: flex; align-items: center; gap: 2px; padding: 3px; border-radius: 10px; background: #f4f0e7; }
   .action-btn, .vote-btn {
     display: inline-flex; align-items: center; justify-content: center; gap: 6px; min-height: 34px;
-    padding: 6px 9px; border: 0; border-radius: 8px; background: transparent; color: #617067;
+    padding: 6px 9px; border: 0; border-radius: 8px; background: transparent; color: #706b79;
     font-size: 12px; font-weight: 800;
   }
-  .action-btn:hover, .vote-btn:hover { background: #edf2ee; color: var(--green-dark); }
-  .vote-btn.selected { background: var(--green-soft); color: var(--green-dark); }
-  .reply-panel { margin-top: 12px; padding-top: 12px; border-top: 1px solid #eff2ef; }
+  .action-btn:hover, .vote-btn:hover { background: #f0ecf9; color: var(--accent-dark); }
+  .vote-btn.selected { background: var(--accent-soft); color: var(--accent-dark); }
+  .reply-panel { margin-top: 12px; padding-top: 12px; border-top: 1px solid #f0ebdf; }
   .reply-list { display: grid; gap: 11px; margin-bottom: 13px; }
   .reply { display: flex; align-items: flex-start; gap: 9px; font-size: 13px; line-height: 1.5; }
   .reply .avatar { width: 28px; height: 28px; font-size: 11px; }
@@ -118,7 +127,7 @@
   .reply-time { color: var(--muted); font-size: 11px; }
   .reply-form { display: flex; gap: 8px; }
   .reply-form input { min-width: 0; padding: 9px 11px; font-size: 13px; }
-  .reply-form button { padding: 8px 12px; border: 0; border-radius: 9px; background: var(--green); color: #fff; font-size: 12px; font-weight: 800; }
+  .reply-form button { padding: 8px 12px; border: 0; border-radius: 9px; background: var(--accent); color: #fff; font-size: 12px; font-weight: 800; }
   .reply-error { margin-top: 6px; }
   .empty, .loading { padding: 34px 20px; color: var(--muted); text-align: center; font-size: 14px; }
   .right-rail { display: grid; gap: 13px; }
@@ -126,11 +135,75 @@
   .rail-card p { margin: 0; color: var(--muted); font-size: 13px; line-height: 1.6; }
   .trend { display: flex; justify-content: space-between; gap: 8px; margin-top: 12px; font-size: 13px; font-weight: 800; }
   .trend span:last-child { color: #9aa59e; font-size: 11px; font-weight: 600; }
-  .guideline { display: flex; gap: 9px; margin-top: 11px; color: #536159; font-size: 12px; line-height: 1.5; }
-  .guideline strong { color: var(--green); }
+  .guideline { display: flex; gap: 9px; margin-top: 11px; color: #625c70; font-size: 12px; line-height: 1.5; }
+  .guideline strong { color: var(--accent); }
+  .layout { display: block; max-width: 760px; margin: 28px auto 110px; padding: 0 20px; }
+  .app-shell { min-width: 0; }
+  .app-screen[hidden] { display: none; }
+  .eyebrow { margin: 0 0 7px; color: var(--accent-dark); font-size: 11px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; }
+  .feed-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 14px; margin: 0 0 18px; }
+  .feed-head h1, .screen-head h1 { margin: 0; font-size: clamp(24px, 5vw, 32px); line-height: 1.12; letter-spacing: -.055em; }
+  .feed-head p:not(.eyebrow), .screen-head p:not(.eyebrow) { margin: 7px 0 0; color: var(--muted); font-size: 14px; }
+  .feed-stat { padding: 8px 11px; border: 1px solid var(--line); border-radius: 12px; background: var(--paper); color: var(--accent-dark); font-size: 12px; font-weight: 800; white-space: nowrap; }
+  .category-list { display: flex; gap: 7px; margin: 0 0 16px; overflow-x: auto; scrollbar-width: none; }
+  .category-list::-webkit-scrollbar { display: none; }
+  .category-btn { width: auto; flex: 0 0 auto; padding: 8px 12px; border: 1px solid var(--line); border-radius: 999px; background: var(--paper); white-space: nowrap; font-size: 12px; }
+  .category-icon { display: none; }
+  .side-title, .side-note, .right-rail { display: none; }
+  .screen-head { margin: 4px 0 20px; }
+  .screen-head-row { display: flex; align-items: center; gap: 12px; }
+  .back-btn { display: grid; flex: 0 0 auto; place-items: center; width: 38px; height: 38px; border: 1px solid var(--line); border-radius: 50%; background: var(--paper); color: var(--ink); font-size: 18px; }
+  .demo-banner { margin: 0 0 14px; padding: 10px 12px; border: 1px solid #e8defe; border-radius: 12px; background: #f2edff; color: #62528e; font-size: 12px; line-height: 1.5; }
+  .composer { padding: 20px; }
+  .composer textarea { min-height: 180px; border: 0; background: transparent; padding: 14px 0; font-size: 16px; }
+  .composer textarea:focus { outline: none; }
+  .composer textarea:focus-visible { outline: 2px solid #b8a8ff; outline-offset: 3px; border-radius: 6px; }
+  .compose-privacy { margin: 16px 0 0; padding: 11px 12px; border-radius: 12px; background: #f5f1ff; color: #716586; font-size: 12px; line-height: 1.5; }
+  .composer-actions { display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+  .draft-btn { padding: 7px 10px; border: 0; border-radius: 8px; background: transparent; color: var(--accent-dark); font-size: 12px; font-weight: 800; }
+  .request-tabs, .inbox-tabs { display: flex; gap: 5px; margin: 0 0 15px; padding: 4px; border-radius: 12px; background: #ebe6da; }
+  .request-tab, .inbox-tab { flex: 1; padding: 9px 12px; border: 0; border-radius: 9px; background: transparent; color: var(--muted); font-size: 13px; font-weight: 800; }
+  .request-tab.active, .inbox-tab.active { background: var(--paper); color: var(--ink); box-shadow: 0 1px 4px rgba(43,31,74,.1); }
+  .request-card { display: flex; align-items: center; gap: 12px; margin-bottom: 11px; padding: 15px; }
+  .person-avatar { display: grid; flex: 0 0 auto; place-items: center; width: 43px; height: 43px; border-radius: 50%; background: #f1e7ff; font-size: 20px; }
+  .person-info { flex: 1; min-width: 0; }
+  .person-name { display: flex; align-items: center; gap: 5px; font-size: 14px; font-weight: 800; }
+  .verified { color: var(--accent); font-size: 12px; }
+  .person-meta, .person-note { margin-top: 2px; color: var(--muted); font-size: 12px; }
+  .person-note { margin-top: 7px; color: #625c70; line-height: 1.45; }
+  .request-actions { display: flex; gap: 7px; margin-top: 12px; }
+  .request-actions button { padding: 8px 13px; border: 0; border-radius: 9px; background: var(--accent); color: #fff; font-size: 12px; font-weight: 800; }
+  .request-actions .decline-btn { border: 1px solid var(--line); background: transparent; color: var(--muted); }
+  .request-actions .message-btn { background: var(--accent-soft); color: var(--accent-dark); }
+  .request-status { color: var(--accent-dark); font-size: 12px; font-weight: 800; }
+  .screen-search { margin-bottom: 13px; padding: 11px 13px; }
+  .inbox-row { display: flex; width: 100%; align-items: center; gap: 11px; margin-bottom: 8px; padding: 13px; border: 1px solid var(--line); border-radius: 15px; background: var(--paper); color: inherit; text-align: left; }
+  .inbox-row:hover { background: #faf7ff; }
+  .inbox-row .person-avatar { width: 42px; height: 42px; }
+  .inbox-copy { flex: 1; min-width: 0; }
+  .inbox-preview { overflow: hidden; margin-top: 3px; color: var(--muted); font-size: 12px; text-overflow: ellipsis; white-space: nowrap; }
+  .inbox-time { align-self: flex-start; color: var(--muted); font-size: 10px; white-space: nowrap; }
+  .unread-dot { flex: 0 0 auto; width: 8px; height: 8px; border-radius: 50%; background: var(--accent); }
+  .chat-header { display: flex; align-items: center; gap: 10px; padding: 13px 15px; border: 1px solid var(--line); border-radius: 16px 16px 0 0; background: var(--paper); }
+  .chat-header .person-avatar { width: 38px; height: 38px; font-size: 18px; }
+  .chat-messages { display: flex; min-height: 280px; flex-direction: column; gap: 11px; padding: 17px 14px; border-right: 1px solid var(--line); border-left: 1px solid var(--line); background: #faf7ef; }
+  .chat-day { align-self: center; color: var(--muted); font-size: 10px; font-weight: 800; letter-spacing: .08em; }
+  .chat-bubble { max-width: 82%; padding: 10px 12px; border-radius: 15px 15px 15px 5px; background: var(--paper); box-shadow: 0 2px 6px rgba(43,31,74,.06); font-size: 13px; line-height: 1.5; }
+  .chat-bubble.mine { align-self: flex-end; border-radius: 15px 15px 5px 15px; background: var(--accent); color: #fff; }
+  .chat-time { display: block; margin-top: 4px; opacity: .65; font-size: 9px; text-align: right; }
+  .chat-form { display: flex; gap: 8px; padding: 11px; border: 1px solid var(--line); border-top: 0; border-radius: 0 0 16px 16px; background: var(--paper); }
+  .chat-form input { min-width: 0; flex: 1; padding: 10px 12px; border: 1px solid var(--line); border-radius: 999px; background: #faf8f3; }
+  .chat-form button { width: 40px; height: 40px; border: 0; border-radius: 50%; background: var(--accent); color: #fff; font-size: 17px; }
+  .bottom-nav { position: fixed; z-index: 8; right: 0; bottom: 0; left: 0; display: grid; grid-template-columns: repeat(4, 1fr); max-width: 760px; margin: 0 auto; padding: 8px 10px max(8px, env(safe-area-inset-bottom)); border: 1px solid var(--line); border-bottom: 0; border-radius: 18px 18px 0 0; background: rgba(255,253,248,.97); box-shadow: 0 -7px 24px rgba(43,31,74,.07); backdrop-filter: blur(14px); }
+  .nav-btn { display: grid; justify-items: center; gap: 3px; padding: 5px 3px; border: 0; border-radius: 11px; background: transparent; color: #898392; font-size: 10px; font-weight: 700; }
+  .nav-btn.active { color: var(--accent); }
+  .nav-icon { font-size: 19px; line-height: 1; }
+  .nav-btn[data-screen="post"] .nav-icon { display: grid; place-items: center; width: 34px; height: 30px; border-radius: 10px; background: var(--accent-soft); font-size: 19px; }
+  .nav-btn[data-screen="post"].active .nav-icon { background: var(--accent); color: #fff; }
+  .sent-panel[hidden], .received-panel[hidden], .inbox-row[hidden] { display: none; }
+  .demo-chat-empty { padding: 18px; color: var(--muted); text-align: center; font-size: 12px; }
   @media (max-width: 1020px) {
-    .layout { grid-template-columns: 190px minmax(0, 620px); justify-content: center; }
-    .right-rail { display: none; }
+    .layout { display: block; max-width: 760px; }
   }
   @media (max-width: 680px) {
     .topbar { height: 60px; padding: 0 15px; }
@@ -138,15 +211,9 @@
     .brand-name { font-size: 17px; }
     .campus-pill { padding: 6px 9px; font-size: 11px; }
     .anon-state { display: none; }
-    .layout { display: block; margin: 18px auto; padding: 0 13px; }
-    .sidebar { position: static; margin-bottom: 14px; overflow-x: auto; }
-    .side-title, .side-note { display: none; }
-    .category-list { display: flex; width: max-content; min-width: 100%; gap: 6px; }
-    .category-btn { width: auto; padding: 8px 11px; border: 1px solid var(--line); background: #fff; white-space: nowrap; font-size: 13px; }
-    .category-btn.active { border-color: #b7d9c4; }
-    .category-icon { display: none; }
+    .layout { display: block; margin: 18px auto 96px; padding: 0 13px; }
     .feed-head { margin: 0 0 15px; }
-    .feed-head h1 { font-size: 23px; }
+    .feed-head h1 { font-size: 25px; }
     .composer { padding: 14px; }
     .composer-bottom { align-items: flex-end; }
     .compose-options { flex-wrap: wrap; gap: 7px; }
@@ -155,6 +222,10 @@
     .feed-tools { align-items: flex-start; flex-direction: column; }
     .search { max-width: none; }
     .post { padding: 14px; }
+    .feed-stat { font-size: 10px; }
+    .request-card { align-items: flex-start; }
+    .request-card > .person-avatar { width: 38px; height: 38px; }
+    .composer textarea { min-height: 220px; }
   }
   @media (prefers-reduced-motion: reduce) { *, *::before, *::after { scroll-behavior: auto !important; } }
 </style>
@@ -169,77 +240,195 @@
 </header>
 
 <div class="layout">
-  <aside class="sidebar" aria-label="Feed categories">
-    <h2 class="side-title">Your campus</h2>
-    <nav class="category-list" id="categories">
-      <button class="category-btn active" type="button" data-category="All"><span class="category-icon">⌂</span> All posts</button>
-      <button class="category-btn" type="button" data-category="Campus"><span class="category-icon">◉</span> Campus life</button>
-      <button class="category-btn" type="button" data-category="Question"><span class="category-icon">?</span> Questions</button>
-      <button class="category-btn" type="button" data-category="Confession"><span class="category-icon">♡</span> Confessions</button>
-      <button class="category-btn" type="button" data-category="Lost & Found"><span class="category-icon">⌕</span> Lost &amp; found</button>
-      <button class="category-btn" type="button" data-category="Opportunity"><span class="category-icon">↗</span> Opportunities</button>
-    </nav>
-    <div class="side-note"><strong>Your campus, your voice.</strong>Share what’s happening around Legon. Posts and replies are anonymous to other students.</div>
-  </aside>
-
-  <main>
-    <div class="feed-head">
-      <h1>What’s happening?</h1>
-      <p>A little closer to campus. A little closer to each other.</p>
-    </div>
-
-    <form class="card composer" id="postForm">
-      <div class="composer-top">
-        <div class="avatar" aria-hidden="true">?</div>
-        <div><div class="composer-prompt">Start a conversation</div><span class="composer-hint">Your post is anonymous</span></div>
-      </div>
-      <label for="postText" class="sr-only">Your post</label>
-      <textarea id="postText" maxlength="500" placeholder="What’s on your mind, Legon?" required></textarea>
-      <div class="composer-bottom">
-        <div class="compose-options">
-          <label class="sr-only" for="postCategory">Choose a category</label>
-          <select id="postCategory">
-            <option value="Campus">Campus life</option>
-            <option value="Question">Question</option>
-            <option value="Confession">Confession</option>
-            <option value="Lost & Found">Lost &amp; found</option>
-            <option value="Opportunity">Opportunity</option>
-          </select>
-          <span class="char-count" id="charCount">0 / 500</span>
+  <div class="app-shell">
+    <section class="app-screen" id="feedScreen" data-screen-panel="feed">
+      <header class="feed-head">
+        <div>
+          <p class="eyebrow">◉ &nbsp; University of Ghana</p>
+          <h1>Good evening, Legonites.</h1>
+          <p>Your campus. Your people. Your space.</p>
         </div>
-        <button class="primary-btn" id="postButton" type="submit">Post anonymously</button>
-      </div>
-      <p class="error" id="postError" role="alert"></p>
-    </form>
+        <span class="feed-stat">✦ &nbsp; Campus afterhours</span>
+      </header>
 
-    <div class="feed-tools">
-      <div class="sort-tabs" role="group" aria-label="Sort posts">
-        <button class="sort-btn active" type="button" data-sort="latest">Latest</button>
-        <button class="sort-btn" type="button" data-sort="top">Top</button>
-      </div>
-      <label class="sr-only" for="search">Search posts</label>
-      <input class="search" id="search" type="search" placeholder="Search the feed">
-    </div>
-    <section id="feed" aria-live="polite"><div class="card loading">Loading the campus feed…</div></section>
-  </main>
+      <nav class="category-list" id="categories" aria-label="Campus feed categories">
+        <button class="category-btn active" type="button" data-category="All">For you</button>
+        <button class="category-btn" type="button" data-category="Campus">Campus life</button>
+        <button class="category-btn" type="button" data-category="Question">Questions</button>
+        <button class="category-btn" type="button" data-category="Confession">Confessions</button>
+        <button class="category-btn" type="button" data-category="Lost & Found">Lost &amp; found</button>
+        <button class="category-btn" type="button" data-category="Opportunity">Opportunities</button>
+      </nav>
 
-  <aside class="right-rail">
-    <section class="rail-card">
-      <h2>Welcome to Legon Loop</h2>
-      <p>A shared space for the University of Ghana community. Join the conversation and look out for one another.</p>
+      <div class="feed-tools">
+        <div class="sort-tabs" role="group" aria-label="Sort posts">
+          <button class="sort-btn active" type="button" data-sort="latest">Latest</button>
+          <button class="sort-btn" type="button" data-sort="top">Trending</button>
+        </div>
+        <label class="sr-only" for="search">Search posts</label>
+        <input class="search" id="search" type="search" placeholder="Search campus posts">
+      </div>
+      <section id="feed" aria-live="polite"><div class="card loading">Loading the campus feed…</div></section>
     </section>
-    <section class="rail-card">
-      <h2>Community guidelines</h2>
-      <div class="guideline"><strong>01</strong><span>Be kind. Disagree with ideas, not people.</span></div>
-      <div class="guideline"><strong>02</strong><span>Protect people’s privacy. Don’t share personal details.</span></div>
-      <div class="guideline"><strong>03</strong><span>Keep it relevant and safe for the campus community.</span></div>
+
+    <section class="app-screen" id="postScreen" data-screen-panel="post" hidden>
+      <header class="screen-head">
+        <p class="eyebrow">YOUR CAMPUS. YOUR VOICE.</p>
+        <h1>Put it out there.</h1>
+        <p>Your campus. Your inside voice.</p>
+      </header>
+      <div class="demo-banner">Posts are anonymous to other students. Please keep personal details out of your post.</div>
+      <form class="card composer" id="postForm">
+        <div class="composer-top">
+          <div class="avatar" aria-hidden="true">?</div>
+          <div><div class="composer-prompt">Legon Loop</div><span class="composer-hint">Posting anonymously</span></div>
+          <span class="tag">ANONYMOUS</span>
+        </div>
+        <label for="postText" class="sr-only">Your post</label>
+        <textarea id="postText" maxlength="500" placeholder="What’s on your mind?" required></textarea>
+        <div class="composer-bottom">
+          <div class="compose-options">
+            <label class="sr-only" for="postCategory">Choose a category</label>
+            <select id="postCategory">
+              <option value="Campus">Campus life</option>
+              <option value="Question">Question</option>
+              <option value="Confession">Confession</option>
+              <option value="Lost & Found">Lost &amp; found</option>
+              <option value="Opportunity">Opportunity</option>
+            </select>
+            <span class="char-count" id="charCount">0 / 500</span>
+          </div>
+        </div>
+        <label class="location-option" for="shareLocation">
+          <input id="shareLocation" type="checkbox">
+          <span>Attach my approximate location (about 1 km)</span>
+        </label>
+        <p class="location-status" id="locationStatus" aria-live="polite">Location stays off unless you opt in for this post.</p>
+        <p class="compose-privacy">◉ &nbsp; Your name and student email stay private. Keep it kind and leave identifying details out.</p>
+        <p class="error" id="postError" role="alert"></p>
+        <div class="composer-actions">
+          <button class="draft-btn" id="saveDraft" type="button">Save draft</button>
+          <button class="primary-btn" id="postButton" type="submit">➤ &nbsp; Post anonymously</button>
+        </div>
+      </form>
     </section>
-    <section class="rail-card">
-      <h2>Good to know</h2>
-      <p>Your email is never shown on posts or replies. Please don’t include identifying information in what you share.</p>
+
+    <section class="app-screen" id="requestsScreen" data-screen-panel="requests" hidden>
+      <header class="screen-head">
+        <p class="eyebrow">YOUR CAMPUS CIRCLE</p>
+        <h1>New connections. <span class="verified">2</span></h1>
+        <p>A little hello could go a long way.</p>
+      </header>
+      <div class="demo-banner">Demo screen: sample connection requests only. Accepting a request updates this preview; it does not contact a real student.</div>
+      <div class="request-tabs" role="group" aria-label="Connection request type">
+        <button class="request-tab active" type="button" data-request-tab="received">Received&nbsp; 2</button>
+        <button class="request-tab" type="button" data-request-tab="sent">Sent&nbsp; 1</button>
+      </div>
+      <div id="receivedRequests" class="received-panel">
+        <article class="card request-card" data-demo-request>
+          <div class="person-avatar" aria-hidden="true">🦉</div>
+          <div class="person-info">
+            <div class="person-name">Night Owl 27 <span class="verified">●</span></div>
+            <div class="person-meta">From your post about late-night study spots</div>
+            <p class="person-note">“Is the library still open after 10? Looking for a quiet study crew.”</p>
+            <div class="request-actions">
+              <button type="button" data-request-action="accept" data-person="Night Owl 27">✓ &nbsp; Accept &amp; chat</button>
+              <button class="decline-btn" type="button" data-request-action="decline">Decline</button>
+            </div>
+          </div>
+        </article>
+        <article class="card request-card" data-demo-request>
+          <div class="person-avatar" aria-hidden="true">🐸</div>
+          <div class="person-info">
+            <div class="person-name">Moss Frog <span class="verified">●</span></div>
+            <div class="person-meta">From your campus-life post</div>
+            <p class="person-note">“We’re putting a little study group together. You’re welcome to join!”</p>
+            <div class="request-actions">
+              <button type="button" data-request-action="accept" data-person="Moss Frog">✓ &nbsp; Accept &amp; chat</button>
+              <button class="decline-btn" type="button" data-request-action="decline">Decline</button>
+            </div>
+          </div>
+        </article>
+      </div>
+      <div id="sentRequests" class="sent-panel" hidden>
+        <article class="card request-card">
+          <div class="person-avatar" aria-hidden="true">📚</div>
+          <div class="person-info">
+            <div class="person-name">Library Ghost</div>
+            <div class="person-meta">Sent yesterday · Waiting for a reply</div>
+          </div>
+          <span class="request-status">Pending</span>
+        </article>
+      </div>
     </section>
-  </aside>
+
+    <section class="app-screen" id="inboxScreen" data-screen-panel="inbox" hidden>
+      <header class="screen-head">
+        <p class="eyebrow">YOUR CAMPUS CIRCLE</p>
+        <h1>Your people.</h1>
+        <p>Still anonymous. A little less strangers.</p>
+      </header>
+      <div class="demo-banner">Demo screen: sample conversations are stored only in this page preview and are not sent to anyone.</div>
+      <label class="sr-only" for="inboxSearch">Find a pseudonym</label>
+      <input class="screen-search" id="inboxSearch" type="search" placeholder="⌕  Find a pseudonym">
+      <div class="inbox-tabs" role="group" aria-label="Filter conversations">
+        <button class="inbox-tab active" type="button" data-inbox-filter="all">All chats</button>
+        <button class="inbox-tab" type="button" data-inbox-filter="unread">Unread&nbsp; 2</button>
+      </div>
+      <div id="inboxList">
+        <button class="inbox-row" type="button" data-demo-chat="Night Owl 27" data-unread="true">
+          <span class="person-avatar" aria-hidden="true">🦉</span>
+          <span class="inbox-copy"><span class="person-name">Night Owl 27 <span class="verified">●</span></span><span class="inbox-preview">deal. I'll be the one with the purple notebook 👀</span></span>
+          <span class="inbox-time">2m ago</span><span class="unread-dot" aria-label="Unread"></span>
+        </button>
+        <button class="inbox-row" type="button" data-demo-chat="Moss Frog" data-unread="true">
+          <span class="person-avatar" aria-hidden="true">🐸</span>
+          <span class="inbox-copy"><span class="person-name">Moss Frog</span><span class="inbox-preview">The best biryani after lectures? 👀</span></span>
+          <span class="inbox-time">1h ago</span><span class="unread-dot" aria-label="Unread"></span>
+        </button>
+        <button class="inbox-row" type="button" data-demo-chat="Library Ghost" data-unread="false">
+          <span class="person-avatar" aria-hidden="true">📚</span>
+          <span class="inbox-copy"><span class="person-name">Library Ghost</span><span class="inbox-preview">Found the quiet floor. Finally.</span></span>
+          <span class="inbox-time">Yesterday</span>
+        </button>
+        <button class="inbox-row" type="button" data-demo-chat="Cosmic Bagel" data-unread="false">
+          <span class="person-avatar" aria-hidden="true">🥯</span>
+          <span class="inbox-copy"><span class="person-name">Cosmic Bagel</span><span class="inbox-preview">Nice work on your project!</span></span>
+          <span class="inbox-time">2d ago</span>
+        </button>
+      </div>
+      <p id="inboxEmpty" class="demo-chat-empty" hidden>No conversations match that search.</p>
+    </section>
+
+    <section class="app-screen" id="chatScreen" data-screen-panel="chat" hidden>
+      <div class="chat-header">
+        <button class="back-btn" type="button" data-screen="inbox" aria-label="Back to inbox">←</button>
+        <span class="person-avatar" id="chatAvatar" aria-hidden="true">🦉</span>
+        <span class="person-info"><span class="person-name" id="chatName">Night Owl 27</span><span class="person-meta">◉ &nbsp; Anonymous campus connection</span></span>
+        <span class="tag">DEMO</span>
+      </div>
+      <div class="demo-banner" style="margin-top:10px">Demo conversation: messages you type appear here temporarily and are not sent or saved.</div>
+      <div class="chat-messages" id="chatMessages" aria-live="polite">
+        <span class="chat-day">TODAY · 9:32 PM</span>
+        <div class="chat-bubble">Hey! Saw your post about late-night study spots. Still looking for a crew?<span class="chat-time">9:32 PM</span></div>
+        <div class="chat-bubble mine">Yes please — I’m usually at the library after 10. Want to join?<span class="chat-time">9:34 PM</span></div>
+        <div class="chat-bubble">Deal. I’ll be the one with the purple notebook 👀<span class="chat-time">9:36 PM</span></div>
+      </div>
+      <form class="chat-form" id="demoChatForm">
+        <label class="sr-only" for="demoChatInput">Write a demo message</label>
+        <input id="demoChatInput" type="text" maxlength="300" placeholder="Message (demo only)…" autocomplete="off">
+        <button type="submit" aria-label="Add demo message">↑</button>
+      </form>
+    </section>
+  </div>
 </div>
+
+<nav class="bottom-nav" aria-label="Main navigation">
+  <button class="nav-btn active" type="button" data-screen="feed" aria-current="page"><span class="nav-icon">⌂</span><span>Feed</span></button>
+  <button class="nav-btn" type="button" data-screen="post"><span class="nav-icon">↗</span><span>Post</span></button>
+  <button class="nav-btn" type="button" data-screen="requests"><span class="nav-icon">♙</span><span>Requests</span></button>
+  <button class="nav-btn" type="button" data-screen="inbox"><span class="nav-icon">▤</span><span>Inbox</span></button>
+</nav>
 
 <style>.sr-only { position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0; }</style>
 
@@ -251,6 +440,7 @@
     runTransaction, serverTimestamp
   } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
   import { firebaseConfig } from "./firebase-config.js";
+  import { googleMapsApiKey } from "./google-maps-config.js";
 
   const app = initializeApp(firebaseConfig);
   const auth = getAuth(app);
@@ -261,6 +451,10 @@
   const postText = document.getElementById('postText');
   const postButton = document.getElementById('postButton');
   const postError = document.getElementById('postError');
+  const shareLocation = document.getElementById('shareLocation');
+  const locationStatus = document.getElementById('locationStatus');
+  const inboxSearch = document.getElementById('inboxSearch');
+  const inboxEmpty = document.getElementById('inboxEmpty');
   const search = document.getElementById('search');
   const categories = document.getElementById('categories');
   const commentsByPost = new Map();
@@ -271,6 +465,10 @@
   let unsubscribeFeed = null;
   const voting = new Set();
   const writingReply = new Set();
+  const openMaps = new Set();
+  let selectedLocation = null;
+  let mapsPromise = null;
+  let inboxFilter = 'all';
 
   onAuthStateChanged(auth, function (user) {
     if (!user) {
@@ -289,7 +487,7 @@
         },
         function (error) {
           console.error('Could not load campus posts:', error);
-          feed.replaceChildren(messageCard('Could not load the campus feed. Check your connection and Firestore access.'));
+          feed.replaceChildren(messageCard(firestoreErrorMessage(error, 'load the campus feed')));
         }
       );
     }
@@ -300,6 +498,13 @@
     card.className = 'card ' + (className || 'empty');
     card.textContent = text;
     return card;
+  }
+
+  function firestoreErrorMessage(error, action) {
+    if (error && error.code === 'permission-denied') {
+      return 'Firebase denied ' + action + '. Deploy firestore.rules to project ugdiary-23249, then reload.';
+    }
+    return 'Could not ' + action + '. Check your connection and try again.';
   }
 
   function timestampDate(value) {
@@ -376,6 +581,23 @@
     text.className = 'post-text';
     text.textContent = post.text || '';
 
+    let mapToggle = null;
+    let mapPanel = null;
+    if (post.location && Number.isInteger(post.location.latitudeCell) && Number.isInteger(post.location.longitudeCell)) {
+      const locationLabel = document.createElement('div');
+      locationLabel.className = 'post-location';
+      locationLabel.textContent = '⌖ Approximate location · about 1 km grid area';
+      mapToggle = makeButton(openMaps.has(post.id) ? 'Hide map' : 'View approximate map', 'map-toggle');
+      mapPanel = document.createElement('div');
+      mapPanel.className = 'map-panel';
+      mapPanel.hidden = !openMaps.has(post.id);
+      mapPanel.setAttribute('role', 'region');
+      mapPanel.setAttribute('aria-label', 'Approximate post location');
+      card.append(head, text, locationLabel, mapToggle, mapPanel);
+    } else {
+      card.append(head, text);
+    }
+
     const actions = document.createElement('div');
     actions.className = 'post-actions';
     const votes = post.votes || {};
@@ -394,10 +616,133 @@
     replies.setAttribute('aria-expanded', String(Boolean(replyState && replyState.open)));
     replies.addEventListener('click', function () { toggleReplies(post.id); });
     actions.append(voteGroup, replies);
-    card.append(head, text, actions);
+    card.append(actions);
 
     if (replyState && replyState.open) card.appendChild(renderReplies(post.id, replyState));
+    if (mapToggle) {
+      mapToggle.addEventListener('click', function () {
+        if (openMaps.has(post.id)) {
+          openMaps.delete(post.id);
+        } else {
+          openMaps.add(post.id);
+        }
+        renderFeed();
+      });
+      if (openMaps.has(post.id)) renderPostMap(mapPanel, post.location);
+    }
     return card;
+  }
+
+  function renderPostMap(container, location) {
+    if (googleMapsApiKey === 'YOUR_RESTRICTED_GOOGLE_MAPS_API_KEY') {
+      showMapMessage(container, 'Add a referrer-restricted Google Maps JavaScript API key in google-maps-config.js to view maps.');
+      return;
+    }
+    loadGoogleMaps().then(function (maps) {
+      if (!container.isConnected) return;
+      const center = {
+        lat: location.latitudeCell / 100,
+        lng: location.longitudeCell / 100
+      };
+      const map = new maps.Map(container, {
+        center: center,
+        zoom: 15,
+        clickableIcons: false,
+        mapTypeControl: false,
+        streetViewControl: false,
+        fullscreenControl: false
+      });
+      new maps.Rectangle({
+        map: map,
+        bounds: {
+          north: center.lat + 0.005,
+          south: center.lat - 0.005,
+          east: center.lng + 0.005,
+          west: center.lng - 0.005
+        },
+        fillColor: '#6744e8',
+        fillOpacity: 0.16,
+        strokeColor: '#6744e8',
+        strokeOpacity: 0.6,
+        strokeWeight: 1
+      });
+    }).catch(function (error) {
+      console.error('Could not load Google Maps:', error);
+      if (container.isConnected) showMapMessage(container, 'Google Maps could not load. Check the API key, enabled Maps JavaScript API, billing, and allowed website referrers.');
+    });
+  }
+
+  function showMapMessage(container, text) {
+    const message = document.createElement('div');
+    message.className = 'map-message';
+    message.textContent = text;
+    container.replaceChildren(message);
+  }
+
+  function loadGoogleMaps() {
+    if (window.google && window.google.maps) return Promise.resolve(window.google.maps);
+    if (mapsPromise) return mapsPromise;
+
+    mapsPromise = new Promise(function (resolve, reject) {
+      const callbackName = 'legonLoopMapsLoaded';
+      const script = document.createElement('script');
+      const params = new URLSearchParams({
+        key: googleMapsApiKey,
+        callback: callbackName,
+        loading: 'async'
+      });
+      window[callbackName] = function () {
+        delete window[callbackName];
+        resolve(window.google.maps);
+      };
+      script.async = true;
+      script.src = 'https://maps.googleapis.com/maps/api/js?' + params.toString();
+      script.onerror = function () {
+        delete window[callbackName];
+        mapsPromise = null;
+        reject(new Error('Google Maps JavaScript API failed to load.'));
+      };
+      document.head.appendChild(script);
+    });
+    return mapsPromise;
+  }
+
+  function setLocationStatus(text, isError) {
+    locationStatus.textContent = text;
+    locationStatus.style.color = isError ? 'var(--danger)' : '';
+  }
+
+  function locateForPost() {
+    selectedLocation = null;
+    if (!navigator.geolocation) {
+      shareLocation.checked = false;
+      setLocationStatus('This browser does not support location sharing.', true);
+      return;
+    }
+
+    shareLocation.disabled = true;
+    setLocationStatus('Getting your location. Your exact coordinates will not be published.', false);
+    navigator.geolocation.getCurrentPosition(function (position) {
+      selectedLocation = {
+        latitudeCell: Math.round(position.coords.latitude * 100),
+        longitudeCell: Math.round(position.coords.longitude * 100)
+      };
+      shareLocation.disabled = false;
+      setLocationStatus('Approximate location ready. Only an about 1 km area will be attached.', false);
+    }, function (error) {
+      shareLocation.checked = false;
+      shareLocation.disabled = false;
+      const messages = {
+        1: 'Location permission was denied. Allow it in your browser settings to attach a location.',
+        2: 'Your location is unavailable right now. Try again or post without it.',
+        3: 'Finding your location timed out. Try again or post without it.'
+      };
+      setLocationStatus(messages[error.code] || 'Could not get your location. Try again or post without it.', true);
+    }, {
+      enableHighAccuracy: false,
+      maximumAge: 30000,
+      timeout: 10000
+    });
   }
 
   async function changeVote(post, value) {
@@ -424,7 +769,7 @@
       });
     } catch (error) {
       console.error('Could not save vote:', error);
-      postError.textContent = 'Your vote could not be saved. Check your connection and Firestore access.';
+      postError.textContent = firestoreErrorMessage(error, 'save your vote');
     } finally {
       voting.delete(post.id);
     }
@@ -450,7 +795,7 @@
         },
         function (error) {
           console.error('Could not load replies:', error);
-          state.error = 'Could not load replies. Check your Firestore access.';
+          state.error = firestoreErrorMessage(error, 'load replies');
           renderFeed();
         }
       );
@@ -529,7 +874,7 @@
         });
       } catch (err) {
         console.error('Could not save reply:', err);
-        state.replyError = 'Could not send your reply. Check your connection and Firestore access.';
+        state.replyError = firestoreErrorMessage(err, 'send your reply');
       } finally {
         writingReply.delete(postId);
         renderFeed();
@@ -548,11 +893,15 @@
       postText.focus();
       return;
     }
+    if (shareLocation.checked && !selectedLocation) {
+      postError.textContent = 'Wait for your approximate location to be ready, or turn location sharing off.';
+      return;
+    }
     postError.textContent = '';
     postButton.disabled = true;
     postButton.textContent = 'Posting…';
     try {
-      await addDoc(postsRef, {
+      const postData = {
         authorId: currentUser.uid,
         category: document.getElementById('postCategory').value,
         campus: 'University of Ghana',
@@ -561,15 +910,30 @@
         upvotes: 0,
         downvotes: 0,
         createdAt: serverTimestamp()
-      });
+      };
+      if (selectedLocation) postData.location = selectedLocation;
+      await addDoc(postsRef, postData);
       postForm.reset();
+      selectedLocation = null;
+      sessionStorage.removeItem('legonLoopDraft');
       document.getElementById('charCount').textContent = '0 / 500';
+      setLocationStatus('Location stays off unless you opt in for this post.', false);
+      setScreen('feed');
     } catch (error) {
       console.error('Could not create post:', error);
-      postError.textContent = 'Your post could not be published. Check your connection and Firestore access.';
+      postError.textContent = firestoreErrorMessage(error, 'publish your post');
     } finally {
       postButton.disabled = false;
       postButton.textContent = 'Post anonymously';
+    }
+  });
+
+  shareLocation.addEventListener('change', function () {
+    if (shareLocation.checked) {
+      locateForPost();
+    } else {
+      selectedLocation = null;
+      setLocationStatus('Location stays off unless you opt in for this post.', false);
     }
   });
 
@@ -602,6 +966,147 @@
       console.error('Could not sign out:', error);
       postError.textContent = 'Could not log out. Please try again.';
     }
+  });
+
+  function setScreen(screenName) {
+    document.querySelectorAll('[data-screen-panel]').forEach(function (panel) {
+      panel.hidden = panel.dataset.screenPanel !== screenName;
+    });
+    const activeTab = screenName === 'chat' ? 'inbox' : screenName;
+    document.querySelectorAll('.nav-btn').forEach(function (button) {
+      const active = button.dataset.screen === activeTab;
+      button.classList.toggle('active', active);
+      if (active) button.setAttribute('aria-current', 'page');
+      else button.removeAttribute('aria-current');
+    });
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  document.querySelectorAll('.nav-btn, .back-btn').forEach(function (button) {
+    button.addEventListener('click', function () {
+      setScreen(button.dataset.screen);
+    });
+  });
+
+  const savedDraft = sessionStorage.getItem('legonLoopDraft');
+  if (savedDraft) {
+    try {
+      const draft = JSON.parse(savedDraft);
+      postText.value = draft.text || '';
+      if (draft.category) document.getElementById('postCategory').value = draft.category;
+      document.getElementById('charCount').textContent = postText.value.length + ' / 500';
+    } catch (error) {
+      console.error('Could not restore saved post draft:', error);
+      sessionStorage.removeItem('legonLoopDraft');
+    }
+  }
+
+  document.getElementById('saveDraft').addEventListener('click', function () {
+    const draft = {
+      text: postText.value,
+      category: document.getElementById('postCategory').value
+    };
+    sessionStorage.setItem('legonLoopDraft', JSON.stringify(draft));
+    const button = document.getElementById('saveDraft');
+    button.textContent = '✓ Draft saved';
+    window.setTimeout(function () { button.textContent = 'Save draft'; }, 1800);
+  });
+
+  const requestsScreen = document.getElementById('requestsScreen');
+  requestsScreen.addEventListener('click', function (event) {
+    const tab = event.target.closest('[data-request-tab]');
+    if (tab) {
+      const sent = tab.dataset.requestTab === 'sent';
+      document.querySelectorAll('[data-request-tab]').forEach(function (item) {
+        item.classList.toggle('active', item === tab);
+      });
+      document.getElementById('receivedRequests').hidden = sent;
+      document.getElementById('sentRequests').hidden = !sent;
+      return;
+    }
+    const openChat = event.target.closest('[data-open-chat]');
+    if (openChat) {
+      openDemoChat(openChat.dataset.openChat);
+      return;
+    }
+    const action = event.target.closest('[data-request-action]');
+    if (!action) return;
+    const card = action.closest('[data-demo-request]');
+    if (action.dataset.requestAction === 'decline') {
+      card.remove();
+      return;
+    }
+    const person = action.dataset.person;
+    const actions = card.querySelector('.request-actions');
+    actions.replaceChildren();
+    const connected = document.createElement('span');
+    connected.className = 'request-status';
+    connected.textContent = '✓ Connected';
+    const message = document.createElement('button');
+    message.type = 'button';
+    message.className = 'message-btn';
+    message.dataset.openChat = person;
+    message.textContent = 'Open demo chat';
+    actions.append(connected, message);
+  });
+
+  function openDemoChat(person) {
+    const emojiByPerson = {
+      'Night Owl 27': '🦉',
+      'Moss Frog': '🐸',
+      'Library Ghost': '📚',
+      'Cosmic Bagel': '🥯'
+    };
+    document.getElementById('chatName').textContent = person;
+    document.getElementById('chatAvatar').textContent = emojiByPerson[person] || '◉';
+    setScreen('chat');
+  }
+
+  document.getElementById('inboxList').addEventListener('click', function (event) {
+    const row = event.target.closest('[data-demo-chat]');
+    const connected = event.target.closest('[data-open-chat]');
+    if (row) openDemoChat(row.dataset.demoChat);
+    else if (connected) openDemoChat(connected.dataset.openChat);
+  });
+
+  function filterInbox() {
+    const term = inboxSearch.value.trim().toLowerCase();
+    let visibleCount = 0;
+    document.querySelectorAll('.inbox-row').forEach(function (row) {
+      const matchesTerm = row.textContent.toLowerCase().includes(term);
+      const matchesFilter = inboxFilter === 'all' || row.dataset.unread === 'true';
+      row.hidden = !matchesTerm || !matchesFilter;
+      if (!row.hidden) visibleCount += 1;
+    });
+    inboxEmpty.hidden = visibleCount > 0;
+  }
+
+  inboxSearch.addEventListener('input', filterInbox);
+  document.querySelectorAll('[data-inbox-filter]').forEach(function (button) {
+    button.addEventListener('click', function () {
+      inboxFilter = button.dataset.inboxFilter;
+      document.querySelectorAll('[data-inbox-filter]').forEach(function (item) {
+        item.classList.toggle('active', item === button);
+      });
+      filterInbox();
+    });
+  });
+
+  document.getElementById('demoChatForm').addEventListener('submit', function (event) {
+    event.preventDefault();
+    const input = document.getElementById('demoChatInput');
+    const text = input.value.trim();
+    if (!text) return;
+    const bubble = document.createElement('div');
+    bubble.className = 'chat-bubble mine';
+    bubble.append(document.createTextNode(text));
+    const time = document.createElement('span');
+    time.className = 'chat-time';
+    time.textContent = 'now · demo only';
+    bubble.appendChild(time);
+    document.getElementById('chatMessages').appendChild(bubble);
+    input.value = '';
+    bubble.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
   });
 </script>
 </body>

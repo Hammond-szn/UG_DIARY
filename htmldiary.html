@@ -7,9 +7,9 @@
     <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600&family=Nunito:wght@400;600&display=swap" rel="stylesheet">
     <style>
         :root {
-            --ink: #3b2a57;
-            --purple: #7c3aed;
-            --paper: rgba(255, 248, 252, 0.94);
+            --ink: #29243a;
+            --purple: #6744e8;
+            --paper: rgba(255, 253, 248, 0.96);
         }
 
         * {
@@ -23,7 +23,7 @@
             display: grid;
             place-items: center;
             background:
-                linear-gradient(rgba(255, 247, 251, 0.3), rgba(247, 242, 226, 0.36)),
+                linear-gradient(rgba(249, 246, 238, 0.54), rgba(241, 236, 250, 0.48)),
                 url("legon-tower-background.jpg") center / cover fixed no-repeat;
             color: var(--ink);
             font-family: "Nunito", system-ui, sans-serif;
@@ -52,10 +52,10 @@
             max-width: 440px;
             justify-self: start;
             padding: 28px;
-            border: 2px solid var(--ink);
-            border-radius: 16px;
+            border: 1px solid rgba(103, 68, 232, 0.16);
+            border-radius: 24px;
             background: var(--paper);
-            box-shadow: 0 8px 28px rgba(59, 42, 87, 0.18);
+            box-shadow: 0 12px 36px rgba(42, 33, 72, 0.16);
         }
 
         .emblem {
@@ -68,8 +68,10 @@
 
         .card h1 {
             margin: 0 0 4px;
-            font-family: "Caveat", cursive;
-            font-size: 2.4rem;
+            font-family: "Nunito", system-ui, sans-serif;
+            font-size: 2rem;
+            font-weight: 800;
+            letter-spacing: -0.05em;
             text-align: center;
         }
 
@@ -90,34 +92,45 @@
             width: 100%;
             margin-bottom: 16px;
             padding: 12px;
-            border: 2px solid var(--ink);
-            border-radius: 10px;
-            background: #fff;
+            border: 1px solid #e8e1d5;
+            border-radius: 12px;
+            background: #fffefa;
             color: var(--ink);
             font: inherit;
         }
 
         input:focus-visible,
         button:focus-visible {
-            outline: 3px solid var(--purple);
+            outline: 3px solid #b8a8ff;
             outline-offset: 2px;
         }
 
         button {
             width: 100%;
             padding: 13px;
-            border: 2px solid var(--ink);
-            border-radius: 10px;
+            border: 0;
+            border-radius: 13px;
             background: var(--purple);
             color: #fff;
             cursor: pointer;
             font: inherit;
-            font-weight: 600;
+            font-weight: 800;
             transition: transform 0.15s;
         }
 
         button:hover {
-            transform: translateY(-2px);
+            transform: translateY(-1px);
+            background: #5030c8;
+        }
+
+        #signupBtn {
+            border: 1px solid #e7e1d5;
+            background: #fffdf8 !important;
+            color: var(--ink) !important;
+        }
+
+        #signupBtn:hover {
+            background: #f0ecf9 !important;
         }
 
         .levels {
