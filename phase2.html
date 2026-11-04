@@ -3,167 +3,606 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>My diary</title>
-<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600&family=Nunito:wght@400;600&display=swap" rel="stylesheet">
+<meta name="theme-color" content="#f5f7f5">
+<title>Legon Loop | Campus community</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
-  :root { --ink:#3b2a57; --pink:#ec4899; --purple:#7c3aed; --paper:#fff8fc; }
+  :root {
+    color-scheme: light;
+    --ink: #17251e;
+    --muted: #6d7a72;
+    --green: #176b48;
+    --green-dark: #105437;
+    --green-soft: #e6f3ec;
+    --paper: #fff;
+    --line: #e5eae6;
+    --bg: #f5f7f5;
+    --orange: #e68a48;
+    --danger: #b42318;
+    font-family: 'Nunito', system-ui, sans-serif;
+  }
   * { box-sizing: border-box; }
-  body { margin:0; min-height:100vh; padding:20px; background:#fde9f3;
-         font-family:'Nunito',system-ui,sans-serif; color:var(--ink); }
-  .wrap { max-width:720px; margin:0 auto; }
-  header { display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; gap:12px; }
-  header h1 { font-family:'Caveat',cursive; font-size:2.4rem; margin:0; }
-  #who { font-size:.85rem; opacity:.75; }
-  .card { background:var(--paper); border:2px solid var(--ink); border-radius:16px; padding:24px; margin-bottom:24px; }
-  label { display:block; font-weight:600; margin-bottom:6px; }
-  input, textarea, select { width:100%; padding:12px; margin-bottom:16px; border:2px solid var(--ink);
-          border-radius:10px; font:inherit; background:#fff; color:var(--ink); }
-  textarea { min-height:130px; resize:vertical; }
-  input:focus-visible, textarea:focus-visible, select:focus-visible, button:focus-visible {
-    outline:3px solid var(--purple); outline-offset:2px; }
-  button { padding:12px 20px; font:inherit; font-weight:600; color:#fff; background:var(--purple);
-           border:2px solid var(--ink); border-radius:10px; cursor:pointer; transition:transform .15s; }
-  button:hover { transform:translateY(-2px); }
-  .ghost { background:transparent; color:var(--ink); }
-  .row { display:grid; gap:0 16px; grid-template-columns:1fr; }
-  @media (min-width:560px) { .row { grid-template-columns:2fr 1fr; } }
-  .entry h2 { font-family:'Caveat',cursive; font-size:1.8rem; margin:0 0 2px; }
-  .meta { font-size:.9rem; opacity:.75; margin-bottom:10px; }
-  .entry p { white-space:pre-wrap; margin:0 0 14px; line-height:1.6; }
-  .entry button { padding:6px 12px; font-size:.9rem; }
-  .empty { text-align:center; opacity:.8; }
-  .search { margin-bottom:20px; }
-  .actions { display:flex; gap:10px; }
-  #err { color:#b91c1c; font-weight:600; min-height:1.2em; }
+  body { margin: 0; min-height: 100vh; color: var(--ink); background: var(--bg); }
+  button, input, textarea, select { font: inherit; }
+  button { cursor: pointer; }
+  button:focus-visible, input:focus-visible, textarea:focus-visible, select:focus-visible {
+    outline: 3px solid #82c9a5; outline-offset: 2px;
+  }
+  .topbar {
+    position: sticky; z-index: 5; top: 0; display: flex; align-items: center;
+    justify-content: space-between; height: 68px; padding: 0 max(22px, calc((100vw - 1180px) / 2));
+    background: rgba(255,255,255,.94); border-bottom: 1px solid var(--line); backdrop-filter: blur(12px);
+  }
+  .brand { display: flex; align-items: center; gap: 11px; color: var(--ink); text-decoration: none; }
+  .brand-mark {
+    display: grid; place-items: center; width: 38px; height: 38px; border-radius: 12px;
+    background: var(--green); color: #fff; font-size: 15px; font-weight: 800; letter-spacing: -.05em;
+  }
+  .brand-name { font-size: 19px; font-weight: 800; letter-spacing: -.04em; }
+  .campus-pill { padding: 7px 12px; border-radius: 999px; background: var(--green-soft); color: var(--green-dark); font-size: 13px; font-weight: 700; }
+  .account { display: flex; align-items: center; gap: 12px; }
+  .anon-state { color: var(--muted); font-size: 13px; }
+  .logout { border: 0; background: transparent; color: var(--green-dark); font-weight: 800; }
+  .layout {
+    display: grid; grid-template-columns: 220px minmax(0, 620px) 250px; gap: 26px;
+    max-width: 1180px; margin: 30px auto; padding: 0 20px; align-items: start;
+  }
+  .sidebar, .right-rail { position: sticky; top: 92px; }
+  .side-title { margin: 0 0 12px 10px; color: var(--muted); font-size: 11px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; }
+  .category-list { display: grid; gap: 5px; }
+  .category-btn {
+    display: flex; align-items: center; gap: 12px; width: 100%; padding: 11px 12px;
+    border: 0; border-radius: 12px; background: transparent; color: #536159; text-align: left; font-weight: 700;
+  }
+  .category-btn:hover { background: #eaf0ec; }
+  .category-btn.active { background: var(--green-soft); color: var(--green-dark); }
+  .category-icon { display: grid; place-items: center; width: 24px; font-size: 17px; }
+  .side-note, .rail-card { padding: 17px; border: 1px solid var(--line); border-radius: 16px; background: var(--paper); }
+  .side-note { margin-top: 24px; color: var(--muted); font-size: 13px; line-height: 1.55; }
+  .side-note strong { display: block; margin-bottom: 5px; color: var(--ink); }
+  .feed-head { margin: 2px 0 19px; }
+  .feed-head h1 { margin: 0; font-size: 27px; letter-spacing: -.05em; }
+  .feed-head p { margin: 4px 0 0; color: var(--muted); font-size: 14px; }
+  .card { border: 1px solid var(--line); border-radius: 17px; background: var(--paper); box-shadow: 0 2px 6px rgba(20,40,28,.025); }
+  .composer { margin-bottom: 18px; padding: 18px; }
+  .composer-top { display: flex; align-items: center; gap: 11px; margin-bottom: 13px; }
+  .avatar {
+    display: grid; flex: 0 0 auto; place-items: center; width: 38px; height: 38px;
+    border-radius: 50%; background: #f5e8dc; color: #8a512c; font-size: 14px; font-weight: 800;
+  }
+  .composer-prompt { font-size: 14px; font-weight: 800; }
+  .composer-hint { display: block; margin-top: 1px; color: var(--muted); font-size: 12px; }
+  textarea, input[type="search"], select {
+    width: 100%; border: 1px solid var(--line); border-radius: 11px; background: #fbfcfb; color: var(--ink);
+  }
+  textarea { min-height: 104px; padding: 13px; resize: vertical; line-height: 1.5; }
+  textarea::placeholder, input::placeholder { color: #99a49d; }
+  .composer-bottom { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-top: 12px; }
+  .compose-options { display: flex; align-items: center; gap: 10px; min-width: 0; }
+  select { width: auto; max-width: 175px; padding: 9px 28px 9px 10px; font-size: 13px; }
+  .char-count { color: var(--muted); font-size: 12px; white-space: nowrap; }
+  .primary-btn {
+    padding: 10px 17px; border: 0; border-radius: 10px; background: var(--green); color: white; font-weight: 800;
+  }
+  .primary-btn:hover { background: var(--green-dark); }
+  .primary-btn:disabled { opacity: .6; cursor: wait; }
+  .error { min-height: 0; margin: 0; color: var(--danger); font-size: 13px; }
+  .error:not(:empty) { margin-top: 9px; }
+  .feed-tools { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin: 20px 0 12px; }
+  .sort-tabs { display: flex; gap: 4px; padding: 4px; border-radius: 11px; background: #e9eeea; }
+  .sort-btn { padding: 7px 13px; border: 0; border-radius: 8px; background: transparent; color: var(--muted); font-size: 13px; font-weight: 800; }
+  .sort-btn.active { background: white; color: var(--ink); box-shadow: 0 1px 3px rgba(0,0,0,.08); }
+  .search { max-width: 220px; padding: 9px 12px; font-size: 13px; }
+  .post { margin-bottom: 12px; padding: 17px; }
+  .post-head { display: flex; align-items: center; gap: 10px; }
+  .post-head .avatar { width: 36px; height: 36px; background: #e9f1eb; color: var(--green); }
+  .post-author { font-size: 13px; font-weight: 800; }
+  .post-meta { margin-top: 1px; color: var(--muted); font-size: 12px; }
+  .tag { margin-left: auto; padding: 5px 9px; border-radius: 999px; background: #f1f4f2; color: #5d6a62; font-size: 11px; font-weight: 800; }
+  .post-text { margin: 14px 0 15px; white-space: pre-wrap; overflow-wrap: anywhere; line-height: 1.65; font-size: 15px; }
+  .post-actions { display: flex; align-items: center; gap: 8px; border-top: 1px solid #eff2ef; padding-top: 11px; }
+  .vote-group { display: flex; align-items: center; gap: 2px; padding: 3px; border-radius: 10px; background: #f4f7f4; }
+  .action-btn, .vote-btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: 6px; min-height: 34px;
+    padding: 6px 9px; border: 0; border-radius: 8px; background: transparent; color: #617067;
+    font-size: 12px; font-weight: 800;
+  }
+  .action-btn:hover, .vote-btn:hover { background: #edf2ee; color: var(--green-dark); }
+  .vote-btn.selected { background: var(--green-soft); color: var(--green-dark); }
+  .reply-panel { margin-top: 12px; padding-top: 12px; border-top: 1px solid #eff2ef; }
+  .reply-list { display: grid; gap: 11px; margin-bottom: 13px; }
+  .reply { display: flex; align-items: flex-start; gap: 9px; font-size: 13px; line-height: 1.5; }
+  .reply .avatar { width: 28px; height: 28px; font-size: 11px; }
+  .reply-content { min-width: 0; overflow-wrap: anywhere; }
+  .reply-author { margin-right: 5px; font-weight: 800; }
+  .reply-time { color: var(--muted); font-size: 11px; }
+  .reply-form { display: flex; gap: 8px; }
+  .reply-form input { min-width: 0; padding: 9px 11px; font-size: 13px; }
+  .reply-form button { padding: 8px 12px; border: 0; border-radius: 9px; background: var(--green); color: #fff; font-size: 12px; font-weight: 800; }
+  .reply-error { margin-top: 6px; }
+  .empty, .loading { padding: 34px 20px; color: var(--muted); text-align: center; font-size: 14px; }
+  .right-rail { display: grid; gap: 13px; }
+  .rail-card h2 { margin: 0 0 9px; font-size: 14px; }
+  .rail-card p { margin: 0; color: var(--muted); font-size: 13px; line-height: 1.6; }
+  .trend { display: flex; justify-content: space-between; gap: 8px; margin-top: 12px; font-size: 13px; font-weight: 800; }
+  .trend span:last-child { color: #9aa59e; font-size: 11px; font-weight: 600; }
+  .guideline { display: flex; gap: 9px; margin-top: 11px; color: #536159; font-size: 12px; line-height: 1.5; }
+  .guideline strong { color: var(--green); }
+  @media (max-width: 1020px) {
+    .layout { grid-template-columns: 190px minmax(0, 620px); justify-content: center; }
+    .right-rail { display: none; }
+  }
+  @media (max-width: 680px) {
+    .topbar { height: 60px; padding: 0 15px; }
+    .brand-mark { width: 34px; height: 34px; }
+    .brand-name { font-size: 17px; }
+    .campus-pill { padding: 6px 9px; font-size: 11px; }
+    .anon-state { display: none; }
+    .layout { display: block; margin: 18px auto; padding: 0 13px; }
+    .sidebar { position: static; margin-bottom: 14px; overflow-x: auto; }
+    .side-title, .side-note { display: none; }
+    .category-list { display: flex; width: max-content; min-width: 100%; gap: 6px; }
+    .category-btn { width: auto; padding: 8px 11px; border: 1px solid var(--line); background: #fff; white-space: nowrap; font-size: 13px; }
+    .category-btn.active { border-color: #b7d9c4; }
+    .category-icon { display: none; }
+    .feed-head { margin: 0 0 15px; }
+    .feed-head h1 { font-size: 23px; }
+    .composer { padding: 14px; }
+    .composer-bottom { align-items: flex-end; }
+    .compose-options { flex-wrap: wrap; gap: 7px; }
+    select { max-width: 150px; }
+    .primary-btn { padding: 10px 13px; white-space: nowrap; }
+    .feed-tools { align-items: flex-start; flex-direction: column; }
+    .search { max-width: none; }
+    .post { padding: 14px; }
+  }
+  @media (prefers-reduced-motion: reduce) { *, *::before, *::after { scroll-behavior: auto !important; } }
 </style>
 </head>
 <body>
-<div class="wrap">
-  <header>
-    <div><h1>Dear diary,</h1><div id="who"></div></div>
-    <button class="ghost" id="logout">Log out</button>
-  </header>
+<header class="topbar">
+  <a class="brand" href="phase2.html" aria-label="Legon Loop home">
+    <span class="brand-mark" aria-hidden="true">ll</span><span class="brand-name">legon loop</span>
+  </a>
+  <span class="campus-pill">● &nbsp;University of Ghana</span>
+  <div class="account"><span class="anon-state">You’re posting anonymously</span><button class="logout" id="logout" type="button">Log out</button></div>
+</header>
 
-  <form class="card" id="entryForm">
-    <div class="row">
-      <div><label for="title">Title</label><input id="title" maxlength="80" required></div>
-      <div>
-        <label for="mood">Mood</label>
-        <select id="mood">
-          <option>Happy</option><option>Chill</option><option>Stressed</option>
-          <option>Sad</option><option>Hyped</option>
-        </select>
+<div class="layout">
+  <aside class="sidebar" aria-label="Feed categories">
+    <h2 class="side-title">Your campus</h2>
+    <nav class="category-list" id="categories">
+      <button class="category-btn active" type="button" data-category="All"><span class="category-icon">⌂</span> All posts</button>
+      <button class="category-btn" type="button" data-category="Campus"><span class="category-icon">◉</span> Campus life</button>
+      <button class="category-btn" type="button" data-category="Question"><span class="category-icon">?</span> Questions</button>
+      <button class="category-btn" type="button" data-category="Confession"><span class="category-icon">♡</span> Confessions</button>
+      <button class="category-btn" type="button" data-category="Lost & Found"><span class="category-icon">⌕</span> Lost &amp; found</button>
+      <button class="category-btn" type="button" data-category="Opportunity"><span class="category-icon">↗</span> Opportunities</button>
+    </nav>
+    <div class="side-note"><strong>Your campus, your voice.</strong>Share what’s happening around Legon. Posts and replies are anonymous to other students.</div>
+  </aside>
+
+  <main>
+    <div class="feed-head">
+      <h1>What’s happening?</h1>
+      <p>A little closer to campus. A little closer to each other.</p>
+    </div>
+
+    <form class="card composer" id="postForm">
+      <div class="composer-top">
+        <div class="avatar" aria-hidden="true">?</div>
+        <div><div class="composer-prompt">Start a conversation</div><span class="composer-hint">Your post is anonymous</span></div>
       </div>
-    </div>
-    <label for="text">What happened today?</label>
-    <textarea id="text" required></textarea>
-    <div id="err" role="alert"></div>
-    <div class="actions">
-      <button type="submit" id="saveBtn">Save entry</button>
-      <button type="button" class="ghost" id="cancelEdit" hidden>Cancel</button>
-    </div>
-  </form>
+      <label for="postText" class="sr-only">Your post</label>
+      <textarea id="postText" maxlength="500" placeholder="What’s on your mind, Legon?" required></textarea>
+      <div class="composer-bottom">
+        <div class="compose-options">
+          <label class="sr-only" for="postCategory">Choose a category</label>
+          <select id="postCategory">
+            <option value="Campus">Campus life</option>
+            <option value="Question">Question</option>
+            <option value="Confession">Confession</option>
+            <option value="Lost & Found">Lost &amp; found</option>
+            <option value="Opportunity">Opportunity</option>
+          </select>
+          <span class="char-count" id="charCount">0 / 500</span>
+        </div>
+        <button class="primary-btn" id="postButton" type="submit">Post anonymously</button>
+      </div>
+      <p class="error" id="postError" role="alert"></p>
+    </form>
 
-  <input class="search" id="search" type="search" placeholder="Search your entries" aria-label="Search entries">
-  <section id="entries" aria-live="polite"></section>
+    <div class="feed-tools">
+      <div class="sort-tabs" role="group" aria-label="Sort posts">
+        <button class="sort-btn active" type="button" data-sort="latest">Latest</button>
+        <button class="sort-btn" type="button" data-sort="top">Top</button>
+      </div>
+      <label class="sr-only" for="search">Search posts</label>
+      <input class="search" id="search" type="search" placeholder="Search the feed">
+    </div>
+    <section id="feed" aria-live="polite"><div class="card loading">Loading the campus feed…</div></section>
+  </main>
+
+  <aside class="right-rail">
+    <section class="rail-card">
+      <h2>Welcome to Legon Loop</h2>
+      <p>A shared space for the University of Ghana community. Join the conversation and look out for one another.</p>
+    </section>
+    <section class="rail-card">
+      <h2>Community guidelines</h2>
+      <div class="guideline"><strong>01</strong><span>Be kind. Disagree with ideas, not people.</span></div>
+      <div class="guideline"><strong>02</strong><span>Protect people’s privacy. Don’t share personal details.</span></div>
+      <div class="guideline"><strong>03</strong><span>Keep it relevant and safe for the campus community.</span></div>
+    </section>
+    <section class="rail-card">
+      <h2>Good to know</h2>
+      <p>Your email is never shown on posts or replies. Please don’t include identifying information in what you share.</p>
+    </section>
+  </aside>
 </div>
+
+<style>.sr-only { position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0; }</style>
 
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
   import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
   import {
-    getFirestore, collection, addDoc, updateDoc, deleteDoc, doc, query, orderBy, onSnapshot
+    getFirestore, collection, addDoc, doc, query, orderBy, limit, onSnapshot,
+    runTransaction, serverTimestamp
   } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
   import { firebaseConfig } from "./firebase-config.js";
 
   const app = initializeApp(firebaseConfig);
   const auth = getAuth(app);
   const db = getFirestore(app);
-
-  const list = document.getElementById('entries');
-  const saveBtn = document.getElementById('saveBtn');
-  const cancelBtn = document.getElementById('cancelEdit');
-  const searchBox = document.getElementById('search');
-  const errBox = document.getElementById('err');
-  let entries = [], editingId = null, col = null;
+  const postsRef = collection(db, 'posts');
+  const feed = document.getElementById('feed');
+  const postForm = document.getElementById('postForm');
+  const postText = document.getElementById('postText');
+  const postButton = document.getElementById('postButton');
+  const postError = document.getElementById('postError');
+  const search = document.getElementById('search');
+  const categories = document.getElementById('categories');
+  const commentsByPost = new Map();
+  let posts = [];
+  let currentUser = null;
+  let selectedCategory = 'All';
+  let selectedSort = 'latest';
+  let unsubscribeFeed = null;
+  const voting = new Set();
+  const writingReply = new Set();
 
   onAuthStateChanged(auth, function (user) {
-    if (!user) { window.location.href = 'htmldiary.html'; return; }
-    document.getElementById('who').textContent = user.email;
-    col = collection(db, 'users', user.uid, 'entries');
-    onSnapshot(query(col, orderBy('date', 'desc')), function (snap) {
-      entries = snap.docs.map(function (d) { return Object.assign({ id: d.id }, d.data()); });
-      render();
-    }, function () { errBox.textContent = 'Could not load entries. Check your Firestore rules.'; });
-  });
-
-  function render() {
-    const q = searchBox.value.trim().toLowerCase();
-    const shown = entries.filter(function (e) {
-      return !q || (e.title + ' ' + e.text + ' ' + e.mood).toLowerCase().includes(q);
-    });
-    list.innerHTML = '';
-    if (!shown.length) {
-      list.innerHTML = '<div class="card empty">' + (entries.length
-        ? 'No entries match your search.' : 'No entries yet. Write your first one above.') + '</div>';
+    if (!user) {
+      window.location.href = 'htmldiary.html';
       return;
     }
-    shown.forEach(function (e) {
-      const card = document.createElement('article');
-      card.className = 'card entry';
-      const h = document.createElement('h2'); h.textContent = e.title;
-      const m = document.createElement('div'); m.className = 'meta';
-      m.textContent = new Date(e.date).toLocaleString() + ' | Mood: ' + e.mood;
-      const p = document.createElement('p'); p.textContent = e.text;
-      const edit = document.createElement('button'); edit.textContent = 'Edit entry';
-      edit.addEventListener('click', function () {
-        editingId = e.id;
-        document.getElementById('title').value = e.title;
-        document.getElementById('mood').value = e.mood;
-        document.getElementById('text').value = e.text;
-        saveBtn.textContent = 'Update entry';
-        cancelBtn.hidden = false;
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-        document.getElementById('title').focus();
-      });
-      const del = document.createElement('button'); del.className = 'ghost'; del.textContent = 'Delete entry';
-      del.addEventListener('click', async function () {
-        if (!confirm('Delete this entry?')) return;
-        try { await deleteDoc(doc(col, e.id)); }
-        catch { errBox.textContent = 'Could not delete the entry.'; }
-      });
-      const actions = document.createElement('div'); actions.className = 'actions';
-      actions.append(edit, del);
-      card.append(h, m, p, actions);
-      list.appendChild(card);
-    });
-  }
-
-  function resetForm() {
-    editingId = null;
-    document.getElementById('entryForm').reset();
-    saveBtn.textContent = 'Save entry';
-    cancelBtn.hidden = true;
-  }
-
-  document.getElementById('entryForm').addEventListener('submit', async function (ev) {
-    ev.preventDefault();
-    errBox.textContent = '';
-    const data = {
-      title: document.getElementById('title').value.trim(),
-      mood: document.getElementById('mood').value,
-      text: document.getElementById('text').value.trim()
-    };
-    try {
-      if (editingId) await updateDoc(doc(col, editingId), data);
-      else await addDoc(col, Object.assign({ date: new Date().toISOString() }, data));
-      resetForm();
-    } catch { errBox.textContent = 'Could not save. Check your connection and Firestore rules.'; }
+    currentUser = user;
+    if (!unsubscribeFeed) {
+      unsubscribeFeed = onSnapshot(
+        query(postsRef, orderBy('createdAt', 'desc'), limit(60)),
+        function (snapshot) {
+          posts = snapshot.docs.map(function (item) {
+            return Object.assign({ id: item.id }, item.data());
+          });
+          renderFeed();
+        },
+        function (error) {
+          console.error('Could not load campus posts:', error);
+          feed.replaceChildren(messageCard('Could not load the campus feed. Check your connection and Firestore access.'));
+        }
+      );
+    }
   });
 
-  cancelBtn.addEventListener('click', resetForm);
-  searchBox.addEventListener('input', render);
-  document.getElementById('logout').addEventListener('click', function () { signOut(auth); });
+  function messageCard(text, className) {
+    const card = document.createElement('div');
+    card.className = 'card ' + (className || 'empty');
+    card.textContent = text;
+    return card;
+  }
+
+  function timestampDate(value) {
+    if (value && typeof value.toDate === 'function') return value.toDate();
+    if (value) {
+      const date = new Date(value);
+      if (!Number.isNaN(date.getTime())) return date;
+    }
+    return new Date();
+  }
+
+  function relativeTime(value) {
+    const seconds = Math.max(0, Math.floor((Date.now() - timestampDate(value).getTime()) / 1000));
+    if (seconds < 60) return 'just now';
+    if (seconds < 3600) return Math.floor(seconds / 60) + 'm ago';
+    if (seconds < 86400) return Math.floor(seconds / 3600) + 'h ago';
+    if (seconds < 604800) return Math.floor(seconds / 86400) + 'd ago';
+    return timestampDate(value).toLocaleDateString();
+  }
+
+  function makeButton(text, className, label) {
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.className = className;
+    button.textContent = text;
+    if (label) button.setAttribute('aria-label', label);
+    return button;
+  }
+
+  function renderFeed() {
+    const term = search.value.trim().toLowerCase();
+    const shown = posts.filter(function (post) {
+      return (selectedCategory === 'All' || post.category === selectedCategory)
+        && (!term || String(post.text || '').toLowerCase().includes(term));
+    });
+    if (selectedSort === 'top') {
+      shown.sort(function (a, b) {
+        const scoreA = (a.upvotes || 0) - (a.downvotes || 0);
+        const scoreB = (b.upvotes || 0) - (b.downvotes || 0);
+        return scoreB - scoreA || timestampDate(b.createdAt) - timestampDate(a.createdAt);
+      });
+    }
+    feed.replaceChildren();
+    if (!shown.length) {
+      feed.appendChild(messageCard(posts.length ? 'No posts match this view. Try another category or search.' : 'No posts yet. Start the conversation!', 'empty'));
+      return;
+    }
+    shown.forEach(function (post) { feed.appendChild(renderPost(post)); });
+  }
+
+  function renderPost(post) {
+    const card = document.createElement('article');
+    card.className = 'card post';
+    const head = document.createElement('div');
+    head.className = 'post-head';
+    const avatar = document.createElement('div');
+    avatar.className = 'avatar';
+    avatar.setAttribute('aria-hidden', 'true');
+    avatar.textContent = '•';
+    const authorWrap = document.createElement('div');
+    const author = document.createElement('div');
+    author.className = 'post-author';
+    author.textContent = 'Anonymous';
+    const meta = document.createElement('div');
+    meta.className = 'post-meta';
+    meta.textContent = 'University of Ghana · ' + relativeTime(post.createdAt);
+    authorWrap.append(author, meta);
+    const tag = document.createElement('span');
+    tag.className = 'tag';
+    tag.textContent = post.category || 'Campus';
+    head.append(avatar, authorWrap, tag);
+
+    const text = document.createElement('p');
+    text.className = 'post-text';
+    text.textContent = post.text || '';
+
+    const actions = document.createElement('div');
+    actions.className = 'post-actions';
+    const votes = post.votes || {};
+    const ownVote = currentUser ? votes[currentUser.uid] : null;
+    const voteGroup = document.createElement('div');
+    voteGroup.className = 'vote-group';
+    const up = makeButton('▲ ' + (post.upvotes || 0), 'vote-btn' + (ownVote === 1 ? ' selected' : ''), 'Upvote post');
+    const down = makeButton('▼ ' + (post.downvotes || 0), 'vote-btn' + (ownVote === -1 ? ' selected' : ''), 'Downvote post');
+    up.setAttribute('aria-pressed', String(ownVote === 1));
+    down.setAttribute('aria-pressed', String(ownVote === -1));
+    up.addEventListener('click', function () { changeVote(post, 1); });
+    down.addEventListener('click', function () { changeVote(post, -1); });
+    voteGroup.append(up, down);
+    const replyState = commentsByPost.get(post.id);
+    const replies = makeButton('◯  ' + (replyState && replyState.items ? replyState.items.length + ' replies' : 'Reply'), 'action-btn', 'Show replies');
+    replies.setAttribute('aria-expanded', String(Boolean(replyState && replyState.open)));
+    replies.addEventListener('click', function () { toggleReplies(post.id); });
+    actions.append(voteGroup, replies);
+    card.append(head, text, actions);
+
+    if (replyState && replyState.open) card.appendChild(renderReplies(post.id, replyState));
+    return card;
+  }
+
+  async function changeVote(post, value) {
+    if (!currentUser || voting.has(post.id)) return;
+    voting.add(post.id);
+    try {
+      const postRef = doc(db, 'posts', post.id);
+      await runTransaction(db, async function (transaction) {
+        const snapshot = await transaction.get(postRef);
+        if (!snapshot.exists()) throw new Error('This post is no longer available.');
+        const data = snapshot.data();
+        const votes = Object.assign({}, data.votes || {});
+        const previous = votes[currentUser.uid] || 0;
+        const next = previous === value ? 0 : value;
+        let upvotes = data.upvotes || 0;
+        let downvotes = data.downvotes || 0;
+        if (previous === 1) upvotes -= 1;
+        if (previous === -1) downvotes -= 1;
+        if (next === 1) upvotes += 1;
+        if (next === -1) downvotes += 1;
+        if (next) votes[currentUser.uid] = next;
+        else delete votes[currentUser.uid];
+        transaction.update(postRef, { votes: votes, upvotes: upvotes, downvotes: downvotes });
+      });
+    } catch (error) {
+      console.error('Could not save vote:', error);
+      postError.textContent = 'Your vote could not be saved. Check your connection and Firestore access.';
+    } finally {
+      voting.delete(post.id);
+    }
+  }
+
+  function toggleReplies(postId) {
+    let state = commentsByPost.get(postId);
+    if (!state) {
+      state = { items: [], open: true, unsubscribe: null, error: '' };
+      commentsByPost.set(postId, state);
+    } else {
+      state.open = !state.open;
+    }
+    if (state.open && !state.unsubscribe) {
+      state.unsubscribe = onSnapshot(
+        query(collection(db, 'posts', postId, 'comments'), orderBy('createdAt', 'asc')),
+        function (snapshot) {
+          state.items = snapshot.docs.map(function (item) {
+            return Object.assign({ id: item.id }, item.data());
+          });
+          state.error = '';
+          renderFeed();
+        },
+        function (error) {
+          console.error('Could not load replies:', error);
+          state.error = 'Could not load replies. Check your Firestore access.';
+          renderFeed();
+        }
+      );
+    }
+    renderFeed();
+  }
+
+  function renderReplies(postId, state) {
+    const panel = document.createElement('section');
+    panel.className = 'reply-panel';
+    panel.setAttribute('aria-label', 'Replies');
+    const list = document.createElement('div');
+    list.className = 'reply-list';
+    if (state.error) {
+      const error = document.createElement('p');
+      error.className = 'error';
+      error.textContent = state.error;
+      list.appendChild(error);
+    } else if (state.items.length) {
+      state.items.forEach(function (item) {
+        const row = document.createElement('div');
+        row.className = 'reply';
+        const avatar = document.createElement('div');
+        avatar.className = 'avatar';
+        avatar.setAttribute('aria-hidden', 'true');
+        avatar.textContent = '•';
+        const content = document.createElement('div');
+        content.className = 'reply-content';
+        const name = document.createElement('span');
+        name.className = 'reply-author';
+        name.textContent = 'Anonymous';
+        const time = document.createElement('span');
+        time.className = 'reply-time';
+        time.textContent = relativeTime(item.createdAt);
+        const body = document.createElement('span');
+        body.textContent = item.text || '';
+        content.append(name, time, document.createTextNode(' '), body);
+        row.append(avatar, content);
+        list.appendChild(row);
+      });
+    } else if (!state.error) {
+      const empty = document.createElement('div');
+      empty.className = 'post-meta';
+      empty.textContent = 'No replies yet. Be the first to respond.';
+      list.appendChild(empty);
+    }
+
+    const form = document.createElement('form');
+    form.className = 'reply-form';
+    const input = document.createElement('input');
+    input.type = 'text';
+    input.maxLength = 300;
+    input.required = true;
+    input.placeholder = 'Write an anonymous reply…';
+    input.setAttribute('aria-label', 'Write an anonymous reply');
+    const button = document.createElement('button');
+    button.type = 'submit';
+    button.textContent = writingReply.has(postId) ? 'Sending…' : 'Reply';
+    button.disabled = writingReply.has(postId);
+    form.append(input, button);
+    const error = document.createElement('p');
+    error.className = 'error reply-error';
+    error.textContent = state.replyError || '';
+    form.addEventListener('submit', async function (event) {
+      event.preventDefault();
+      const text = input.value.trim();
+      if (!text || !currentUser || writingReply.has(postId)) return;
+      state.replyError = '';
+      writingReply.add(postId);
+      renderFeed();
+      try {
+        await addDoc(collection(db, 'posts', postId, 'comments'), {
+          authorId: currentUser.uid,
+          text: text,
+          createdAt: serverTimestamp()
+        });
+      } catch (err) {
+        console.error('Could not save reply:', err);
+        state.replyError = 'Could not send your reply. Check your connection and Firestore access.';
+      } finally {
+        writingReply.delete(postId);
+        renderFeed();
+      }
+    });
+    panel.append(list, form, error);
+    return panel;
+  }
+
+  postForm.addEventListener('submit', async function (event) {
+    event.preventDefault();
+    if (!currentUser) return;
+    const text = postText.value.trim();
+    if (!text) {
+      postError.textContent = 'Write something before posting.';
+      postText.focus();
+      return;
+    }
+    postError.textContent = '';
+    postButton.disabled = true;
+    postButton.textContent = 'Posting…';
+    try {
+      await addDoc(postsRef, {
+        authorId: currentUser.uid,
+        category: document.getElementById('postCategory').value,
+        campus: 'University of Ghana',
+        text: text,
+        votes: {},
+        upvotes: 0,
+        downvotes: 0,
+        createdAt: serverTimestamp()
+      });
+      postForm.reset();
+      document.getElementById('charCount').textContent = '0 / 500';
+    } catch (error) {
+      console.error('Could not create post:', error);
+      postError.textContent = 'Your post could not be published. Check your connection and Firestore access.';
+    } finally {
+      postButton.disabled = false;
+      postButton.textContent = 'Post anonymously';
+    }
+  });
+
+  postText.addEventListener('input', function () {
+    document.getElementById('charCount').textContent = postText.value.length + ' / 500';
+  });
+  search.addEventListener('input', renderFeed);
+  categories.addEventListener('click', function (event) {
+    const button = event.target.closest('[data-category]');
+    if (!button) return;
+    selectedCategory = button.dataset.category;
+    categories.querySelectorAll('[data-category]').forEach(function (item) {
+      item.classList.toggle('active', item === button);
+    });
+    renderFeed();
+  });
+  document.querySelectorAll('[data-sort]').forEach(function (button) {
+    button.addEventListener('click', function () {
+      selectedSort = button.dataset.sort;
+      document.querySelectorAll('[data-sort]').forEach(function (item) {
+        item.classList.toggle('active', item === button);
+      });
+      renderFeed();
+    });
+  });
+  document.getElementById('logout').addEventListener('click', async function () {
+    try {
+      await signOut(auth);
+    } catch (error) {
+      console.error('Could not sign out:', error);
+      postError.textContent = 'Could not log out. Please try again.';
+    }
+  });
 </script>
 </body>
 </html>
