@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#f4f0e7">
 <title>Legon Loop | Campus community</title>
+<link rel="icon" href="LEGONLOOP.png" type="image/png">
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -137,6 +138,23 @@
   .trend span:last-child { color: #9aa59e; font-size: 11px; font-weight: 600; }
   .guideline { display: flex; gap: 9px; margin-top: 11px; color: #625c70; font-size: 12px; line-height: 1.5; }
   .guideline strong { color: var(--accent); }
+  .profile-shell { display: grid; gap: 14px; }
+  .profile-card { padding: 22px; }
+  .profile-top { display: flex; align-items: center; gap: 14px; margin-bottom: 16px; }
+  .profile-avatar { display: grid; place-items: center; width: 68px; height: 68px; border-radius: 50%; background: linear-gradient(135deg, #eee8ff, #d9e8ff); color: var(--accent-dark); font-size: 24px; font-weight: 800; }
+  .profile-meta { flex: 1; min-width: 0; }
+  .profile-meta h2 { margin: 0; font-size: 28px; letter-spacing: -.05em; }
+  .profile-meta p { margin: 5px 0 0; color: var(--muted); font-size: 13px; }
+  .profile-form { display: grid; gap: 14px; }
+  .form-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+  .field { display: grid; gap: 6px; }
+  .field label { font-size: 12px; font-weight: 800; letter-spacing: .04em; text-transform: uppercase; color: var(--muted); }
+  .field input, .field textarea { width: 100%; padding: 11px 12px; border: 1px solid var(--line); border-radius: 12px; background: #fffefa; color: var(--ink); font: inherit; }
+  .field textarea { min-height: 88px; resize: vertical; }
+  .profile-actions { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-top: 6px; }
+  .profile-status { font-size: 12px; font-weight: 700; }
+  .profile-status.success { color: #0a7d4a; }
+  .profile-status.error { color: var(--danger); }
   .layout { display: block; max-width: 760px; margin: 28px auto 110px; padding: 0 20px; }
   .app-shell { min-width: 0; }
   .app-screen[hidden] { display: none; }
@@ -191,10 +209,25 @@
   .chat-bubble { max-width: 82%; padding: 10px 12px; border-radius: 15px 15px 15px 5px; background: var(--paper); box-shadow: 0 2px 6px rgba(43,31,74,.06); font-size: 13px; line-height: 1.5; }
   .chat-bubble.mine { align-self: flex-end; border-radius: 15px 15px 5px 15px; background: var(--accent); color: #fff; }
   .chat-time { display: block; margin-top: 4px; opacity: .65; font-size: 9px; text-align: right; }
-  .chat-form { display: flex; gap: 8px; padding: 11px; border: 1px solid var(--line); border-top: 0; border-radius: 0 0 16px 16px; background: var(--paper); }
-  .chat-form input { min-width: 0; flex: 1; padding: 10px 12px; border: 1px solid var(--line); border-radius: 999px; background: #faf8f3; }
+  .chat-form { display: grid; grid-template-columns: minmax(0, 1fr) minmax(120px, 180px) 40px; gap: 8px; padding: 11px; border: 1px solid var(--line); border-top: 0; border-radius: 0 0 16px 16px; background: var(--paper); }
+  .chat-form input { min-width: 0; padding: 10px 12px; border: 1px solid var(--line); border-radius: 999px; background: #faf8f3; }
+  .media-controls { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-top: 10px; }
+  .media-button { display: inline-flex; align-items: center; justify-content: center; min-height: 36px; padding: 7px 12px; border: 1px solid var(--line); border-radius: 8px; background: var(--paper); color: var(--ink); font: inherit; font-size: 12px; font-weight: 700; cursor: pointer; }
+  .media-button:hover { background: #f3efe6; }
+  .media-status { color: var(--muted); font-size: 12px; }
+  .media-preview { display: block; max-width: min(100%, 360px); max-height: 260px; margin-top: 10px; border-radius: 8px; object-fit: contain; }
+  .post-media { display: block; max-width: 100%; max-height: 420px; margin: 10px 0; border-radius: 8px; }
+  .reply-form { flex-wrap: wrap; }
+  .reply-form .media-status { flex: 1 1 100%; }
+  .chat-form { grid-template-columns: minmax(0, 1fr) minmax(100px, 160px) auto auto 40px; align-items: center; }
+  .chat-form .media-button { min-height: 40px; }
+  .chat-form .media-status { grid-column: 1 / -1; }
   .chat-form button { width: 40px; height: 40px; border: 0; border-radius: 50%; background: var(--accent); color: #fff; font-size: 17px; }
-  .bottom-nav { position: fixed; z-index: 8; right: 0; bottom: 0; left: 0; display: grid; grid-template-columns: repeat(4, 1fr); max-width: 760px; margin: 0 auto; padding: 8px 10px max(8px, env(safe-area-inset-bottom)); border: 1px solid var(--line); border-bottom: 0; border-radius: 18px 18px 0 0; background: rgba(255,253,248,.97); box-shadow: 0 -7px 24px rgba(43,31,74,.07); backdrop-filter: blur(14px); }
+  .chat-form { grid-template-columns: minmax(0, 1fr) minmax(100px, 160px) auto 40px; align-items: center; }
+  .chat-form > button[type="submit"] { grid-column: 4; }
+  .chat-form .media-button { min-height: 40px; width: auto; border-radius: 8px; background: var(--paper); color: var(--ink); font-size: 12px; }
+  .chat-form .media-status { grid-column: 1 / -1; }
+  .bottom-nav { position: fixed; z-index: 8; right: 0; bottom: 0; left: 0; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); max-width: 760px; margin: 0 auto; padding: 8px 10px max(8px, env(safe-area-inset-bottom)); border: 1px solid var(--line); border-bottom: 0; border-radius: 18px 18px 0 0; background: rgba(255,253,248,.97); box-shadow: 0 -7px 24px rgba(43,31,74,.07); backdrop-filter: blur(14px); }
   .nav-btn { display: grid; justify-items: center; gap: 3px; padding: 5px 3px; border: 0; border-radius: 11px; background: transparent; color: #898392; font-size: 10px; font-weight: 700; }
   .nav-btn.active { color: var(--accent); }
   .nav-icon { font-size: 19px; line-height: 1; }
@@ -206,6 +239,11 @@
     .layout { display: block; max-width: 760px; }
   }
   @media (max-width: 680px) {
+    .chat-form { grid-template-columns: minmax(0, 1fr) 40px; }
+    .chat-form input[type="url"] { grid-column: 1 / -1; }
+    .chat-form > button[type="submit"] { grid-column: 2; }
+    .chat-form .media-button { grid-column: 1; }
+    .chat-form .media-status { grid-column: 1 / -1; }
     .topbar { height: 60px; padding: 0 15px; }
     .brand-mark { width: 34px; height: 34px; }
     .brand-name { font-size: 17px; }
@@ -229,6 +267,7 @@
   }
   @media (prefers-reduced-motion: reduce) { *, *::before, *::after { scroll-behavior: auto !important; } }
 </style>
+<link rel="stylesheet" href="styles.css">
 </head>
 <body>
 <header class="topbar">
@@ -285,7 +324,15 @@
           <span class="tag">ANONYMOUS</span>
         </div>
         <label for="postText" class="sr-only">Your post</label>
-        <textarea id="postText" maxlength="500" placeholder="What’s on your mind?" required></textarea>
+        <textarea id="postText" maxlength="500" placeholder="What’s on your mind?"></textarea>
+        <div class="media-controls">
+          <label class="media-button" for="postPhoto">Take or choose photo</label>
+          <input class="sr-only" id="postPhoto" type="file" accept="image/*" capture="environment">
+          <span id="postPhotoStatus" class="media-status" aria-live="polite"></span>
+          <button class="media-button" id="recordPostVoice" type="button">Record voice note</button>
+          <span id="postVoiceStatus" class="media-status" aria-live="polite"></span>
+        </div>
+        <img id="postPhotoPreview" class="media-preview" alt="Selected photo preview" hidden>
         <div class="composer-bottom">
           <div class="compose-options">
             <label class="sr-only" for="postCategory">Choose a category</label>
@@ -368,7 +415,7 @@
         <h1>Your people.</h1>
         <p>Still anonymous. A little less strangers.</p>
       </header>
-      <div class="demo-banner">Demo screen: sample conversations are stored only in this page preview and are not sent to anyone.</div>
+      <div class="demo-banner">Conversations and messages are saved to your account.</div>
       <label class="sr-only" for="inboxSearch">Find a pseudonym</label>
       <input class="screen-search" id="inboxSearch" type="search" placeholder="⌕  Find a pseudonym">
       <div class="inbox-tabs" role="group" aria-label="Filter conversations">
@@ -404,10 +451,10 @@
       <div class="chat-header">
         <button class="back-btn" type="button" data-screen="inbox" aria-label="Back to inbox">←</button>
         <span class="person-avatar" id="chatAvatar" aria-hidden="true">🦉</span>
-        <span class="person-info"><span class="person-name" id="chatName">Night Owl 27</span><span class="person-meta">◉ &nbsp; Anonymous campus connection</span></span>
-        <span class="tag">DEMO</span>
+        <span class="person-info"><span class="person-name" id="chatName">Night Owl 27</span><span class="person-meta" id="chatPresence">Active now</span></span>
+        <span class="tag">LIVE</span>
       </div>
-      <div class="demo-banner" style="margin-top:10px">Demo conversation: messages you type appear here temporarily and are not sent or saved.</div>
+      <div class="demo-banner" style="margin-top:10px">Messages are visible to participants in this conversation.</div>
       <div class="chat-messages" id="chatMessages" aria-live="polite">
         <span class="chat-day">TODAY · 9:32 PM</span>
         <div class="chat-bubble">Hey! Saw your post about late-night study spots. Still looking for a crew?<span class="chat-time">9:32 PM</span></div>
@@ -416,9 +463,74 @@
       </div>
       <form class="chat-form" id="demoChatForm">
         <label class="sr-only" for="demoChatInput">Write a demo message</label>
-        <input id="demoChatInput" type="text" maxlength="300" placeholder="Message (demo only)…" autocomplete="off">
+        <input id="demoChatInput" type="text" maxlength="300" placeholder="Message…" autocomplete="off">
+        <label class="sr-only" for="chatAttachment">Optional attachment</label>
+        <input id="chatAttachment" type="url" maxlength="500" placeholder="Optional image URL" autocomplete="off">
+        <button class="media-button" id="recordChatVoice" type="button">Voice note</button>
+        <span id="chatVoiceStatus" class="media-status" aria-live="polite"></span>
         <button type="submit" aria-label="Add demo message">↑</button>
       </form>
+    </section>
+
+    <section class="app-screen" id="profileScreen" data-screen-panel="profile" hidden>
+      <header class="screen-head">
+        <p class="eyebrow">YOUR ACCOUNT</p>
+        <h1>Your profile.</h1>
+        <p>Keep your campus presence friendly and recognizable.</p>
+      </header>
+      <div class="profile-shell">
+        <div class="card profile-card">
+          <div class="profile-top">
+            <div class="profile-avatar" id="profileAvatar" aria-hidden="true">L</div>
+            <div class="profile-meta">
+              <h2 id="profileHeadline">Legonite</h2>
+              <p id="profileSubtitle">University of Ghana student</p>
+            </div>
+          </div>
+
+          <form class="profile-form" id="profileForm">
+            <div class="form-grid">
+              <div class="field">
+                <label for="profileDisplayName">Display name</label>
+                <input id="profileDisplayName" name="displayName" type="text" maxlength="40" placeholder="Your name or nickname">
+              </div>
+              <div class="field">
+                <label for="profilePronouns">Pronouns</label>
+                <input id="profilePronouns" name="pronouns" type="text" maxlength="20" placeholder="she/her, he/him, they/them">
+              </div>
+              <div class="field">
+                <label for="profileMajor">Major</label>
+                <input id="profileMajor" name="major" type="text" maxlength="60" placeholder="Computer Science">
+              </div>
+              <div class="field">
+                <label for="profileYear">Year</label>
+                <input id="profileYear" name="year" type="text" maxlength="30" placeholder="Level 200">
+              </div>
+            </div>
+
+            <div class="field">
+              <label for="profileBio">Short bio</label>
+              <textarea id="profileBio" name="bio" maxlength="180" placeholder="Tell other students a little about you."></textarea>
+            </div>
+
+            <div class="form-grid">
+              <div class="field">
+                <label for="profileInterests">Interests</label>
+                <input id="profileInterests" name="interests" type="text" maxlength="80" placeholder="Reading, football, design, tutoring">
+              </div>
+              <div class="field">
+                <label for="profileLocation">Location</label>
+                <input id="profileLocation" name="location" type="text" maxlength="60" placeholder="Legon, Accra">
+              </div>
+            </div>
+
+            <div class="profile-actions">
+              <span class="profile-status" id="profileStatus" aria-live="polite"></span>
+              <button class="primary-btn" id="saveProfileBtn" type="submit">Save profile</button>
+            </div>
+          </form>
+        </div>
+      </div>
     </section>
   </div>
 </div>
@@ -428,23 +540,21 @@
   <button class="nav-btn" type="button" data-screen="post"><span class="nav-icon">↗</span><span>Post</span></button>
   <button class="nav-btn" type="button" data-screen="requests"><span class="nav-icon">♙</span><span>Requests</span></button>
   <button class="nav-btn" type="button" data-screen="inbox"><span class="nav-icon">▤</span><span>Inbox</span></button>
+  <button class="nav-btn" type="button" data-screen="profile"><span class="nav-icon">◌</span><span>Profile</span></button>
 </nav>
 
 <style>.sr-only { position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0; }</style>
 
 <script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-  import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+  import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
   import {
-    getFirestore, collection, addDoc, doc, query, orderBy, limit, onSnapshot,
-    runTransaction, serverTimestamp
+    collection, addDoc, doc, query, orderBy, limit, onSnapshot,
+    runTransaction, serverTimestamp, where, getDoc, setDoc, updateDoc
   } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-  import { firebaseConfig } from "./firebase-config.js";
+  import { ref, uploadBytesResumable, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js";
+  import { auth, db, storage } from "./firebase-app.js";
   import { googleMapsApiKey } from "./google-maps-config.js";
 
-  const app = initializeApp(firebaseConfig);
-  const auth = getAuth(app);
-  const db = getFirestore(app);
   const postsRef = collection(db, 'posts');
   const feed = document.getElementById('feed');
   const postForm = document.getElementById('postForm');
@@ -467,15 +577,500 @@
   const writingReply = new Set();
   const openMaps = new Set();
   let selectedLocation = null;
+  let selectedPostPhoto = null;
+  let selectedPostVoice = null;
+  let selectedChatVoice = null;
   let mapsPromise = null;
   let inboxFilter = 'all';
+  const chatRoomsRef = collection(db, 'chatRooms');
+  const chatRooms = [];
+  let activeChatRoomId = null;
+  const roomListeners = new Map();
+  let presenceUnsubscribe = null;
+  let typingTimer = null;
 
-  onAuthStateChanged(auth, function (user) {
+  function buildInitials(value) {
+    const clean = String(value || 'Campus').trim();
+    if (!clean) return 'C';
+    const parts = clean.split(/\s+/).filter(Boolean).slice(0, 2);
+    if (!parts.length) return 'C';
+    return parts.map(function (part) { return part[0].toUpperCase(); }).join('');
+  }
+
+  async function uploadMedia(file, folder, maxBytes) {
+    if (!currentUser || !file) throw new Error('Sign in and select a media file first.');
+    let uploadFile = file;
+    let contentType = file.type.split(';')[0].toLowerCase();
+    if (folder === 'images' && file.size > 25 * 1024 * 1024) {
+      throw new Error('Choose a photo smaller than 25 MB.');
+    }
+    if (folder === 'images' && file.size > 1.5 * 1024 * 1024 && /^image\/(jpeg|png|webp)$/i.test(contentType)) {
+      if (!window.createImageBitmap) {
+        throw new Error('This browser cannot resize the photo. Choose a smaller JPEG, PNG, or WebP image.');
+      }
+      let bitmap;
+      try {
+        bitmap = await createImageBitmap(file);
+      } catch (error) {
+        throw new Error('This photo format is not supported by your browser. Try saving it as JPEG or PNG.');
+      }
+      const scale = Math.min(1, 1600 / Math.max(bitmap.width, bitmap.height));
+      const canvas = document.createElement('canvas');
+      canvas.width = Math.max(1, Math.round(bitmap.width * scale));
+      canvas.height = Math.max(1, Math.round(bitmap.height * scale));
+      const context = canvas.getContext('2d');
+      if (!context) {
+        bitmap.close();
+        throw new Error('Could not prepare this photo. Try a different image.');
+      }
+      context.drawImage(bitmap, 0, 0, canvas.width, canvas.height);
+      bitmap.close();
+      uploadFile = await new Promise(function (resolve, reject) {
+        canvas.toBlob(function (blob) {
+          if (blob) resolve(blob);
+          else reject(new Error('Could not resize this photo. Try a different image.'));
+        }, contentType === 'image/png' ? 'image/png' : contentType, 0.82);
+      });
+      contentType = uploadFile.type.split(';')[0].toLowerCase();
+    }
+    if (uploadFile.size > maxBytes) {
+      throw new Error(folder === 'images'
+        ? 'This photo is still larger than 8 MB after resizing. Choose a smaller image.'
+        : 'This media file is too large.');
+    }
+    const allowed = folder === 'audio'
+      ? /^audio\/(webm|ogg|mp4|mpeg|wav)$/i.test(contentType)
+      : /^image\/(jpeg|png|webp|gif)$/i.test(contentType);
+    if (!allowed) {
+      throw new Error(folder === 'images'
+        ? 'This photo format is not supported. Save it as JPEG, PNG, WebP, or GIF and try again.'
+        : 'This media type is not supported.');
+    }
+    const extension = contentType.split('/')[1].replace('jpeg', 'jpg');
+    const fileRef = ref(storage, 'users/' + currentUser.uid + '/' + folder + '/' + Date.now() + '-' + Math.random().toString(36).slice(2) + '.' + extension);
+    const uploadTask = uploadBytesResumable(fileRef, uploadFile, { contentType: contentType });
+    await new Promise(function (resolve, reject) {
+      uploadTask.on('state_changed', function (snapshot) {
+        if (folder === 'images') {
+          const percent = Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
+          document.getElementById('postPhotoStatus').textContent = 'Uploading photo… ' + percent + '%';
+          postButton.textContent = 'Uploading ' + percent + '%';
+        }
+      }, reject, resolve);
+    });
+    return getDownloadURL(fileRef);
+  }
+
+  function setupVoiceRecorder(button, status, onRecorded) {
+    let recorder = null;
+    let chunks = [];
+    let timeout = null;
+    button.addEventListener('click', async function () {
+      if (recorder && recorder.state === 'recording') {
+        recorder.stop();
+        return;
+      }
+      if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia || !window.MediaRecorder) {
+        status.textContent = 'Voice recording is not supported in this browser.';
+        return;
+      }
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        const mimeType = ['audio/webm;codecs=opus', 'audio/ogg;codecs=opus', 'audio/mp4'].find(function (type) {
+          return MediaRecorder.isTypeSupported(type);
+        });
+        recorder = new MediaRecorder(stream, mimeType ? { mimeType: mimeType } : undefined);
+        chunks = [];
+        recorder.addEventListener('dataavailable', function (event) {
+          if (event.data.size) chunks.push(event.data);
+        });
+        recorder.addEventListener('stop', function () {
+          window.clearTimeout(timeout);
+          stream.getTracks().forEach(function (track) { track.stop(); });
+          button.textContent = 'Record voice note';
+          if (chunks.length) {
+            const blob = new Blob(chunks, { type: recorder.mimeType || 'audio/webm' });
+            if (blob.size > 5 * 1024 * 1024) {
+              status.textContent = 'Recording exceeds the 5 MB limit.';
+              onRecorded(null);
+            } else {
+              onRecorded(blob);
+              status.textContent = 'Voice note ready. Record again to replace it.';
+            }
+          }
+        });
+        recorder.start();
+        button.textContent = 'Stop recording';
+        status.textContent = 'Recording… (60 second maximum)';
+        timeout = window.setTimeout(function () {
+          if (recorder && recorder.state === 'recording') recorder.stop();
+        }, 60000);
+      } catch (error) {
+        console.error('Could not start voice recording:', error);
+        status.textContent = 'Allow microphone access to record a voice note.';
+      }
+    });
+  }
+
+  async function ensureGeneralInboxRoom() {
+    if (!currentUser) return null;
+    const roomId = 'general-campus-' + currentUser.uid;
+    const roomRef = doc(db, 'chatRooms', roomId);
+    const roomSnap = await getDoc(roomRef);
+    if (!roomSnap.exists()) {
+      await setDoc(roomRef, {
+        id: roomId,
+        name: 'Campus Circle',
+        avatar: 'CC',
+        participants: [currentUser.uid],
+        lastMessage: 'Say hello to the campus community.',
+        lastMessageAt: serverTimestamp(),
+        createdAt: serverTimestamp(),
+        updatedAt: serverTimestamp()
+      });
+    }
+    return roomId;
+  }
+
+  async function ensureDemoRoom(personName, personKey) {
+    if (!currentUser) return null;
+    const slug = String(personKey || personName || 'chat').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '') || 'chat';
+    const roomId = currentUser.uid + '-' + slug;
+    const roomRef = doc(db, 'chatRooms', roomId);
+    const roomSnap = await getDoc(roomRef);
+    if (!roomSnap.exists()) {
+      await setDoc(roomRef, {
+        id: roomId,
+        name: personName,
+        avatar: buildInitials(personName),
+        participants: [currentUser.uid, 'demo:' + slug],
+        lastMessage: 'New conversation started.',
+        lastMessageAt: serverTimestamp(),
+        createdAt: serverTimestamp(),
+        updatedAt: serverTimestamp()
+      });
+    }
+    return roomId;
+  }
+
+  function renderInboxList() {
+    const inboxList = document.getElementById('inboxList');
+    const term = inboxSearch.value.trim().toLowerCase();
+    const visible = chatRooms.filter(function (room) {
+      const haystack = ((room.name || '') + ' ' + (room.lastMessage || '')).toLowerCase();
+      const matchesTerm = !term || haystack.includes(term);
+      const matchesFilter = inboxFilter === 'all' || Number(room.unreadCount || 0) > 0;
+      return matchesTerm && matchesFilter;
+    });
+
+    inboxList.replaceChildren();
+    if (!visible.length) {
+      inboxEmpty.hidden = false;
+      return;
+    }
+    inboxEmpty.hidden = true;
+
+    visible.forEach(function (room) {
+      const row = document.createElement('button');
+      row.type = 'button';
+      row.className = 'inbox-row';
+      row.dataset.chatRoomId = room.id;
+      row.dataset.unread = String(Number(room.unreadCount || 0) > 0);
+
+      const avatar = document.createElement('span');
+      avatar.className = 'person-avatar';
+      avatar.textContent = room.avatar || buildInitials(room.name);
+
+      const copy = document.createElement('span');
+      copy.className = 'inbox-copy';
+      const name = document.createElement('span');
+      name.className = 'person-name';
+      name.textContent = room.name || 'Campus Circle';
+      const preview = document.createElement('span');
+      preview.className = 'inbox-preview';
+      preview.textContent = room.lastMessage || 'Start the conversation';
+      copy.append(name, preview);
+
+      const time = document.createElement('span');
+      time.className = 'inbox-time';
+      time.textContent = room.lastMessageAt ? relativeTime(room.lastMessageAt) : 'Now';
+
+      const unread = document.createElement('span');
+      unread.className = 'unread-dot';
+      unread.setAttribute('aria-label', 'Unread');
+      unread.hidden = !(Number(room.unreadCount || 0) > 0);
+
+      row.append(avatar, copy, time, unread);
+      row.addEventListener('click', function () {
+        openChatRoom(room.id, room.name || 'Campus Circle', room.avatar || buildInitials(room.name));
+      });
+      inboxList.appendChild(row);
+    });
+  }
+
+  function updateRoomReadState(roomId) {
+    if (!roomId || !currentUser) return;
+    const roomRef = doc(db, 'chatRooms', roomId);
+    updateDoc(roomRef, {
+      [`readBy.${currentUser.uid}`]: serverTimestamp(),
+      unreadCount: 0,
+      updatedAt: serverTimestamp()
+    }).catch(function (error) {
+      console.error('Could not mark room as read:', error);
+    });
+  }
+
+  function renderAttachment(item) {
+    const attachmentWrap = document.createElement('div');
+    attachmentWrap.style.marginTop = '8px';
+    if (!item.attachmentUrl) return attachmentWrap;
+
+    if (item.attachmentType === 'audio' || /^audio\//i.test(item.attachmentType || '')) {
+      const audio = document.createElement('audio');
+      audio.controls = true;
+      audio.preload = 'metadata';
+      audio.src = item.attachmentUrl;
+      attachmentWrap.appendChild(audio);
+      return attachmentWrap;
+    }
+    if (item.attachmentType === 'image' || /\.(png|jpe?g|gif|webp)(\?.*)?$/i.test(item.attachmentUrl)) {
+      const img = document.createElement('img');
+      img.src = item.attachmentUrl;
+      img.alt = 'Shared attachment';
+      img.style.maxWidth = '220px';
+      img.style.maxHeight = '180px';
+      img.style.borderRadius = '10px';
+      img.style.display = 'block';
+      attachmentWrap.appendChild(img);
+    }
+
+    const link = document.createElement('a');
+    link.href = item.attachmentUrl;
+    link.target = '_blank';
+    link.rel = 'noopener noreferrer';
+    link.textContent = 'Open attachment';
+    link.style.display = 'inline-block';
+    link.style.marginTop = '6px';
+    link.style.fontSize = '11px';
+    link.style.fontWeight = '700';
+    link.style.color = '#5c57d6';
+    attachmentWrap.appendChild(link);
+    return attachmentWrap;
+  }
+
+  async function openChatRoom(roomId, roomName, roomAvatar) {
+    if (!roomId || !currentUser) return;
+    activeChatRoomId = roomId;
+    setScreen('chat');
+    document.getElementById('chatName').textContent = roomName || 'Campus Circle';
+    document.getElementById('chatAvatar').textContent = roomAvatar || buildInitials(roomName);
+    updateRoomReadState(roomId);
+
+    if (roomListeners.has(roomId)) {
+      roomListeners.get(roomId)();
+      roomListeners.delete(roomId);
+    }
+
+    const messagesRef = collection(db, 'chatRooms', roomId, 'messages');
+    const messageQuery = query(messagesRef, orderBy('createdAt', 'asc'));
+    const listener = onSnapshot(messageQuery, function (snapshot) {
+      const items = snapshot.docs.map(function (item) {
+        const data = item.data();
+        return {
+          id: item.id,
+          senderId: data.senderId,
+          senderName: data.senderName || 'Campus member',
+          text: data.text || '',
+          attachmentUrl: data.attachmentUrl || '',
+          attachmentType: data.attachmentType || '',
+          deletedAt: data.deletedAt || null,
+          editedAt: data.editedAt || null,
+          createdAt: data.createdAt || null
+        };
+      });
+      renderChatMessages(items);
+    }, function (error) {
+      console.error('Could not load messages for room:', error);
+    });
+    roomListeners.set(roomId, listener);
+  }
+
+  function renderChatMessages(items) {
+    const container = document.getElementById('chatMessages');
+    container.replaceChildren();
+    if (!items.length) {
+      const empty = document.createElement('div');
+      empty.className = 'demo-chat-empty';
+      empty.textContent = 'No messages yet. Say hello to start the conversation.';
+      container.appendChild(empty);
+      return;
+    }
+
+    items.forEach(function (item) {
+      const bubble = document.createElement('div');
+      const isMine = item.senderId === currentUser.uid;
+      bubble.className = 'chat-bubble' + (isMine ? ' mine' : '');
+
+      const textValue = item.deletedAt ? 'This message was deleted.' : (item.text || '');
+      if (textValue) {
+        const textNode = document.createElement('div');
+        textNode.textContent = textValue;
+        bubble.appendChild(textNode);
+      }
+
+      const attachment = renderAttachment(item);
+      if (attachment.childElementCount) {
+        bubble.appendChild(attachment);
+      }
+
+      const time = document.createElement('span');
+      time.className = 'chat-time';
+      time.textContent = item.editedAt && typeof item.editedAt.toDate === 'function' ? 'edited · ' + item.editedAt.toDate().toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' }) : (
+        item.createdAt && typeof item.createdAt.toDate === 'function'
+          ? item.createdAt.toDate().toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' })
+          : 'now'
+      );
+      bubble.appendChild(time);
+
+      if (isMine && !item.deletedAt) {
+        const actionRow = document.createElement('div');
+        actionRow.style.display = 'flex';
+        actionRow.style.gap = '8px';
+        actionRow.style.marginTop = '8px';
+        actionRow.style.justifyContent = 'flex-end';
+
+        const editBtn = document.createElement('button');
+        editBtn.type = 'button';
+        editBtn.textContent = 'Edit';
+        editBtn.style.fontSize = '10px';
+        editBtn.style.border = 'none';
+        editBtn.style.borderRadius = '999px';
+        editBtn.style.padding = '5px 8px';
+        editBtn.style.background = 'rgba(255,255,255,0.18)';
+        editBtn.style.color = 'inherit';
+        editBtn.addEventListener('click', function () {
+          const nextText = window.prompt('Edit your message', item.text || '');
+          if (nextText === null) return;
+          const trimmed = nextText.trim();
+          if (!trimmed) return;
+          updateDoc(doc(db, 'chatRooms', activeChatRoomId, 'messages', item.id), {
+            text: trimmed,
+            attachmentUrl: item.attachmentUrl || '',
+            editedAt: serverTimestamp()
+          }).catch(function (error) {
+            console.error('Could not edit message:', error);
+          });
+        });
+
+        const deleteBtn = document.createElement('button');
+        deleteBtn.type = 'button';
+        deleteBtn.textContent = 'Delete';
+        deleteBtn.style.fontSize = '10px';
+        deleteBtn.style.border = 'none';
+        deleteBtn.style.borderRadius = '999px';
+        deleteBtn.style.padding = '5px 8px';
+        deleteBtn.style.background = 'rgba(255,255,255,0.18)';
+        deleteBtn.style.color = 'inherit';
+        deleteBtn.addEventListener('click', function () {
+          updateDoc(doc(db, 'chatRooms', activeChatRoomId, 'messages', item.id), {
+            deletedAt: serverTimestamp(),
+            text: 'This message was deleted.'
+          }).catch(function (error) {
+            console.error('Could not delete message:', error);
+          });
+        });
+
+        actionRow.append(editBtn, deleteBtn);
+        bubble.appendChild(actionRow);
+      }
+
+      container.appendChild(bubble);
+    });
+    container.scrollTop = container.scrollHeight;
+  }
+
+  async function sendChatMessage(roomId, text, attachmentUrl, attachmentType) {
+    if (!roomId || !currentUser || (!text.trim() && !attachmentUrl)) return;
+    const roomRef = doc(db, 'chatRooms', roomId);
+    const roomSnap = await getDoc(roomRef);
+    if (!roomSnap.exists()) {
+      await setDoc(roomRef, {
+        id: roomId,
+        name: 'Campus Circle',
+        avatar: 'CC',
+        participants: [currentUser.uid],
+        lastMessage: text.trim() || (attachmentType === 'audio' ? 'Voice note' : 'Photo'),
+        lastMessageAt: serverTimestamp(),
+        createdAt: serverTimestamp(),
+        updatedAt: serverTimestamp(),
+        readBy: { [currentUser.uid]: serverTimestamp() },
+        unreadCount: 0
+      });
+    }
+
+    await addDoc(collection(roomRef, 'messages'), {
+      senderId: currentUser.uid,
+      senderName: currentUser.displayName || currentUser.email?.split('@')[0] || 'You',
+      text: text.trim(),
+      attachmentUrl: attachmentUrl || '',
+      attachmentType: attachmentType || '',
+      createdAt: serverTimestamp(),
+      editedAt: null,
+      deletedAt: null
+    });
+
+    const payload = {
+      lastMessage: text.trim() || (attachmentType === 'audio' ? 'Voice note' : 'Photo'),
+      lastMessageAt: serverTimestamp(),
+      updatedAt: serverTimestamp(),
+      name: roomSnap.exists() ? roomSnap.data().name || 'Campus Circle' : 'Campus Circle',
+      unreadCount: 0
+    };
+    await updateDoc(roomRef, payload);
+  }
+
+  function subscribeToChatRooms() {
+    if (!currentUser) return;
+    const q = query(chatRoomsRef, where('participants', 'array-contains', currentUser.uid));
+    onSnapshot(q, function (snapshot) {
+      const nextRooms = snapshot.docs.map(function (item) {
+        const data = item.data();
+        const lastRead = data.readBy && data.readBy[currentUser.uid];
+        const isUnread = !lastRead || (data.lastMessageAt && typeof data.lastMessageAt.toDate === 'function' && lastRead && lastRead.toDate && lastRead.toDate() < data.lastMessageAt.toDate());
+        return {
+          id: item.id,
+          name: data.name || 'Campus Circle',
+          avatar: data.avatar || buildInitials(data.name || 'Campus Circle'),
+          lastMessage: data.lastMessage || 'Start the conversation',
+          lastMessageAt: data.lastMessageAt || null,
+          unreadCount: isUnread ? 1 : Number(data.unreadCount || 0)
+        };
+      }).sort(function (a, b) {
+        const aTime = a.lastMessageAt && typeof a.lastMessageAt.toDate === 'function' ? a.lastMessageAt.toDate().getTime() : 0;
+        const bTime = b.lastMessageAt && typeof b.lastMessageAt.toDate === 'function' ? b.lastMessageAt.toDate().getTime() : 0;
+        return bTime - aTime;
+      });
+
+      chatRooms.length = 0;
+      nextRooms.forEach(function (room) { chatRooms.push(room); });
+      renderInboxList();
+
+      if (!activeChatRoomId && chatRooms.length) {
+        const firstRoom = chatRooms[0];
+        openChatRoom(firstRoom.id, firstRoom.name, firstRoom.avatar);
+      }
+    }, function (error) {
+      console.error('Could not load chat rooms:', error);
+    });
+  }
+
+  onAuthStateChanged(auth, async function (user) {
     if (!user) {
       window.location.href = 'htmldiary.html';
       return;
     }
     currentUser = user;
+    trackPresence();
     if (!unsubscribeFeed) {
       unsubscribeFeed = onSnapshot(
         query(postsRef, orderBy('createdAt', 'desc'), limit(60)),
@@ -491,6 +1086,13 @@
         }
       );
     }
+
+    try {
+      await ensureGeneralInboxRoom();
+      subscribeToChatRooms();
+    } catch (error) {
+      console.error('Could not initialize chat rooms:', error);
+    }
   });
 
   function messageCard(text, className) {
@@ -501,8 +1103,8 @@
   }
 
   function firestoreErrorMessage(error, action) {
-    if (error && error.code === 'permission-denied') {
-      return 'Firebase denied ' + action + '. Deploy firestore.rules to project ugdiary-23249, then reload.';
+    if (error && (error.code === 'permission-denied' || error.code === 'storage/unauthorized')) {
+      return 'Firebase denied ' + action + '. Deploy firestore.rules and storage.rules to project ugdiary-23249, then reload.';
     }
     return 'Could not ' + action + '. Check your connection and try again.';
   }
@@ -596,6 +1198,23 @@
       card.append(head, text, locationLabel, mapToggle, mapPanel);
     } else {
       card.append(head, text);
+    }
+
+    if (post.imageUrl) {
+      const image = document.createElement('img');
+      image.className = 'post-media';
+      image.src = post.imageUrl;
+      image.alt = 'Photo attached to anonymous post';
+      image.loading = 'lazy';
+      card.appendChild(image);
+    }
+    if (post.audioUrl) {
+      const audio = document.createElement('audio');
+      audio.className = 'post-media';
+      audio.controls = true;
+      audio.preload = 'metadata';
+      audio.src = post.audioUrl;
+      card.appendChild(audio);
     }
 
     const actions = document.createElement('div');
@@ -833,6 +1452,16 @@
         const body = document.createElement('span');
         body.textContent = item.text || '';
         content.append(name, time, document.createTextNode(' '), body);
+        if (item.audioUrl) {
+          const audio = document.createElement('audio');
+          audio.controls = true;
+          audio.preload = 'metadata';
+          audio.src = item.audioUrl;
+          audio.style.display = 'block';
+          audio.style.maxWidth = '100%';
+          audio.style.marginTop = '8px';
+          content.appendChild(audio);
+        }
         row.append(avatar, content);
         list.appendChild(row);
       });
@@ -848,30 +1477,41 @@
     const input = document.createElement('input');
     input.type = 'text';
     input.maxLength = 300;
-    input.required = true;
     input.placeholder = 'Write an anonymous reply…';
     input.setAttribute('aria-label', 'Write an anonymous reply');
+    const recordButton = document.createElement('button');
+    recordButton.type = 'button';
+    recordButton.className = 'media-button';
+    recordButton.textContent = 'Record voice note';
+    const voiceStatus = document.createElement('span');
+    voiceStatus.className = 'media-status';
+    voiceStatus.textContent = state.voiceBlob ? 'Voice note ready. Record again to replace it.' : '';
+    voiceStatus.setAttribute('aria-live', 'polite');
+    setupVoiceRecorder(recordButton, voiceStatus, function (blob) { state.voiceBlob = blob; });
     const button = document.createElement('button');
     button.type = 'submit';
     button.textContent = writingReply.has(postId) ? 'Sending…' : 'Reply';
     button.disabled = writingReply.has(postId);
-    form.append(input, button);
+    form.append(input, recordButton, button, voiceStatus);
     const error = document.createElement('p');
     error.className = 'error reply-error';
     error.textContent = state.replyError || '';
     form.addEventListener('submit', async function (event) {
       event.preventDefault();
       const text = input.value.trim();
-      if (!text || !currentUser || writingReply.has(postId)) return;
+      if ((!text && !state.voiceBlob) || !currentUser || writingReply.has(postId)) return;
       state.replyError = '';
       writingReply.add(postId);
       renderFeed();
       try {
+        const audioUrl = state.voiceBlob ? await uploadMedia(state.voiceBlob, 'audio', 5 * 1024 * 1024) : '';
         await addDoc(collection(db, 'posts', postId, 'comments'), {
           authorId: currentUser.uid,
           text: text,
+          audioUrl: audioUrl,
           createdAt: serverTimestamp()
         });
+        state.voiceBlob = null;
       } catch (err) {
         console.error('Could not save reply:', err);
         state.replyError = firestoreErrorMessage(err, 'send your reply');
@@ -888,8 +1528,8 @@
     event.preventDefault();
     if (!currentUser) return;
     const text = postText.value.trim();
-    if (!text) {
-      postError.textContent = 'Write something before posting.';
+    if (!text && !selectedPostPhoto && !selectedPostVoice) {
+      postError.textContent = 'Write something, add a photo, or record a voice note before posting.';
       postText.focus();
       return;
     }
@@ -911,9 +1551,21 @@
         downvotes: 0,
         createdAt: serverTimestamp()
       };
+      if (selectedPostPhoto) {
+        document.getElementById('postPhotoStatus').textContent = 'Preparing photo…';
+        postData.imageUrl = await uploadMedia(selectedPostPhoto, 'images', 8 * 1024 * 1024);
+        document.getElementById('postPhotoStatus').textContent = 'Photo uploaded. Publishing post…';
+      }
+      if (selectedPostVoice) postData.audioUrl = await uploadMedia(selectedPostVoice, 'audio', 5 * 1024 * 1024);
       if (selectedLocation) postData.location = selectedLocation;
       await addDoc(postsRef, postData);
       postForm.reset();
+      selectedPostPhoto = null;
+      selectedPostVoice = null;
+      document.getElementById('postPhotoStatus').textContent = '';
+      document.getElementById('postPhotoPreview').hidden = true;
+      document.getElementById('postPhotoPreview').removeAttribute('src');
+      document.getElementById('postVoiceStatus').textContent = '';
       selectedLocation = null;
       sessionStorage.removeItem('legonLoopDraft');
       document.getElementById('charCount').textContent = '0 / 500';
@@ -921,11 +1573,40 @@
       setScreen('feed');
     } catch (error) {
       console.error('Could not create post:', error);
-      postError.textContent = firestoreErrorMessage(error, 'publish your post');
+      if (selectedPostPhoto) {
+        document.getElementById('postPhotoStatus').textContent = error.message || 'Photo upload failed.';
+      }
+      postError.textContent = error.code ? firestoreErrorMessage(error, 'publish your post') : error.message || 'Could not publish your post. Try again.';
     } finally {
       postButton.disabled = false;
       postButton.textContent = 'Post anonymously';
     }
+  });
+
+  document.getElementById('postPhoto').addEventListener('change', function () {
+    selectedPostPhoto = this.files && this.files[0] || null;
+    const preview = document.getElementById('postPhotoPreview');
+    if (selectedPostPhoto) {
+      if (!selectedPostPhoto.type.startsWith('image/')) {
+        selectedPostPhoto = null;
+        this.value = '';
+        postError.textContent = 'Choose an image file for your post.';
+        return;
+      }
+      preview.src = URL.createObjectURL(selectedPostPhoto);
+      preview.hidden = false;
+      document.getElementById('postPhotoStatus').textContent =
+        (selectedPostPhoto.size / (1024 * 1024)).toFixed(1) + ' MB selected';
+      postError.textContent = '';
+    } else {
+      preview.hidden = true;
+      preview.removeAttribute('src');
+      document.getElementById('postPhotoStatus').textContent = '';
+    }
+  });
+
+  setupVoiceRecorder(document.getElementById('recordPostVoice'), document.getElementById('postVoiceStatus'), function (blob) {
+    selectedPostVoice = blob;
   });
 
   shareLocation.addEventListener('change', function () {
@@ -1012,8 +1693,31 @@
     window.setTimeout(function () { button.textContent = 'Save draft'; }, 1800);
   });
 
+  function setPresenceText(text) {
+    const chatPresence = document.getElementById('chatPresence');
+    if (chatPresence) chatPresence.textContent = text;
+  }
+
+  function trackPresence() {
+    if (!currentUser) return;
+    const presenceRef = doc(db, 'presence', currentUser.uid);
+    const status = {
+      userId: currentUser.uid,
+      email: currentUser.email || '',
+      isOnline: true,
+      lastSeen: serverTimestamp(),
+      updatedAt: serverTimestamp()
+    };
+    setDoc(presenceRef, status, { merge: true }).catch(function (error) {
+      console.error('Could not update presence:', error);
+    });
+    window.addEventListener('beforeunload', function () {
+      setDoc(presenceRef, { isOnline: false, lastSeen: serverTimestamp(), updatedAt: serverTimestamp() }, { merge: true }).catch(function () {});
+    });
+  }
+
   const requestsScreen = document.getElementById('requestsScreen');
-  requestsScreen.addEventListener('click', function (event) {
+  requestsScreen.addEventListener('click', async function (event) {
     const tab = event.target.closest('[data-request-tab]');
     if (tab) {
       const sent = tab.dataset.requestTab === 'sent';
@@ -1026,7 +1730,9 @@
     }
     const openChat = event.target.closest('[data-open-chat]');
     if (openChat) {
-      openDemoChat(openChat.dataset.openChat);
+      const person = openChat.dataset.openChat;
+      const roomId = await ensureDemoRoom(person, person);
+      if (roomId) openChatRoom(roomId, person, buildInitials(person));
       return;
     }
     const action = event.target.closest('[data-request-action]');
@@ -1046,8 +1752,23 @@
     message.type = 'button';
     message.className = 'message-btn';
     message.dataset.openChat = person;
-    message.textContent = 'Open demo chat';
+    message.textContent = 'Open chat';
     actions.append(connected, message);
+
+    const roomId = await ensureDemoRoom(person, person);
+    if (roomId) {
+      const room = {
+        id: roomId,
+        name: person,
+        avatar: buildInitials(person),
+        lastMessage: 'New conversation started.',
+        lastMessageAt: new Date(),
+        unreadCount: 0
+      };
+      const existing = chatRooms.find(function (item) { return item.id === room.id; });
+      if (!existing) chatRooms.push(room);
+      renderInboxList();
+    }
   });
 
   function openDemoChat(person) {
@@ -1057,12 +1778,26 @@
       'Library Ghost': '📚',
       'Cosmic Bagel': '🥯'
     };
+    const roomId = currentUser ? currentUser.uid + '-' + person.toLowerCase().replace(/[^a-z0-9]+/g, '-') : null;
+    if (roomId) {
+      openChatRoom(roomId, person, emojiByPerson[person] || '◉');
+      return;
+    }
     document.getElementById('chatName').textContent = person;
     document.getElementById('chatAvatar').textContent = emojiByPerson[person] || '◉';
     setScreen('chat');
   }
 
   document.getElementById('inboxList').addEventListener('click', function (event) {
+    const room = event.target.closest('[data-chat-room-id]');
+    if (room) {
+      const roomId = room.dataset.chatRoomId;
+      const roomName = room.querySelector('.person-name')?.textContent || 'Campus Circle';
+      const roomAvatar = room.querySelector('.person-avatar')?.textContent || 'C';
+      openChatRoom(roomId, roomName, roomAvatar);
+      return;
+    }
+
     const row = event.target.closest('[data-demo-chat]');
     const connected = event.target.closest('[data-open-chat]');
     if (row) openDemoChat(row.dataset.demoChat);
@@ -1070,15 +1805,7 @@
   });
 
   function filterInbox() {
-    const term = inboxSearch.value.trim().toLowerCase();
-    let visibleCount = 0;
-    document.querySelectorAll('.inbox-row').forEach(function (row) {
-      const matchesTerm = row.textContent.toLowerCase().includes(term);
-      const matchesFilter = inboxFilter === 'all' || row.dataset.unread === 'true';
-      row.hidden = !matchesTerm || !matchesFilter;
-      if (!row.hidden) visibleCount += 1;
-    });
-    inboxEmpty.hidden = visibleCount > 0;
+    renderInboxList();
   }
 
   inboxSearch.addEventListener('input', filterInbox);
@@ -1088,26 +1815,47 @@
       document.querySelectorAll('[data-inbox-filter]').forEach(function (item) {
         item.classList.toggle('active', item === button);
       });
-      filterInbox();
+      renderInboxList();
     });
   });
 
-  document.getElementById('demoChatForm').addEventListener('submit', function (event) {
+  document.getElementById('demoChatForm').addEventListener('submit', async function (event) {
     event.preventDefault();
     const input = document.getElementById('demoChatInput');
+    const attachment = document.getElementById('chatAttachment');
+    const voiceStatus = document.getElementById('chatVoiceStatus');
     const text = input.value.trim();
-    if (!text) return;
-    const bubble = document.createElement('div');
-    bubble.className = 'chat-bubble mine';
-    bubble.append(document.createTextNode(text));
-    const time = document.createElement('span');
-    time.className = 'chat-time';
-    time.textContent = 'now · demo only';
-    bubble.appendChild(time);
-    document.getElementById('chatMessages').appendChild(bubble);
-    input.value = '';
-    bubble.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+    if ((!text && !selectedChatVoice && !attachment.value.trim()) || !activeChatRoomId) return;
+    try {
+      const attachmentUrl = selectedChatVoice
+        ? await uploadMedia(selectedChatVoice, 'audio', 5 * 1024 * 1024)
+        : attachment.value.trim();
+      const attachmentType = selectedChatVoice ? 'audio' : (attachmentUrl ? 'image' : '');
+      await sendChatMessage(activeChatRoomId, text, attachmentUrl, attachmentType);
+      input.value = '';
+      attachment.value = '';
+      selectedChatVoice = null;
+      voiceStatus.textContent = '';
+      setPresenceText('Active now');
+    } catch (error) {
+      console.error('Could not send chat message:', error);
+      voiceStatus.textContent = error.code ? firestoreErrorMessage(error, 'send your message') : error.message || 'Could not send your message.';
+    }
+  });
+
+  setupVoiceRecorder(document.getElementById('recordChatVoice'), document.getElementById('chatVoiceStatus'), function (blob) {
+    selectedChatVoice = blob;
+  });
+
+  document.getElementById('demoChatInput').addEventListener('input', function () {
+    if (!currentUser || !activeChatRoomId) return;
+    setPresenceText(this.value.trim() ? 'typing…' : 'Active now');
+    if (typingTimer) window.clearTimeout(typingTimer);
+    typingTimer = window.setTimeout(function () {
+      setPresenceText('Active now');
+    }, 1200);
   });
 </script>
+<script type="module" src="userprofile.js"></script>
 </body>
 </html>
