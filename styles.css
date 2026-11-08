@@ -1,0 +1,342 @@
+:root {
+  color-scheme: light;
+  --ui-radius: 18px;
+  --ui-shadow: 0 14px 36px rgba(35, 40, 76, 0.09);
+  --ui-shadow-hover: 0 20px 46px rgba(35, 40, 76, 0.14);
+  --ui-ease: 220ms cubic-bezier(0.2, 0.75, 0.25, 1);
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 82px;
+}
+
+body {
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+button,
+input,
+textarea,
+select {
+  transition:
+    border-color var(--ui-ease),
+    box-shadow var(--ui-ease),
+    background-color var(--ui-ease),
+    color var(--ui-ease),
+    transform var(--ui-ease);
+}
+
+button:active {
+  transform: scale(0.98);
+}
+
+input:not([type="checkbox"]):not([type="radio"]),
+textarea,
+select {
+  transition:
+    border-color var(--ui-ease),
+    box-shadow var(--ui-ease),
+    background-color var(--ui-ease);
+}
+
+input:not([type="checkbox"]):not([type="radio"]):focus,
+textarea:focus,
+select:focus {
+  border-color: #9c8af2;
+  box-shadow: 0 0 0 4px rgba(103, 68, 232, 0.11);
+}
+
+::selection {
+  background: rgba(103, 68, 232, 0.2);
+}
+
+.topbar {
+  box-shadow: 0 5px 24px rgba(43, 31, 74, 0.045);
+}
+
+.brand-mark {
+  background: linear-gradient(145deg, #8064f0, #5030c8);
+  box-shadow: 0 6px 14px rgba(103, 68, 232, 0.24);
+  transition: transform var(--ui-ease), box-shadow var(--ui-ease);
+}
+
+.brand:hover .brand-mark {
+  transform: rotate(-6deg) scale(1.05);
+  box-shadow: 0 9px 20px rgba(103, 68, 232, 0.3);
+}
+
+.campus-pill {
+  border: 1px solid rgba(103, 68, 232, 0.1);
+}
+
+.logout {
+  padding: 8px 12px;
+  border-radius: 10px;
+}
+
+.logout:hover {
+  background: var(--accent-soft);
+}
+
+.feed-head,
+.screen-head {
+  animation: ui-rise-in 480ms both;
+}
+
+.category-btn,
+.sort-btn,
+.request-tab,
+.inbox-tab,
+.nav-btn,
+.action-btn,
+.vote-btn,
+.draft-btn,
+.back-btn,
+.media-button,
+.request-actions button,
+.reply-form button,
+.primary-btn {
+  transition:
+    transform var(--ui-ease),
+    box-shadow var(--ui-ease),
+    border-color var(--ui-ease),
+    background-color var(--ui-ease),
+    color var(--ui-ease);
+}
+
+.category-btn:hover,
+.inbox-row:hover {
+  transform: translateY(-1px);
+}
+
+.category-btn.active {
+  box-shadow: 0 4px 12px rgba(103, 68, 232, 0.12);
+}
+
+.card,
+.rail-card,
+.side-note {
+  border-radius: var(--ui-radius);
+  box-shadow: var(--ui-shadow);
+}
+
+.app-screen:not([hidden]) .card {
+  animation: ui-rise-in 420ms both;
+}
+
+.app-screen:not([hidden]) .card:hover {
+  border-color: rgba(103, 68, 232, 0.18);
+  box-shadow: var(--ui-shadow-hover);
+}
+
+.post,
+.request-card {
+  transition:
+    transform var(--ui-ease),
+    box-shadow var(--ui-ease),
+    border-color var(--ui-ease);
+}
+
+.post:hover,
+.request-card:hover {
+  transform: translateY(-2px);
+}
+
+.avatar,
+.profile-avatar,
+.person-avatar {
+  transition: transform var(--ui-ease), box-shadow var(--ui-ease);
+}
+
+.post:hover .avatar,
+.request-card:hover .person-avatar {
+  transform: scale(1.04);
+}
+
+.primary-btn,
+.request-actions button:not(.decline-btn):not(.message-btn),
+.reply-form button {
+  box-shadow: 0 7px 16px rgba(103, 68, 232, 0.2);
+}
+
+.primary-btn:hover,
+.request-actions button:not(.decline-btn):not(.message-btn):hover,
+.reply-form button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 22px rgba(103, 68, 232, 0.27);
+}
+
+.primary-btn:active,
+.request-actions button:active,
+.reply-form button:active {
+  transform: translateY(0) scale(0.98);
+}
+
+.media-button:hover,
+.back-btn:hover,
+.draft-btn:hover,
+.action-btn:hover,
+.vote-btn:hover {
+  transform: translateY(-1px);
+}
+
+.inbox-row {
+  transition:
+    transform var(--ui-ease),
+    box-shadow var(--ui-ease),
+    border-color var(--ui-ease),
+    background-color var(--ui-ease);
+}
+
+.inbox-row:hover {
+  border-color: rgba(103, 68, 232, 0.2);
+  box-shadow: 0 8px 22px rgba(43, 31, 74, 0.08);
+}
+
+.chat-messages {
+  scroll-behavior: smooth;
+}
+
+.chat-bubble {
+  animation: ui-message-in 260ms both;
+}
+
+.bottom-nav {
+  box-shadow: 0 -9px 30px rgba(43, 31, 74, 0.1);
+}
+
+.nav-btn {
+  border-radius: 12px;
+}
+
+.nav-btn:hover {
+  background: rgba(103, 68, 232, 0.07);
+}
+
+.nav-btn.active {
+  box-shadow: inset 0 0 0 1px rgba(103, 68, 232, 0.08);
+}
+
+.login {
+  animation: ui-rise-in 650ms both;
+}
+
+.login .card {
+  border-color: rgba(255, 255, 255, 0.76);
+  background: rgba(255, 253, 248, 0.9);
+  box-shadow: 0 24px 70px rgba(27, 38, 84, 0.2);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+.login .emblem {
+  filter: drop-shadow(0 6px 10px rgba(34, 50, 108, 0.13));
+  transition: transform 320ms ease;
+}
+
+.login .card:hover .emblem {
+  transform: translateY(-2px) scale(1.035);
+}
+
+.login input[type="text"],
+.login input[type="email"],
+.login input[type="password"] {
+  border-color: rgba(45, 64, 169, 0.16);
+  transition: border-color var(--ui-ease), box-shadow var(--ui-ease), background-color var(--ui-ease);
+}
+
+.login input[type="text"]:focus,
+.login input[type="email"]:focus,
+.login input[type="password"]:focus {
+  border-color: #5279d3;
+  box-shadow: 0 0 0 4px rgba(30, 94, 172, 0.13);
+}
+
+.login button[type="submit"] {
+  box-shadow: 0 8px 20px rgba(19, 52, 114, 0.2);
+  transition: transform var(--ui-ease), box-shadow var(--ui-ease), background-color var(--ui-ease);
+}
+
+.login button[type="submit"]:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 24px rgba(19, 52, 114, 0.25);
+}
+
+.login #signupBtn {
+  transition: transform var(--ui-ease), box-shadow var(--ui-ease), background-color var(--ui-ease);
+}
+
+.login #signupBtn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 14px rgba(27, 38, 84, 0.08);
+}
+
+.loading {
+  background-image: linear-gradient(100deg, transparent 20%, rgba(103, 68, 232, 0.06) 45%, transparent 70%);
+  background-size: 220% 100%;
+  animation: ui-shimmer 1.8s ease-in-out infinite;
+}
+
+@keyframes ui-rise-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes ui-message-in {
+  from {
+    opacity: 0;
+    transform: translateY(5px) scale(0.99);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes ui-shimmer {
+  to {
+    background-position: -220% 0;
+  }
+}
+
+@media (max-width: 680px) {
+  html {
+    scroll-padding-top: 68px;
+  }
+
+  .topbar {
+    box-shadow: 0 4px 18px rgba(43, 31, 74, 0.07);
+  }
+
+  .login {
+    gap: 8px;
+  }
+
+  .login .scene {
+    max-width: 300px;
+    margin: -22px auto -34px;
+  }
+
+  .login .card {
+    padding: 24px 20px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

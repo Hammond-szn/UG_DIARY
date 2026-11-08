@@ -3,13 +3,14 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>My HTML Diary</title>
+    <title>Legon Loop | Campus community</title>
+    <link rel="icon" href="LEGONLOOP.png" type="image/png">
     <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600&family=Nunito:wght@400;600&display=swap" rel="stylesheet">
     <style>
         :root {
-            --ink: #3b2a57;
-            --purple: #7c3aed;
-            --paper: rgba(255, 248, 252, 0.94);
+            --ink: #2d40a9;
+            --purple: #133472;
+            --paper: rgba(216, 207, 184, 0.96);
         }
 
         * {
@@ -23,7 +24,7 @@
             display: grid;
             place-items: center;
             background:
-                linear-gradient(rgba(255, 247, 251, 0.3), rgba(247, 242, 226, 0.36)),
+                linear-gradient(rgba(249, 246, 238, 0.54), rgba(241, 236, 250, 0.48)),
                 url("legon-tower-background.jpg") center / cover fixed no-repeat;
             color: var(--ink);
             font-family: "Nunito", system-ui, sans-serif;
@@ -52,10 +53,10 @@
             max-width: 440px;
             justify-self: start;
             padding: 28px;
-            border: 2px solid var(--ink);
-            border-radius: 16px;
+            border: 1px solid rgba(103, 68, 232, 0.16);
+            border-radius: 24px;
             background: var(--paper);
-            box-shadow: 0 8px 28px rgba(59, 42, 87, 0.18);
+            box-shadow: 0 12px 36px rgba(42, 33, 72, 0.16);
         }
 
         .emblem {
@@ -68,8 +69,10 @@
 
         .card h1 {
             margin: 0 0 4px;
-            font-family: "Caveat", cursive;
-            font-size: 2.4rem;
+            font-family: "Nunito", system-ui, sans-serif;
+            font-size: 2rem;
+            font-weight: 800;
+            letter-spacing: -0.05em;
             text-align: center;
         }
 
@@ -85,38 +88,50 @@
         }
 
         input[type="text"],
+        input[type="email"],
         input[type="password"] {
             width: 100%;
             margin-bottom: 16px;
             padding: 12px;
-            border: 2px solid var(--ink);
-            border-radius: 10px;
-            background: #fff;
+            border: 1px solid #e8e1d5;
+            border-radius: 12px;
+            background: #fffefa;
             color: var(--ink);
             font: inherit;
         }
 
         input:focus-visible,
         button:focus-visible {
-            outline: 3px solid var(--purple);
+            outline: 3px solid #1e5eac;
             outline-offset: 2px;
         }
 
         button {
             width: 100%;
             padding: 13px;
-            border: 2px solid var(--ink);
-            border-radius: 10px;
+            border: 0;
+            border-radius: 13px;
             background: var(--purple);
             color: #fff;
             cursor: pointer;
             font: inherit;
-            font-weight: 600;
+            font-weight: 800;
             transition: transform 0.15s;
         }
 
         button:hover {
-            transform: translateY(-2px);
+            transform: translateY(-1px);
+            background: #1e56b9;
+        }
+
+        #signupBtn {
+            border: 1px solid #e7e1d5;
+            background: #fffdf8 !important;
+            color: var(--ink) !important;
+        }
+
+        #signupBtn:hover {
+            background: #f0ecf9 !important;
         }
 
         .levels {
@@ -248,6 +263,7 @@
             }
         }
     </style>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <main class="login">
@@ -313,31 +329,19 @@
 
         <section class="card" aria-labelledby="diary-title">
             <img class="emblem" src="University_of_Ghana.png" alt="University of Ghana emblem">
-            <h1 id="diary-title">Dear diary,</h1>
-            <p>Log in to keep writing.</p>
+            <h1 id="diary-title">Legon Loop</h1>
+            <p>Meet your campus community. Join the conversation anonymously.</p>
 
             <form id="loginForm">
-                <label for="user-id">USER ID:</label>
-                <input id="user-id" type="text" name="user-id" autocomplete="username" required>
+                <label for="email">EMAIL:</label>
+                <input id="email" type="email" name="email" autocomplete="email" required>
                 <label for="password">Password:</label>
                 <input id="password" type="password" name="password" autocomplete="current-password" required>
                      <p id="msg" role="alert" style="color:#b91c1c;font-weight:600;min-height:1.2em"></p>
-                <button type="submit">Open my diary</button>
-                     <button type="button" id="signupBtn" style="margin-top:10px;background:transparent;color:var(--ink)">Create account</button>
+                <button type="submit">Join the conversation</button>
+                <button type="button" id="signupBtn" style="margin-top:10px;background:transparent;color:var(--ink)">Create account</button>
             </form>
 
-            <form id="levelForm">
-                <fieldset class="levels">
-                    <legend>SELECT YOUR LEVEL</legend>
-                    <div class="level-options">
-                        <label><input type="radio" name="level" value="100" required> 100</label>
-                        <label><input type="radio" name="level" value="200"> 200</label>
-                        <label><input type="radio" name="level" value="300"> 300</label>
-                        <label><input type="radio" name="level" value="400"> 400</label>
-                    </div>
-                </fieldset>
-                <button type="submit">Continue</button>
-            </form>
             <p class="photo-credit">
                 Background photo: <a href="https://commons.wikimedia.org/wiki/File:Legon_Tower.JPG" target="_blank" rel="noopener noreferrer">Legon Tower</a>
                 by Rtevels, <a href="https://creativecommons.org/licenses/by-sa/3.0/" target="_blank" rel="noopener noreferrer">CC BY-SA 3.0</a>.
