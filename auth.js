@@ -1,10 +1,8 @@
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import {
-  getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut
+  signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-import { firebaseConfig } from "./firebase-config.js";
+import { auth } from "./firebase-app.js";
 
-const auth = getAuth(initializeApp(firebaseConfig));
 const form = document.getElementById('loginForm');
 const msg = document.getElementById('msg');
 const signupBtn = document.getElementById('signupBtn');
