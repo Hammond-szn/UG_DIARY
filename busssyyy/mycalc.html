@@ -5,6 +5,55 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>UG CALC</title>
     <style>
+        :root {
+            color-scheme: light;
+            --page-bg: linear-gradient(135deg, #edf4fa, #dce9f2);
+            --card-bg: rgba(255, 255, 255, 0.88);
+            --card-border: rgba(255, 255, 255, 0.75);
+            --text: #09376d;
+            --heading: #09376d;
+            --muted: #48627d;
+            --accent: #956f1f;
+            --action-bg: #09376d;
+            --action-text: #fff;
+            --action-hover-bg: #fff;
+            --action-hover-text: #09376d;
+            --glow: rgba(255, 255, 255, 0.3);
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root:not([data-theme="light"]) {
+                color-scheme: dark;
+                --page-bg: linear-gradient(135deg, #101827, #1c2b40);
+                --card-bg: rgba(21, 32, 49, 0.92);
+                --card-border: rgba(176, 193, 211, 0.22);
+                --text: #e5edf5;
+                --heading: #f1f5f9;
+                --muted: #b6c5d5;
+                --accent: #e2bf6a;
+                --action-bg: #d6ad55;
+                --action-text: #17263a;
+                --action-hover-bg: #f1f5f9;
+                --action-hover-text: #17263a;
+                --glow: rgba(0, 0, 0, 0.14);
+            }
+        }
+
+        :root[data-theme="dark"] {
+            color-scheme: dark;
+            --page-bg: linear-gradient(135deg, #101827, #1c2b40);
+            --card-bg: rgba(21, 32, 49, 0.92);
+            --card-border: rgba(176, 193, 211, 0.22);
+            --text: #e5edf5;
+            --heading: #f1f5f9;
+            --muted: #b6c5d5;
+            --accent: #e2bf6a;
+            --action-bg: #d6ad55;
+            --action-text: #17263a;
+            --action-hover-bg: #f1f5f9;
+            --action-hover-text: #17263a;
+            --glow: rgba(0, 0, 0, 0.14);
+        }
         * {
             box-sizing: border-box;
         }
@@ -12,8 +61,9 @@
         body {
             min-height: 100vh;
             margin: 0;
-            color: #09376d;
+            color: var(--text);
             font-family: Arial, sans-serif;
+            transition: color 0.3s;
         }
 
         .page-background {
@@ -21,7 +71,8 @@
             inset: 0;
             z-index: 0;
             overflow: hidden;
-            background: linear-gradient(135deg, #edf4fa, #dce9f2);
+            background: var(--page-bg);
+            transition: background 0.3s;
         }
 
         .page-background::before,
@@ -76,8 +127,8 @@
             inset: 0;
             z-index: 3;
             background:
-                radial-gradient(ellipse at 18% 22%, rgba(255, 255, 255, 0.36), transparent 52%),
-                radial-gradient(ellipse at 82% 76%, rgba(255, 255, 255, 0.22), transparent 48%);
+                radial-gradient(ellipse at 18% 22%, var(--glow), transparent 52%),
+                radial-gradient(ellipse at 82% 76%, var(--glow), transparent 48%);
             animation: soft-glow 11s ease-in-out infinite alternate;
             will-change: opacity;
         }
@@ -91,12 +142,35 @@
             padding: 1.5rem;
         }
 
+        .theme-toggle {
+            position: fixed;
+            top: 1rem;
+            right: 1rem;
+            z-index: 2;
+            padding: 0.65rem 0.9rem;
+            color: var(--text);
+            font: inherit;
+            font-weight: 700;
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 999px;
+            cursor: pointer;
+            -webkit-backdrop-filter: blur(12px);
+            backdrop-filter: blur(12px);
+        }
+
+        .theme-toggle:focus-visible {
+            outline: 3px solid #d6ad55;
+            outline-offset: 3px;
+        }
+
         .text-container {
             width: min(100%, 480px);
             padding: clamp(2rem, 7vw, 3.5rem) clamp(1.5rem, 6vw, 3rem);
             text-align: center;
-            background: rgba(255, 255, 255, 0.88);
-            border: 1px solid rgba(255, 255, 255, 0.75);
+            color: var(--text);
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
             border-top: 5px solid #d6ad55;
             border-radius: 20px;
             box-shadow: 0 24px 60px rgba(9, 35, 67, 0.28);
@@ -106,7 +180,7 @@
 
         .text-container h3 {
             margin: 0 0 0.75rem;
-            color: #956f1f;
+            color: var(--accent);
             font-size: 0.9rem;
             letter-spacing: 0.14em;
             text-transform: uppercase;
@@ -114,7 +188,7 @@
 
         .text-container h1 {
             margin: 0;
-            color: #09376d;
+            color: var(--heading);
             font-size: clamp(1.8rem, 6vw, 2.5rem);
             line-height: 1.2;
         }
@@ -140,19 +214,19 @@
             display: inline-block;
             margin-top: 1.75rem;
             padding: 0.9rem 1.4rem;
-            color: #fff;
+            color: var(--action-text);
             font-weight: 700;
             text-decoration: none;
-            background: #09376d;
-            border: 2px solid #09376d;
+            background: var(--action-bg);
+            border: 2px solid var(--action-bg);
             border-radius: 999px;
             box-shadow: 0 8px 18px rgba(9, 55, 109, 0.2);
             transition: background-color 180ms ease, color 180ms ease, transform 180ms ease;
         }
 
         .page-action:hover {
-            color: #09376d;
-            background: #fff;
+            color: var(--action-hover-text);
+            background: var(--action-hover-bg);
             transform: translateY(-2px);
         }
 
@@ -208,6 +282,7 @@
             .ambient-orb {
                 animation: none;
             }
+
         }
     </style>
 </head>
@@ -217,6 +292,7 @@
         <span class="ambient-orb orb-two"></span>
         <span class="ambient-orb orb-three"></span>
     </div>
+    <button class="theme-toggle" id="theme-toggle" type="button" aria-pressed="false">Dark mode</button>
     <main class="page-content">
         <section class="text-container" aria-labelledby="page-title">
             <h3>Welcome to UG Calc</h3>
@@ -224,5 +300,46 @@
             <a class="page-action" href="cgpa-calculator.html">Open CGPA Calculator</a>
         </section>
     </main>
+    <script>
+        const root = document.documentElement;
+        const themeToggle = document.querySelector("#theme-toggle");
+        const colorScheme = window.matchMedia("(prefers-color-scheme: dark)");
+
+        try {
+            const savedTheme = localStorage.getItem("theme");
+            if (savedTheme === "light" || savedTheme === "dark") {
+                root.setAttribute("data-theme", savedTheme);
+            }
+        } catch (error) {
+            console.error("Could not read the saved theme preference.", error);
+        }
+
+        function updateThemeToggle() {
+            const isDark = root.getAttribute("data-theme") === "dark" ||
+                (!root.hasAttribute("data-theme") && colorScheme.matches);
+            themeToggle.setAttribute("aria-pressed", String(isDark));
+        }
+
+        themeToggle.addEventListener("click", () => {
+            const isDark = root.getAttribute("data-theme") === "dark" ||
+                (!root.hasAttribute("data-theme") && colorScheme.matches);
+            const nextTheme = isDark ? "light" : "dark";
+            root.setAttribute("data-theme", nextTheme);
+            updateThemeToggle();
+
+            try {
+                localStorage.setItem("theme", nextTheme);
+            } catch (error) {
+                console.error("Could not save the theme preference.", error);
+            }
+        });
+
+        colorScheme.addEventListener("change", () => {
+            if (!root.hasAttribute("data-theme")) {
+                updateThemeToggle();
+            }
+        });
+        updateThemeToggle();
+    </script>
 </body>
 </html>

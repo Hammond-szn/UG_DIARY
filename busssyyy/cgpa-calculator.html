@@ -5,6 +5,74 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CGPA Calculator | UG Calc</title>
     <style>
+        :root {
+            color-scheme: light;
+            --page-bg: linear-gradient(135deg, #edf4fa, #dce9f2);
+            --card-bg: rgba(255, 255, 255, 0.9);
+            --card-border: rgba(255, 255, 255, 0.8);
+            --text: #09376d;
+            --heading: #09376d;
+            --muted: #48627d;
+            --accent: #956f1f;
+            --label: #173d63;
+            --input-bg: rgba(255, 255, 255, 0.92);
+            --input-border: #b8c9d8;
+            --result-bg: rgba(237, 244, 250, 0.9);
+            --result-border: #cfdeea;
+            --button-bg: #09376d;
+            --button-text: #fff;
+            --button-hover-bg: #fff;
+            --button-hover-text: #09376d;
+            --link: #09376d;
+            --glow: rgba(255, 255, 255, 0.3);
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root:not([data-theme="light"]) {
+                color-scheme: dark;
+                --page-bg: linear-gradient(135deg, #101827, #1c2b40);
+                --card-bg: rgba(21, 32, 49, 0.94);
+                --card-border: rgba(176, 193, 211, 0.22);
+                --text: #e5edf5;
+                --heading: #f1f5f9;
+                --muted: #b6c5d5;
+                --accent: #e2bf6a;
+                --label: #d1dce8;
+                --input-bg: rgba(13, 23, 37, 0.9);
+                --input-border: #53677d;
+                --result-bg: rgba(13, 23, 37, 0.9);
+                --result-border: #53677d;
+                --button-bg: #d6ad55;
+                --button-text: #17263a;
+                --button-hover-bg: #f1f5f9;
+                --button-hover-text: #17263a;
+                --link: #d1dce8;
+                --glow: rgba(0, 0, 0, 0.14);
+            }
+        }
+
+        :root[data-theme="dark"] {
+            color-scheme: dark;
+            --page-bg: linear-gradient(135deg, #101827, #1c2b40);
+            --card-bg: rgba(21, 32, 49, 0.94);
+            --card-border: rgba(176, 193, 211, 0.22);
+            --text: #e5edf5;
+            --heading: #f1f5f9;
+            --muted: #b6c5d5;
+            --accent: #e2bf6a;
+            --label: #d1dce8;
+            --input-bg: rgba(13, 23, 37, 0.9);
+            --input-border: #53677d;
+            --result-bg: rgba(13, 23, 37, 0.9);
+            --result-border: #53677d;
+            --button-bg: #d6ad55;
+            --button-text: #17263a;
+            --button-hover-bg: #f1f5f9;
+            --button-hover-text: #17263a;
+            --link: #d1dce8;
+            --glow: rgba(0, 0, 0, 0.14);
+        }
+
         * {
             box-sizing: border-box;
         }
@@ -12,8 +80,9 @@
         body {
             min-height: 100vh;
             margin: 0;
-            color: #09376d;
+            color: var(--text);
             font-family: Arial, sans-serif;
+            transition: color 0.3s;
         }
 
         .page-background {
@@ -21,7 +90,8 @@
             inset: 0;
             z-index: 0;
             overflow: hidden;
-            background: linear-gradient(135deg, #edf4fa, #dce9f2);
+            background: var(--page-bg);
+            transition: background 0.3s;
         }
 
         .page-background::before,
@@ -77,8 +147,8 @@
             inset: 0;
             z-index: 3;
             background:
-                radial-gradient(ellipse at 18% 22%, rgba(255, 255, 255, 0.36), transparent 52%),
-                radial-gradient(ellipse at 82% 76%, rgba(255, 255, 255, 0.22), transparent 48%);
+                radial-gradient(ellipse at 18% 22%, var(--glow), transparent 52%),
+                radial-gradient(ellipse at 82% 76%, var(--glow), transparent 48%);
             animation: soft-glow 11s ease-in-out infinite alternate;
             will-change: opacity;
         }
@@ -92,11 +162,34 @@
             padding: 1.5rem;
         }
 
+        .theme-toggle {
+            position: fixed;
+            top: 1rem;
+            right: 1rem;
+            z-index: 2;
+            padding: 0.65rem 0.9rem;
+            color: var(--text);
+            font: inherit;
+            font-weight: 700;
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 999px;
+            cursor: pointer;
+            -webkit-backdrop-filter: blur(12px);
+            backdrop-filter: blur(12px);
+        }
+
+        .theme-toggle:focus-visible {
+            outline: 3px solid #d6ad55;
+            outline-offset: 3px;
+        }
+
         .calculator-card {
             width: min(100%, 560px);
             padding: clamp(1.5rem, 6vw, 3rem);
-            background: rgba(255, 255, 255, 0.9);
-            border: 1px solid rgba(255, 255, 255, 0.8);
+            color: var(--text);
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
             border-top: 5px solid #d6ad55;
             border-radius: 20px;
             box-shadow: 0 24px 60px rgba(9, 35, 67, 0.28);
@@ -106,7 +199,7 @@
 
         .eyebrow {
             margin: 0 0 0.6rem;
-            color: #956f1f;
+            color: var(--accent);
             font-size: 0.82rem;
             font-weight: 700;
             letter-spacing: 0.14em;
@@ -116,7 +209,7 @@
 
         h1 {
             margin: 0;
-            color: #09376d;
+            color: var(--heading);
             font-size: clamp(1.8rem, 6vw, 2.4rem);
             line-height: 1.2;
             text-align: center;
@@ -124,7 +217,7 @@
 
         .intro {
             margin: 0.8rem 0 1.8rem;
-            color: #48627d;
+            color: var(--muted);
             line-height: 1.6;
             text-align: center;
         }
@@ -138,7 +231,7 @@
         .grade-field label {
             display: block;
             margin-bottom: 0.45rem;
-            color: #173d63;
+            color: var(--label);
             font-size: 0.95rem;
             font-weight: 700;
         }
@@ -147,22 +240,22 @@
             width: 100%;
             min-height: 48px;
             padding: 0.7rem 0.8rem;
-            color: #09376d;
+            color: var(--text);
             font: inherit;
-            background: rgba(255, 255, 255, 0.92);
-            border: 1px solid #b8c9d8;
+            background: var(--input-bg);
+            border: 1px solid var(--input-border);
             border-radius: 10px;
         }
 
         .grade-field input:focus {
-            border-color: #09376d;
+            border-color: var(--link);
             outline: 3px solid rgba(9, 55, 109, 0.14);
         }
 
         .field-help {
             display: block;
             margin-top: 0.35rem;
-            color: #5f7388;
+            color: var(--muted);
             font-size: 0.78rem;
         }
 
@@ -182,16 +275,16 @@
 
         .calculate-button {
             margin-top: 1.5rem;
-            color: #fff;
-            background: #09376d;
-            border: 2px solid #09376d;
+            color: var(--button-text);
+            background: var(--button-bg);
+            border: 2px solid var(--button-bg);
             box-shadow: 0 8px 18px rgba(9, 55, 109, 0.2);
             transition: background-color 180ms ease, color 180ms ease, transform 180ms ease;
         }
 
         .calculate-button:hover {
-            color: #09376d;
-            background: #fff;
+            color: var(--button-hover-text);
+            background: var(--button-hover-bg);
             transform: translateY(-2px);
         }
 
@@ -204,10 +297,10 @@
         .result {
             margin-top: 1.25rem;
             padding: 1rem;
-            color: #09376d;
+            color: var(--text);
             text-align: center;
-            background: rgba(237, 244, 250, 0.9);
-            border: 1px solid #cfdeea;
+            background: var(--result-bg);
+            border: 1px solid var(--result-border);
             border-radius: 12px;
         }
 
@@ -217,26 +310,26 @@
 
         .result-label {
             display: block;
-            color: #48627d;
+            color: var(--muted);
             font-size: 0.9rem;
         }
 
         .result-value {
             display: block;
             margin: 0.2rem 0;
-            color: #09376d;
+            color: var(--heading);
             font-size: 2rem;
             font-weight: 700;
         }
 
         .result-class {
-            color: #956f1f;
+            color: var(--accent);
             font-weight: 700;
         }
 
         .back-link {
             margin-top: 0.75rem;
-            color: #09376d;
+            color: var(--link);
             border: 1px solid transparent;
         }
 
@@ -300,6 +393,7 @@
         <span class="ambient-orb orb-two"></span>
         <span class="ambient-orb orb-three"></span>
     </div>
+    <button class="theme-toggle" id="theme-toggle" type="button" aria-pressed="false">Dark mode</button>
     <main class="page-content">
         <section class="calculator-card" aria-labelledby="page-title">
             <p class="eyebrow">University of Ghana</p>
@@ -341,6 +435,46 @@
         </section>
     </main>
     <script>
+        const root = document.documentElement;
+        const themeToggle = document.querySelector("#theme-toggle");
+        const colorScheme = window.matchMedia("(prefers-color-scheme: dark)");
+
+        try {
+            const savedTheme = localStorage.getItem("theme");
+            if (savedTheme === "light" || savedTheme === "dark") {
+                root.setAttribute("data-theme", savedTheme);
+            }
+        } catch (error) {
+            console.error("Could not read the saved theme preference.", error);
+        }
+
+        function updateThemeToggle() {
+            const isDark = root.getAttribute("data-theme") === "dark" ||
+                (!root.hasAttribute("data-theme") && colorScheme.matches);
+            themeToggle.setAttribute("aria-pressed", String(isDark));
+        }
+
+        themeToggle.addEventListener("click", () => {
+            const isDark = root.getAttribute("data-theme") === "dark" ||
+                (!root.hasAttribute("data-theme") && colorScheme.matches);
+            const nextTheme = isDark ? "light" : "dark";
+            root.setAttribute("data-theme", nextTheme);
+            updateThemeToggle();
+
+            try {
+                localStorage.setItem("theme", nextTheme);
+            } catch (error) {
+                console.error("Could not save the theme preference.", error);
+            }
+        });
+
+        colorScheme.addEventListener("change", () => {
+            if (!root.hasAttribute("data-theme")) {
+                updateThemeToggle();
+            }
+        });
+        updateThemeToggle();
+
         const form = document.querySelector("#cgpa-form");
         const result = document.querySelector("#result");
         const cgpaValue = document.querySelector("#cgpa-value");
