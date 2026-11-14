@@ -1,0 +1,1861 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#f4f0e7">
+<title>Legon Loop | Campus community</title>
+<link rel="icon" href="LEGONLOOP.png" type="image/png">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    color-scheme: light;
+    --ink: #29243a;
+    --muted: #807b89;
+    --accent: #6744e8;
+    --accent-dark: #5030c8;
+    --accent-soft: #eee9ff;
+    --paper: #fffdf8;
+    --line: #ebe5d9;
+    --bg: #f4f0e7;
+    --orange: #e68a48;
+    --danger: #b42318;
+    font-family: 'Nunito', system-ui, sans-serif;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; min-height: 100vh; color: var(--ink); background: var(--bg); }
+  button, input, textarea, select { font: inherit; }
+  button { cursor: pointer; }
+  button:focus-visible, input:focus-visible, textarea:focus-visible, select:focus-visible {
+    outline: 3px solid #b8a8ff; outline-offset: 2px;
+  }
+  .topbar {
+    position: sticky; z-index: 5; top: 0; display: flex; align-items: center;
+    justify-content: space-between; height: 68px; padding: 0 max(22px, calc((100vw - 1180px) / 2));
+    background: rgba(255,253,248,.96); border-bottom: 1px solid var(--line); backdrop-filter: blur(12px);
+  }
+  .brand { display: flex; align-items: center; gap: 11px; color: var(--ink); text-decoration: none; }
+  .brand-mark {
+    display: grid; place-items: center; width: 38px; height: 38px; border-radius: 12px;
+    background: var(--accent); color: #fff; font-size: 15px; font-weight: 800; letter-spacing: -.05em;
+  }
+  .brand-name { font-size: 19px; font-weight: 800; letter-spacing: -.04em; }
+  .campus-pill { padding: 7px 12px; border-radius: 999px; background: var(--accent-soft); color: var(--accent-dark); font-size: 13px; font-weight: 700; }
+  .account { display: flex; align-items: center; gap: 12px; }
+  .anon-state { color: var(--muted); font-size: 13px; }
+  .logout { border: 0; background: transparent; color: var(--accent-dark); font-weight: 800; }
+  .layout {
+    display: grid; grid-template-columns: 220px minmax(0, 620px) 250px; gap: 26px;
+    max-width: 1180px; margin: 30px auto; padding: 0 20px; align-items: start;
+  }
+  .sidebar, .right-rail { position: sticky; top: 92px; }
+  .side-title { margin: 0 0 12px 10px; color: var(--muted); font-size: 11px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; }
+  .category-list { display: grid; gap: 5px; }
+  .category-btn {
+    display: flex; align-items: center; gap: 12px; width: 100%; padding: 11px 12px;
+    border: 0; border-radius: 12px; background: transparent; color: #625c70; text-align: left; font-weight: 700;
+  }
+  .category-btn:hover { background: #f0ecf9; }
+  .category-btn.active { background: var(--accent-soft); color: var(--accent-dark); }
+  .category-icon { display: grid; place-items: center; width: 24px; font-size: 17px; }
+  .side-note, .rail-card { padding: 17px; border: 1px solid var(--line); border-radius: 16px; background: var(--paper); }
+  .side-note { margin-top: 24px; color: var(--muted); font-size: 13px; line-height: 1.55; }
+  .side-note strong { display: block; margin-bottom: 5px; color: var(--ink); }
+  .feed-head { margin: 2px 0 19px; }
+  .feed-head h1 { margin: 0; font-size: 27px; letter-spacing: -.05em; }
+  .feed-head p { margin: 4px 0 0; color: var(--muted); font-size: 14px; }
+  .card { border: 1px solid var(--line); border-radius: 20px; background: var(--paper); box-shadow: 0 5px 16px rgba(43,31,74,.045); }
+  .composer { margin-bottom: 18px; padding: 20px; }
+  .composer-top { display: flex; align-items: center; gap: 11px; margin-bottom: 13px; }
+  .avatar {
+    display: grid; flex: 0 0 auto; place-items: center; width: 38px; height: 38px;
+    border-radius: 50%; background: #eee8ff; color: #6241dd; font-size: 14px; font-weight: 800;
+  }
+  .composer-prompt { font-size: 14px; font-weight: 800; }
+  .composer-hint { display: block; margin-top: 1px; color: var(--muted); font-size: 12px; }
+  textarea, input[type="search"], select {
+    width: 100%; border: 1px solid var(--line); border-radius: 12px; background: #fffefa; color: var(--ink);
+  }
+  textarea { min-height: 104px; padding: 13px; resize: vertical; line-height: 1.5; }
+  textarea::placeholder, input::placeholder { color: #a09aa8; }
+  .composer-bottom { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-top: 12px; }
+  .compose-options { display: flex; align-items: center; gap: 10px; min-width: 0; }
+  select { width: auto; max-width: 175px; padding: 9px 28px 9px 10px; font-size: 13px; }
+  .char-count { color: var(--muted); font-size: 12px; white-space: nowrap; }
+  .location-option { display: flex; align-items: center; gap: 8px; margin-top: 11px; color: #625c70; font-size: 13px; }
+  .location-option input { width: 16px; height: 16px; margin: 0; accent-color: var(--accent); }
+  .location-status { min-height: 0; margin: 5px 0 0 24px; color: var(--muted); font-size: 12px; }
+  .post-location { display: inline-flex; align-items: center; gap: 5px; margin: 0 0 12px; color: var(--accent-dark); font-size: 12px; font-weight: 800; }
+  .map-toggle { display: block; margin: 0 0 10px; padding: 0; border: 0; background: transparent; color: var(--accent-dark); font-size: 12px; font-weight: 800; }
+  .map-panel { height: 220px; margin: 0 0 12px; overflow: hidden; border: 1px solid var(--line); border-radius: 12px; background: #f1ede4; }
+  .map-panel[hidden] { display: none; }
+  .map-message { display: grid; height: 100%; place-items: center; padding: 18px; color: var(--muted); text-align: center; font-size: 13px; }
+  .primary-btn {
+    padding: 10px 17px; border: 0; border-radius: 12px; background: var(--accent); color: white; font-weight: 800;
+    box-shadow: 0 4px 10px rgba(103,68,232,.16);
+  }
+  .primary-btn:hover { background: var(--accent-dark); }
+  .primary-btn:disabled { opacity: .6; cursor: wait; }
+  .error { min-height: 0; margin: 0; color: var(--danger); font-size: 13px; }
+  .error:not(:empty) { margin-top: 9px; }
+  .feed-tools { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin: 20px 0 12px; }
+  .sort-tabs { display: flex; gap: 4px; padding: 4px; border-radius: 12px; background: #ebe6da; }
+  .sort-btn { padding: 7px 13px; border: 0; border-radius: 8px; background: transparent; color: var(--muted); font-size: 13px; font-weight: 800; }
+  .sort-btn.active { background: var(--paper); color: var(--accent-dark); box-shadow: 0 1px 4px rgba(43,31,74,.1); }
+  .search { max-width: 220px; padding: 9px 12px; font-size: 13px; }
+  .post { margin-bottom: 13px; padding: 19px; }
+  .post-head { display: flex; align-items: center; gap: 10px; }
+  .post-head .avatar { width: 36px; height: 36px; background: #eee8ff; color: var(--accent-dark); }
+  .post-author { font-size: 13px; font-weight: 800; }
+  .post-meta { margin-top: 1px; color: var(--muted); font-size: 12px; }
+  .tag { margin-left: auto; padding: 5px 9px; border-radius: 999px; background: #f2eee5; color: #625c70; font-size: 11px; font-weight: 800; }
+  .post-text { margin: 14px 0 15px; white-space: pre-wrap; overflow-wrap: anywhere; line-height: 1.65; font-size: 15px; }
+  .post-actions { display: flex; align-items: center; gap: 8px; border-top: 1px solid #f0ebdf; padding-top: 11px; }
+  .vote-group { display: flex; align-items: center; gap: 2px; padding: 3px; border-radius: 10px; background: #f4f0e7; }
+  .action-btn, .vote-btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: 6px; min-height: 34px;
+    padding: 6px 9px; border: 0; border-radius: 8px; background: transparent; color: #706b79;
+    font-size: 12px; font-weight: 800;
+  }
+  .action-btn:hover, .vote-btn:hover { background: #f0ecf9; color: var(--accent-dark); }
+  .vote-btn.selected { background: var(--accent-soft); color: var(--accent-dark); }
+  .reply-panel { margin-top: 12px; padding-top: 12px; border-top: 1px solid #f0ebdf; }
+  .reply-list { display: grid; gap: 11px; margin-bottom: 13px; }
+  .reply { display: flex; align-items: flex-start; gap: 9px; font-size: 13px; line-height: 1.5; }
+  .reply .avatar { width: 28px; height: 28px; font-size: 11px; }
+  .reply-content { min-width: 0; overflow-wrap: anywhere; }
+  .reply-author { margin-right: 5px; font-weight: 800; }
+  .reply-time { color: var(--muted); font-size: 11px; }
+  .reply-form { display: flex; gap: 8px; }
+  .reply-form input { min-width: 0; padding: 9px 11px; font-size: 13px; }
+  .reply-form button { padding: 8px 12px; border: 0; border-radius: 9px; background: var(--accent); color: #fff; font-size: 12px; font-weight: 800; }
+  .reply-error { margin-top: 6px; }
+  .empty, .loading { padding: 34px 20px; color: var(--muted); text-align: center; font-size: 14px; }
+  .right-rail { display: grid; gap: 13px; }
+  .rail-card h2 { margin: 0 0 9px; font-size: 14px; }
+  .rail-card p { margin: 0; color: var(--muted); font-size: 13px; line-height: 1.6; }
+  .trend { display: flex; justify-content: space-between; gap: 8px; margin-top: 12px; font-size: 13px; font-weight: 800; }
+  .trend span:last-child { color: #9aa59e; font-size: 11px; font-weight: 600; }
+  .guideline { display: flex; gap: 9px; margin-top: 11px; color: #625c70; font-size: 12px; line-height: 1.5; }
+  .guideline strong { color: var(--accent); }
+  .profile-shell { display: grid; gap: 14px; }
+  .profile-card { padding: 22px; }
+  .profile-top { display: flex; align-items: center; gap: 14px; margin-bottom: 16px; }
+  .profile-avatar { display: grid; place-items: center; width: 68px; height: 68px; border-radius: 50%; background: linear-gradient(135deg, #eee8ff, #d9e8ff); color: var(--accent-dark); font-size: 24px; font-weight: 800; }
+  .profile-meta { flex: 1; min-width: 0; }
+  .profile-meta h2 { margin: 0; font-size: 28px; letter-spacing: -.05em; }
+  .profile-meta p { margin: 5px 0 0; color: var(--muted); font-size: 13px; }
+  .profile-form { display: grid; gap: 14px; }
+  .form-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+  .field { display: grid; gap: 6px; }
+  .field label { font-size: 12px; font-weight: 800; letter-spacing: .04em; text-transform: uppercase; color: var(--muted); }
+  .field input, .field textarea { width: 100%; padding: 11px 12px; border: 1px solid var(--line); border-radius: 12px; background: #fffefa; color: var(--ink); font: inherit; }
+  .field textarea { min-height: 88px; resize: vertical; }
+  .profile-actions { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-top: 6px; }
+  .profile-status { font-size: 12px; font-weight: 700; }
+  .profile-status.success { color: #0a7d4a; }
+  .profile-status.error { color: var(--danger); }
+  .layout { display: block; max-width: 760px; margin: 28px auto 110px; padding: 0 20px; }
+  .app-shell { min-width: 0; }
+  .app-screen[hidden] { display: none; }
+  .eyebrow { margin: 0 0 7px; color: var(--accent-dark); font-size: 11px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; }
+  .feed-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 14px; margin: 0 0 18px; }
+  .feed-head h1, .screen-head h1 { margin: 0; font-size: clamp(24px, 5vw, 32px); line-height: 1.12; letter-spacing: -.055em; }
+  .feed-head p:not(.eyebrow), .screen-head p:not(.eyebrow) { margin: 7px 0 0; color: var(--muted); font-size: 14px; }
+  .feed-stat { padding: 8px 11px; border: 1px solid var(--line); border-radius: 12px; background: var(--paper); color: var(--accent-dark); font-size: 12px; font-weight: 800; white-space: nowrap; }
+  .category-list { display: flex; gap: 7px; margin: 0 0 16px; overflow-x: auto; scrollbar-width: none; }
+  .category-list::-webkit-scrollbar { display: none; }
+  .category-btn { width: auto; flex: 0 0 auto; padding: 8px 12px; border: 1px solid var(--line); border-radius: 999px; background: var(--paper); white-space: nowrap; font-size: 12px; }
+  .category-icon { display: none; }
+  .side-title, .side-note, .right-rail { display: none; }
+  .screen-head { margin: 4px 0 20px; }
+  .screen-head-row { display: flex; align-items: center; gap: 12px; }
+  .back-btn { display: grid; flex: 0 0 auto; place-items: center; width: 38px; height: 38px; border: 1px solid var(--line); border-radius: 50%; background: var(--paper); color: var(--ink); font-size: 18px; }
+  .demo-banner { margin: 0 0 14px; padding: 10px 12px; border: 1px solid #e8defe; border-radius: 12px; background: #f2edff; color: #62528e; font-size: 12px; line-height: 1.5; }
+  .composer { padding: 20px; }
+  .composer textarea { min-height: 180px; border: 0; background: transparent; padding: 14px 0; font-size: 16px; }
+  .composer textarea:focus { outline: none; }
+  .composer textarea:focus-visible { outline: 2px solid #b8a8ff; outline-offset: 3px; border-radius: 6px; }
+  .compose-privacy { margin: 16px 0 0; padding: 11px 12px; border-radius: 12px; background: #f5f1ff; color: #716586; font-size: 12px; line-height: 1.5; }
+  .composer-actions { display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+  .draft-btn { padding: 7px 10px; border: 0; border-radius: 8px; background: transparent; color: var(--accent-dark); font-size: 12px; font-weight: 800; }
+  .request-tabs, .inbox-tabs { display: flex; gap: 5px; margin: 0 0 15px; padding: 4px; border-radius: 12px; background: #ebe6da; }
+  .request-tab, .inbox-tab { flex: 1; padding: 9px 12px; border: 0; border-radius: 9px; background: transparent; color: var(--muted); font-size: 13px; font-weight: 800; }
+  .request-tab.active, .inbox-tab.active { background: var(--paper); color: var(--ink); box-shadow: 0 1px 4px rgba(43,31,74,.1); }
+  .request-card { display: flex; align-items: center; gap: 12px; margin-bottom: 11px; padding: 15px; }
+  .person-avatar { display: grid; flex: 0 0 auto; place-items: center; width: 43px; height: 43px; border-radius: 50%; background: #f1e7ff; font-size: 20px; }
+  .person-info { flex: 1; min-width: 0; }
+  .person-name { display: flex; align-items: center; gap: 5px; font-size: 14px; font-weight: 800; }
+  .verified { color: var(--accent); font-size: 12px; }
+  .person-meta, .person-note { margin-top: 2px; color: var(--muted); font-size: 12px; }
+  .person-note { margin-top: 7px; color: #625c70; line-height: 1.45; }
+  .request-actions { display: flex; gap: 7px; margin-top: 12px; }
+  .request-actions button { padding: 8px 13px; border: 0; border-radius: 9px; background: var(--accent); color: #fff; font-size: 12px; font-weight: 800; }
+  .request-actions .decline-btn { border: 1px solid var(--line); background: transparent; color: var(--muted); }
+  .request-actions .message-btn { background: var(--accent-soft); color: var(--accent-dark); }
+  .request-status { color: var(--accent-dark); font-size: 12px; font-weight: 800; }
+  .screen-search { margin-bottom: 13px; padding: 11px 13px; }
+  .inbox-row { display: flex; width: 100%; align-items: center; gap: 11px; margin-bottom: 8px; padding: 13px; border: 1px solid var(--line); border-radius: 15px; background: var(--paper); color: inherit; text-align: left; }
+  .inbox-row:hover { background: #faf7ff; }
+  .inbox-row .person-avatar { width: 42px; height: 42px; }
+  .inbox-copy { flex: 1; min-width: 0; }
+  .inbox-preview { overflow: hidden; margin-top: 3px; color: var(--muted); font-size: 12px; text-overflow: ellipsis; white-space: nowrap; }
+  .inbox-time { align-self: flex-start; color: var(--muted); font-size: 10px; white-space: nowrap; }
+  .unread-dot { flex: 0 0 auto; width: 8px; height: 8px; border-radius: 50%; background: var(--accent); }
+  .chat-header { display: flex; align-items: center; gap: 10px; padding: 13px 15px; border: 1px solid var(--line); border-radius: 16px 16px 0 0; background: var(--paper); }
+  .chat-header .person-avatar { width: 38px; height: 38px; font-size: 18px; }
+  .chat-messages { display: flex; min-height: 280px; flex-direction: column; gap: 11px; padding: 17px 14px; border-right: 1px solid var(--line); border-left: 1px solid var(--line); background: #faf7ef; }
+  .chat-day { align-self: center; color: var(--muted); font-size: 10px; font-weight: 800; letter-spacing: .08em; }
+  .chat-bubble { max-width: 82%; padding: 10px 12px; border-radius: 15px 15px 15px 5px; background: var(--paper); box-shadow: 0 2px 6px rgba(43,31,74,.06); font-size: 13px; line-height: 1.5; }
+  .chat-bubble.mine { align-self: flex-end; border-radius: 15px 15px 5px 15px; background: var(--accent); color: #fff; }
+  .chat-time { display: block; margin-top: 4px; opacity: .65; font-size: 9px; text-align: right; }
+  .chat-form { display: grid; grid-template-columns: minmax(0, 1fr) minmax(120px, 180px) 40px; gap: 8px; padding: 11px; border: 1px solid var(--line); border-top: 0; border-radius: 0 0 16px 16px; background: var(--paper); }
+  .chat-form input { min-width: 0; padding: 10px 12px; border: 1px solid var(--line); border-radius: 999px; background: #faf8f3; }
+  .media-controls { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-top: 10px; }
+  .media-button { display: inline-flex; align-items: center; justify-content: center; min-height: 36px; padding: 7px 12px; border: 1px solid var(--line); border-radius: 8px; background: var(--paper); color: var(--ink); font: inherit; font-size: 12px; font-weight: 700; cursor: pointer; }
+  .media-button:hover { background: #f3efe6; }
+  .media-status { color: var(--muted); font-size: 12px; }
+  .media-preview { display: block; max-width: min(100%, 360px); max-height: 260px; margin-top: 10px; border-radius: 8px; object-fit: contain; }
+  .post-media { display: block; max-width: 100%; max-height: 420px; margin: 10px 0; border-radius: 8px; }
+  .reply-form { flex-wrap: wrap; }
+  .reply-form .media-status { flex: 1 1 100%; }
+  .chat-form { grid-template-columns: minmax(0, 1fr) minmax(100px, 160px) auto auto 40px; align-items: center; }
+  .chat-form .media-button { min-height: 40px; }
+  .chat-form .media-status { grid-column: 1 / -1; }
+  .chat-form button { width: 40px; height: 40px; border: 0; border-radius: 50%; background: var(--accent); color: #fff; font-size: 17px; }
+  .chat-form { grid-template-columns: minmax(0, 1fr) minmax(100px, 160px) auto 40px; align-items: center; }
+  .chat-form > button[type="submit"] { grid-column: 4; }
+  .chat-form .media-button { min-height: 40px; width: auto; border-radius: 8px; background: var(--paper); color: var(--ink); font-size: 12px; }
+  .chat-form .media-status { grid-column: 1 / -1; }
+  .bottom-nav { position: fixed; z-index: 8; right: 0; bottom: 0; left: 0; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); max-width: 760px; margin: 0 auto; padding: 8px 10px max(8px, env(safe-area-inset-bottom)); border: 1px solid var(--line); border-bottom: 0; border-radius: 18px 18px 0 0; background: rgba(255,253,248,.97); box-shadow: 0 -7px 24px rgba(43,31,74,.07); backdrop-filter: blur(14px); }
+  .nav-btn { display: grid; justify-items: center; gap: 3px; padding: 5px 3px; border: 0; border-radius: 11px; background: transparent; color: #898392; font-size: 10px; font-weight: 700; }
+  .nav-btn.active { color: var(--accent); }
+  .nav-icon { font-size: 19px; line-height: 1; }
+  .nav-btn[data-screen="post"] .nav-icon { display: grid; place-items: center; width: 34px; height: 30px; border-radius: 10px; background: var(--accent-soft); font-size: 19px; }
+  .nav-btn[data-screen="post"].active .nav-icon { background: var(--accent); color: #fff; }
+  .sent-panel[hidden], .received-panel[hidden], .inbox-row[hidden] { display: none; }
+  .demo-chat-empty { padding: 18px; color: var(--muted); text-align: center; font-size: 12px; }
+  @media (max-width: 1020px) {
+    .layout { display: block; max-width: 760px; }
+  }
+  @media (max-width: 680px) {
+    .chat-form { grid-template-columns: minmax(0, 1fr) 40px; }
+    .chat-form input[type="url"] { grid-column: 1 / -1; }
+    .chat-form > button[type="submit"] { grid-column: 2; }
+    .chat-form .media-button { grid-column: 1; }
+    .chat-form .media-status { grid-column: 1 / -1; }
+    .topbar { height: 60px; padding: 0 15px; }
+    .brand-mark { width: 34px; height: 34px; }
+    .brand-name { font-size: 17px; }
+    .campus-pill { padding: 6px 9px; font-size: 11px; }
+    .anon-state { display: none; }
+    .layout { display: block; margin: 18px auto 96px; padding: 0 13px; }
+    .feed-head { margin: 0 0 15px; }
+    .feed-head h1 { font-size: 25px; }
+    .composer { padding: 14px; }
+    .composer-bottom { align-items: flex-end; }
+    .compose-options { flex-wrap: wrap; gap: 7px; }
+    select { max-width: 150px; }
+    .primary-btn { padding: 10px 13px; white-space: nowrap; }
+    .feed-tools { align-items: flex-start; flex-direction: column; }
+    .search { max-width: none; }
+    .post { padding: 14px; }
+    .feed-stat { font-size: 10px; }
+    .request-card { align-items: flex-start; }
+    .request-card > .person-avatar { width: 38px; height: 38px; }
+    .composer textarea { min-height: 220px; }
+  }
+  @media (prefers-reduced-motion: reduce) { *, *::before, *::after { scroll-behavior: auto !important; } }
+</style>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header class="topbar">
+  <a class="brand" href="phase2.html" aria-label="Legon Loop home">
+    <span class="brand-mark" aria-hidden="true">ll</span><span class="brand-name">legon loop</span>
+  </a>
+  <span class="campus-pill">● &nbsp;University of Ghana</span>
+  <div class="account"><span class="anon-state">You’re posting anonymously</span><button class="logout" id="logout" type="button">Log out</button></div>
+</header>
+
+<div class="layout">
+  <div class="app-shell">
+    <section class="app-screen" id="feedScreen" data-screen-panel="feed">
+      <header class="feed-head">
+        <div>
+          <p class="eyebrow">◉ &nbsp; University of Ghana</p>
+          <h1>Good evening, Legonites.</h1>
+          <p>Your campus. Your people. Your space.</p>
+        </div>
+        <span class="feed-stat">✦ &nbsp; Campus afterhours</span>
+      </header>
+
+      <nav class="category-list" id="categories" aria-label="Campus feed categories">
+        <button class="category-btn active" type="button" data-category="All">For you</button>
+        <button class="category-btn" type="button" data-category="Campus">Campus life</button>
+        <button class="category-btn" type="button" data-category="Question">Questions</button>
+        <button class="category-btn" type="button" data-category="Confession">Confessions</button>
+        <button class="category-btn" type="button" data-category="Lost & Found">Lost &amp; found</button>
+        <button class="category-btn" type="button" data-category="Opportunity">Opportunities</button>
+      </nav>
+
+      <div class="feed-tools">
+        <div class="sort-tabs" role="group" aria-label="Sort posts">
+          <button class="sort-btn active" type="button" data-sort="latest">Latest</button>
+          <button class="sort-btn" type="button" data-sort="top">Trending</button>
+        </div>
+        <label class="sr-only" for="search">Search posts</label>
+        <input class="search" id="search" type="search" placeholder="Search campus posts">
+      </div>
+      <section id="feed" aria-live="polite"><div class="card loading">Loading the campus feed…</div></section>
+    </section>
+
+    <section class="app-screen" id="postScreen" data-screen-panel="post" hidden>
+      <header class="screen-head">
+        <p class="eyebrow">YOUR CAMPUS. YOUR VOICE.</p>
+        <h1>Put it out there.</h1>
+        <p>Your campus. Your inside voice.</p>
+      </header>
+      <div class="demo-banner">Posts are anonymous to other students. Please keep personal details out of your post.</div>
+      <form class="card composer" id="postForm">
+        <div class="composer-top">
+          <div class="avatar" aria-hidden="true">?</div>
+          <div><div class="composer-prompt">Legon Loop</div><span class="composer-hint">Posting anonymously</span></div>
+          <span class="tag">ANONYMOUS</span>
+        </div>
+        <label for="postText" class="sr-only">Your post</label>
+        <textarea id="postText" maxlength="500" placeholder="What’s on your mind?"></textarea>
+        <div class="media-controls">
+          <label class="media-button" for="postPhoto">Take or choose photo</label>
+          <input class="sr-only" id="postPhoto" type="file" accept="image/*" capture="environment">
+          <span id="postPhotoStatus" class="media-status" aria-live="polite"></span>
+          <button class="media-button" id="recordPostVoice" type="button">Record voice note</button>
+          <span id="postVoiceStatus" class="media-status" aria-live="polite"></span>
+        </div>
+        <img id="postPhotoPreview" class="media-preview" alt="Selected photo preview" hidden>
+        <div class="composer-bottom">
+          <div class="compose-options">
+            <label class="sr-only" for="postCategory">Choose a category</label>
+            <select id="postCategory">
+              <option value="Campus">Campus life</option>
+              <option value="Question">Question</option>
+              <option value="Confession">Confession</option>
+              <option value="Lost & Found">Lost &amp; found</option>
+              <option value="Opportunity">Opportunity</option>
+            </select>
+            <span class="char-count" id="charCount">0 / 500</span>
+          </div>
+        </div>
+        <label class="location-option" for="shareLocation">
+          <input id="shareLocation" type="checkbox">
+          <span>Attach my approximate location (about 1 km)</span>
+        </label>
+        <p class="location-status" id="locationStatus" aria-live="polite">Location stays off unless you opt in for this post.</p>
+        <p class="compose-privacy">◉ &nbsp; Your name and student email stay private. Keep it kind and leave identifying details out.</p>
+        <p class="error" id="postError" role="alert"></p>
+        <div class="composer-actions">
+          <button class="draft-btn" id="saveDraft" type="button">Save draft</button>
+          <button class="primary-btn" id="postButton" type="submit">➤ &nbsp; Post anonymously</button>
+        </div>
+      </form>
+    </section>
+
+    <section class="app-screen" id="requestsScreen" data-screen-panel="requests" hidden>
+      <header class="screen-head">
+        <p class="eyebrow">YOUR CAMPUS CIRCLE</p>
+        <h1>New connections. <span class="verified">2</span></h1>
+        <p>A little hello could go a long way.</p>
+      </header>
+      <div class="demo-banner">Demo screen: sample connection requests only. Accepting a request updates this preview; it does not contact a real student.</div>
+      <div class="request-tabs" role="group" aria-label="Connection request type">
+        <button class="request-tab active" type="button" data-request-tab="received">Received&nbsp; 2</button>
+        <button class="request-tab" type="button" data-request-tab="sent">Sent&nbsp; 1</button>
+      </div>
+      <div id="receivedRequests" class="received-panel">
+        <article class="card request-card" data-demo-request>
+          <div class="person-avatar" aria-hidden="true">🦉</div>
+          <div class="person-info">
+            <div class="person-name">Night Owl 27 <span class="verified">●</span></div>
+            <div class="person-meta">From your post about late-night study spots</div>
+            <p class="person-note">“Is the library still open after 10? Looking for a quiet study crew.”</p>
+            <div class="request-actions">
+              <button type="button" data-request-action="accept" data-person="Night Owl 27">✓ &nbsp; Accept &amp; chat</button>
+              <button class="decline-btn" type="button" data-request-action="decline">Decline</button>
+            </div>
+          </div>
+        </article>
+        <article class="card request-card" data-demo-request>
+          <div class="person-avatar" aria-hidden="true">🐸</div>
+          <div class="person-info">
+            <div class="person-name">Moss Frog <span class="verified">●</span></div>
+            <div class="person-meta">From your campus-life post</div>
+            <p class="person-note">“We’re putting a little study group together. You’re welcome to join!”</p>
+            <div class="request-actions">
+              <button type="button" data-request-action="accept" data-person="Moss Frog">✓ &nbsp; Accept &amp; chat</button>
+              <button class="decline-btn" type="button" data-request-action="decline">Decline</button>
+            </div>
+          </div>
+        </article>
+      </div>
+      <div id="sentRequests" class="sent-panel" hidden>
+        <article class="card request-card">
+          <div class="person-avatar" aria-hidden="true">📚</div>
+          <div class="person-info">
+            <div class="person-name">Library Ghost</div>
+            <div class="person-meta">Sent yesterday · Waiting for a reply</div>
+          </div>
+          <span class="request-status">Pending</span>
+        </article>
+      </div>
+    </section>
+
+    <section class="app-screen" id="inboxScreen" data-screen-panel="inbox" hidden>
+      <header class="screen-head">
+        <p class="eyebrow">YOUR CAMPUS CIRCLE</p>
+        <h1>Your people.</h1>
+        <p>Still anonymous. A little less strangers.</p>
+      </header>
+      <div class="demo-banner">Conversations and messages are saved to your account.</div>
+      <label class="sr-only" for="inboxSearch">Find a pseudonym</label>
+      <input class="screen-search" id="inboxSearch" type="search" placeholder="⌕  Find a pseudonym">
+      <div class="inbox-tabs" role="group" aria-label="Filter conversations">
+        <button class="inbox-tab active" type="button" data-inbox-filter="all">All chats</button>
+        <button class="inbox-tab" type="button" data-inbox-filter="unread">Unread&nbsp; 2</button>
+      </div>
+      <div id="inboxList">
+        <button class="inbox-row" type="button" data-demo-chat="Night Owl 27" data-unread="true">
+          <span class="person-avatar" aria-hidden="true">🦉</span>
+          <span class="inbox-copy"><span class="person-name">Night Owl 27 <span class="verified">●</span></span><span class="inbox-preview">deal. I'll be the one with the purple notebook 👀</span></span>
+          <span class="inbox-time">2m ago</span><span class="unread-dot" aria-label="Unread"></span>
+        </button>
+        <button class="inbox-row" type="button" data-demo-chat="Moss Frog" data-unread="true">
+          <span class="person-avatar" aria-hidden="true">🐸</span>
+          <span class="inbox-copy"><span class="person-name">Moss Frog</span><span class="inbox-preview">The best biryani after lectures? 👀</span></span>
+          <span class="inbox-time">1h ago</span><span class="unread-dot" aria-label="Unread"></span>
+        </button>
+        <button class="inbox-row" type="button" data-demo-chat="Library Ghost" data-unread="false">
+          <span class="person-avatar" aria-hidden="true">📚</span>
+          <span class="inbox-copy"><span class="person-name">Library Ghost</span><span class="inbox-preview">Found the quiet floor. Finally.</span></span>
+          <span class="inbox-time">Yesterday</span>
+        </button>
+        <button class="inbox-row" type="button" data-demo-chat="Cosmic Bagel" data-unread="false">
+          <span class="person-avatar" aria-hidden="true">🥯</span>
+          <span class="inbox-copy"><span class="person-name">Cosmic Bagel</span><span class="inbox-preview">Nice work on your project!</span></span>
+          <span class="inbox-time">2d ago</span>
+        </button>
+      </div>
+      <p id="inboxEmpty" class="demo-chat-empty" hidden>No conversations match that search.</p>
+    </section>
+
+    <section class="app-screen" id="chatScreen" data-screen-panel="chat" hidden>
+      <div class="chat-header">
+        <button class="back-btn" type="button" data-screen="inbox" aria-label="Back to inbox">←</button>
+        <span class="person-avatar" id="chatAvatar" aria-hidden="true">🦉</span>
+        <span class="person-info"><span class="person-name" id="chatName">Night Owl 27</span><span class="person-meta" id="chatPresence">Active now</span></span>
+        <span class="tag">LIVE</span>
+      </div>
+      <div class="demo-banner" style="margin-top:10px">Messages are visible to participants in this conversation.</div>
+      <div class="chat-messages" id="chatMessages" aria-live="polite">
+        <span class="chat-day">TODAY · 9:32 PM</span>
+        <div class="chat-bubble">Hey! Saw your post about late-night study spots. Still looking for a crew?<span class="chat-time">9:32 PM</span></div>
+        <div class="chat-bubble mine">Yes please — I’m usually at the library after 10. Want to join?<span class="chat-time">9:34 PM</span></div>
+        <div class="chat-bubble">Deal. I’ll be the one with the purple notebook 👀<span class="chat-time">9:36 PM</span></div>
+      </div>
+      <form class="chat-form" id="demoChatForm">
+        <label class="sr-only" for="demoChatInput">Write a demo message</label>
+        <input id="demoChatInput" type="text" maxlength="300" placeholder="Message…" autocomplete="off">
+        <label class="sr-only" for="chatAttachment">Optional attachment</label>
+        <input id="chatAttachment" type="url" maxlength="500" placeholder="Optional image URL" autocomplete="off">
+        <button class="media-button" id="recordChatVoice" type="button">Voice note</button>
+        <span id="chatVoiceStatus" class="media-status" aria-live="polite"></span>
+        <button type="submit" aria-label="Add demo message">↑</button>
+      </form>
+    </section>
+
+    <section class="app-screen" id="profileScreen" data-screen-panel="profile" hidden>
+      <header class="screen-head">
+        <p class="eyebrow">YOUR ACCOUNT</p>
+        <h1>Your profile.</h1>
+        <p>Keep your campus presence friendly and recognizable.</p>
+      </header>
+      <div class="profile-shell">
+        <div class="card profile-card">
+          <div class="profile-top">
+            <div class="profile-avatar" id="profileAvatar" aria-hidden="true">L</div>
+            <div class="profile-meta">
+              <h2 id="profileHeadline">Legonite</h2>
+              <p id="profileSubtitle">University of Ghana student</p>
+            </div>
+          </div>
+
+          <form class="profile-form" id="profileForm">
+            <div class="form-grid">
+              <div class="field">
+                <label for="profileDisplayName">Display name</label>
+                <input id="profileDisplayName" name="displayName" type="text" maxlength="40" placeholder="Your name or nickname">
+              </div>
+              <div class="field">
+                <label for="profilePronouns">Pronouns</label>
+                <input id="profilePronouns" name="pronouns" type="text" maxlength="20" placeholder="she/her, he/him, they/them">
+              </div>
+              <div class="field">
+                <label for="profileMajor">Major</label>
+                <input id="profileMajor" name="major" type="text" maxlength="60" placeholder="Computer Science">
+              </div>
+              <div class="field">
+                <label for="profileYear">Year</label>
+                <input id="profileYear" name="year" type="text" maxlength="30" placeholder="Level 200">
+              </div>
+            </div>
+
+            <div class="field">
+              <label for="profileBio">Short bio</label>
+              <textarea id="profileBio" name="bio" maxlength="180" placeholder="Tell other students a little about you."></textarea>
+            </div>
+
+            <div class="form-grid">
+              <div class="field">
+                <label for="profileInterests">Interests</label>
+                <input id="profileInterests" name="interests" type="text" maxlength="80" placeholder="Reading, football, design, tutoring">
+              </div>
+              <div class="field">
+                <label for="profileLocation">Location</label>
+                <input id="profileLocation" name="location" type="text" maxlength="60" placeholder="Legon, Accra">
+              </div>
+            </div>
+
+            <div class="profile-actions">
+              <span class="profile-status" id="profileStatus" aria-live="polite"></span>
+              <button class="primary-btn" id="saveProfileBtn" type="submit">Save profile</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </section>
+  </div>
+</div>
+
+<nav class="bottom-nav" aria-label="Main navigation">
+  <button class="nav-btn active" type="button" data-screen="feed" aria-current="page"><span class="nav-icon">⌂</span><span>Feed</span></button>
+  <button class="nav-btn" type="button" data-screen="post"><span class="nav-icon">↗</span><span>Post</span></button>
+  <button class="nav-btn" type="button" data-screen="requests"><span class="nav-icon">♙</span><span>Requests</span></button>
+  <button class="nav-btn" type="button" data-screen="inbox"><span class="nav-icon">▤</span><span>Inbox</span></button>
+  <button class="nav-btn" type="button" data-screen="profile"><span class="nav-icon">◌</span><span>Profile</span></button>
+</nav>
+
+<style>.sr-only { position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0; }</style>
+
+<script type="module">
+  import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+  import {
+    collection, addDoc, doc, query, orderBy, limit, onSnapshot,
+    runTransaction, serverTimestamp, where, getDoc, setDoc, updateDoc
+  } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+  import { ref, uploadBytesResumable, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js";
+  import { auth, db, storage } from "./firebase-app.js";
+  import { googleMapsApiKey } from "./google-maps-config.js";
+
+  const postsRef = collection(db, 'posts');
+  const feed = document.getElementById('feed');
+  const postForm = document.getElementById('postForm');
+  const postText = document.getElementById('postText');
+  const postButton = document.getElementById('postButton');
+  const postError = document.getElementById('postError');
+  const shareLocation = document.getElementById('shareLocation');
+  const locationStatus = document.getElementById('locationStatus');
+  const inboxSearch = document.getElementById('inboxSearch');
+  const inboxEmpty = document.getElementById('inboxEmpty');
+  const search = document.getElementById('search');
+  const categories = document.getElementById('categories');
+  const commentsByPost = new Map();
+  let posts = [];
+  let currentUser = null;
+  let selectedCategory = 'All';
+  let selectedSort = 'latest';
+  let unsubscribeFeed = null;
+  const voting = new Set();
+  const writingReply = new Set();
+  const openMaps = new Set();
+  let selectedLocation = null;
+  let selectedPostPhoto = null;
+  let selectedPostVoice = null;
+  let selectedChatVoice = null;
+  let mapsPromise = null;
+  let inboxFilter = 'all';
+  const chatRoomsRef = collection(db, 'chatRooms');
+  const chatRooms = [];
+  let activeChatRoomId = null;
+  const roomListeners = new Map();
+  let presenceUnsubscribe = null;
+  let typingTimer = null;
+
+  function buildInitials(value) {
+    const clean = String(value || 'Campus').trim();
+    if (!clean) return 'C';
+    const parts = clean.split(/\s+/).filter(Boolean).slice(0, 2);
+    if (!parts.length) return 'C';
+    return parts.map(function (part) { return part[0].toUpperCase(); }).join('');
+  }
+
+  async function uploadMedia(file, folder, maxBytes) {
+    if (!currentUser || !file) throw new Error('Sign in and select a media file first.');
+    let uploadFile = file;
+    let contentType = file.type.split(';')[0].toLowerCase();
+    if (folder === 'images' && file.size > 25 * 1024 * 1024) {
+      throw new Error('Choose a photo smaller than 25 MB.');
+    }
+    if (folder === 'images' && file.size > 1.5 * 1024 * 1024 && /^image\/(jpeg|png|webp)$/i.test(contentType)) {
+      if (!window.createImageBitmap) {
+        throw new Error('This browser cannot resize the photo. Choose a smaller JPEG, PNG, or WebP image.');
+      }
+      let bitmap;
+      try {
+        bitmap = await createImageBitmap(file);
+      } catch (error) {
+        throw new Error('This photo format is not supported by your browser. Try saving it as JPEG or PNG.');
+      }
+      const scale = Math.min(1, 1600 / Math.max(bitmap.width, bitmap.height));
+      const canvas = document.createElement('canvas');
+      canvas.width = Math.max(1, Math.round(bitmap.width * scale));
+      canvas.height = Math.max(1, Math.round(bitmap.height * scale));
+      const context = canvas.getContext('2d');
+      if (!context) {
+        bitmap.close();
+        throw new Error('Could not prepare this photo. Try a different image.');
+      }
+      context.drawImage(bitmap, 0, 0, canvas.width, canvas.height);
+      bitmap.close();
+      uploadFile = await new Promise(function (resolve, reject) {
+        canvas.toBlob(function (blob) {
+          if (blob) resolve(blob);
+          else reject(new Error('Could not resize this photo. Try a different image.'));
+        }, contentType === 'image/png' ? 'image/png' : contentType, 0.82);
+      });
+      contentType = uploadFile.type.split(';')[0].toLowerCase();
+    }
+    if (uploadFile.size > maxBytes) {
+      throw new Error(folder === 'images'
+        ? 'This photo is still larger than 8 MB after resizing. Choose a smaller image.'
+        : 'This media file is too large.');
+    }
+    const allowed = folder === 'audio'
+      ? /^audio\/(webm|ogg|mp4|mpeg|wav)$/i.test(contentType)
+      : /^image\/(jpeg|png|webp|gif)$/i.test(contentType);
+    if (!allowed) {
+      throw new Error(folder === 'images'
+        ? 'This photo format is not supported. Save it as JPEG, PNG, WebP, or GIF and try again.'
+        : 'This media type is not supported.');
+    }
+    const extension = contentType.split('/')[1].replace('jpeg', 'jpg');
+    const fileRef = ref(storage, 'users/' + currentUser.uid + '/' + folder + '/' + Date.now() + '-' + Math.random().toString(36).slice(2) + '.' + extension);
+    const uploadTask = uploadBytesResumable(fileRef, uploadFile, { contentType: contentType });
+    await new Promise(function (resolve, reject) {
+      uploadTask.on('state_changed', function (snapshot) {
+        if (folder === 'images') {
+          const percent = Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
+          document.getElementById('postPhotoStatus').textContent = 'Uploading photo… ' + percent + '%';
+          postButton.textContent = 'Uploading ' + percent + '%';
+        }
+      }, reject, resolve);
+    });
+    return getDownloadURL(fileRef);
+  }
+
+  function setupVoiceRecorder(button, status, onRecorded) {
+    let recorder = null;
+    let chunks = [];
+    let timeout = null;
+    button.addEventListener('click', async function () {
+      if (recorder && recorder.state === 'recording') {
+        recorder.stop();
+        return;
+      }
+      if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia || !window.MediaRecorder) {
+        status.textContent = 'Voice recording is not supported in this browser.';
+        return;
+      }
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        const mimeType = ['audio/webm;codecs=opus', 'audio/ogg;codecs=opus', 'audio/mp4'].find(function (type) {
+          return MediaRecorder.isTypeSupported(type);
+        });
+        recorder = new MediaRecorder(stream, mimeType ? { mimeType: mimeType } : undefined);
+        chunks = [];
+        recorder.addEventListener('dataavailable', function (event) {
+          if (event.data.size) chunks.push(event.data);
+        });
+        recorder.addEventListener('stop', function () {
+          window.clearTimeout(timeout);
+          stream.getTracks().forEach(function (track) { track.stop(); });
+          button.textContent = 'Record voice note';
+          if (chunks.length) {
+            const blob = new Blob(chunks, { type: recorder.mimeType || 'audio/webm' });
+            if (blob.size > 5 * 1024 * 1024) {
+              status.textContent = 'Recording exceeds the 5 MB limit.';
+              onRecorded(null);
+            } else {
+              onRecorded(blob);
+              status.textContent = 'Voice note ready. Record again to replace it.';
+            }
+          }
+        });
+        recorder.start();
+        button.textContent = 'Stop recording';
+        status.textContent = 'Recording… (60 second maximum)';
+        timeout = window.setTimeout(function () {
+          if (recorder && recorder.state === 'recording') recorder.stop();
+        }, 60000);
+      } catch (error) {
+        console.error('Could not start voice recording:', error);
+        status.textContent = 'Allow microphone access to record a voice note.';
+      }
+    });
+  }
+
+  async function ensureGeneralInboxRoom() {
+    if (!currentUser) return null;
+    const roomId = 'general-campus-' + currentUser.uid;
+    const roomRef = doc(db, 'chatRooms', roomId);
+    const roomSnap = await getDoc(roomRef);
+    if (!roomSnap.exists()) {
+      await setDoc(roomRef, {
+        id: roomId,
+        name: 'Campus Circle',
+        avatar: 'CC',
+        participants: [currentUser.uid],
+        lastMessage: 'Say hello to the campus community.',
+        lastMessageAt: serverTimestamp(),
+        createdAt: serverTimestamp(),
+        updatedAt: serverTimestamp()
+      });
+    }
+    return roomId;
+  }
+
+  async function ensureDemoRoom(personName, personKey) {
+    if (!currentUser) return null;
+    const slug = String(personKey || personName || 'chat').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '') || 'chat';
+    const roomId = currentUser.uid + '-' + slug;
+    const roomRef = doc(db, 'chatRooms', roomId);
+    const roomSnap = await getDoc(roomRef);
+    if (!roomSnap.exists()) {
+      await setDoc(roomRef, {
+        id: roomId,
+        name: personName,
+        avatar: buildInitials(personName),
+        participants: [currentUser.uid, 'demo:' + slug],
+        lastMessage: 'New conversation started.',
+        lastMessageAt: serverTimestamp(),
+        createdAt: serverTimestamp(),
+        updatedAt: serverTimestamp()
+      });
+    }
+    return roomId;
+  }
+
+  function renderInboxList() {
+    const inboxList = document.getElementById('inboxList');
+    const term = inboxSearch.value.trim().toLowerCase();
+    const visible = chatRooms.filter(function (room) {
+      const haystack = ((room.name || '') + ' ' + (room.lastMessage || '')).toLowerCase();
+      const matchesTerm = !term || haystack.includes(term);
+      const matchesFilter = inboxFilter === 'all' || Number(room.unreadCount || 0) > 0;
+      return matchesTerm && matchesFilter;
+    });
+
+    inboxList.replaceChildren();
+    if (!visible.length) {
+      inboxEmpty.hidden = false;
+      return;
+    }
+    inboxEmpty.hidden = true;
+
+    visible.forEach(function (room) {
+      const row = document.createElement('button');
+      row.type = 'button';
+      row.className = 'inbox-row';
+      row.dataset.chatRoomId = room.id;
+      row.dataset.unread = String(Number(room.unreadCount || 0) > 0);
+
+      const avatar = document.createElement('span');
+      avatar.className = 'person-avatar';
+      avatar.textContent = room.avatar || buildInitials(room.name);
+
+      const copy = document.createElement('span');
+      copy.className = 'inbox-copy';
+      const name = document.createElement('span');
+      name.className = 'person-name';
+      name.textContent = room.name || 'Campus Circle';
+      const preview = document.createElement('span');
+      preview.className = 'inbox-preview';
+      preview.textContent = room.lastMessage || 'Start the conversation';
+      copy.append(name, preview);
+
+      const time = document.createElement('span');
+      time.className = 'inbox-time';
+      time.textContent = room.lastMessageAt ? relativeTime(room.lastMessageAt) : 'Now';
+
+      const unread = document.createElement('span');
+      unread.className = 'unread-dot';
+      unread.setAttribute('aria-label', 'Unread');
+      unread.hidden = !(Number(room.unreadCount || 0) > 0);
+
+      row.append(avatar, copy, time, unread);
+      row.addEventListener('click', function () {
+        openChatRoom(room.id, room.name || 'Campus Circle', room.avatar || buildInitials(room.name));
+      });
+      inboxList.appendChild(row);
+    });
+  }
+
+  function updateRoomReadState(roomId) {
+    if (!roomId || !currentUser) return;
+    const roomRef = doc(db, 'chatRooms', roomId);
+    updateDoc(roomRef, {
+      [`readBy.${currentUser.uid}`]: serverTimestamp(),
+      unreadCount: 0,
+      updatedAt: serverTimestamp()
+    }).catch(function (error) {
+      console.error('Could not mark room as read:', error);
+    });
+  }
+
+  function renderAttachment(item) {
+    const attachmentWrap = document.createElement('div');
+    attachmentWrap.style.marginTop = '8px';
+    if (!item.attachmentUrl) return attachmentWrap;
+
+    if (item.attachmentType === 'audio' || /^audio\//i.test(item.attachmentType || '')) {
+      const audio = document.createElement('audio');
+      audio.controls = true;
+      audio.preload = 'metadata';
+      audio.src = item.attachmentUrl;
+      attachmentWrap.appendChild(audio);
+      return attachmentWrap;
+    }
+    if (item.attachmentType === 'image' || /\.(png|jpe?g|gif|webp)(\?.*)?$/i.test(item.attachmentUrl)) {
+      const img = document.createElement('img');
+      img.src = item.attachmentUrl;
+      img.alt = 'Shared attachment';
+      img.style.maxWidth = '220px';
+      img.style.maxHeight = '180px';
+      img.style.borderRadius = '10px';
+      img.style.display = 'block';
+      attachmentWrap.appendChild(img);
+    }
+
+    const link = document.createElement('a');
+    link.href = item.attachmentUrl;
+    link.target = '_blank';
+    link.rel = 'noopener noreferrer';
+    link.textContent = 'Open attachment';
+    link.style.display = 'inline-block';
+    link.style.marginTop = '6px';
+    link.style.fontSize = '11px';
+    link.style.fontWeight = '700';
+    link.style.color = '#5c57d6';
+    attachmentWrap.appendChild(link);
+    return attachmentWrap;
+  }
+
+  async function openChatRoom(roomId, roomName, roomAvatar) {
+    if (!roomId || !currentUser) return;
+    activeChatRoomId = roomId;
+    setScreen('chat');
+    document.getElementById('chatName').textContent = roomName || 'Campus Circle';
+    document.getElementById('chatAvatar').textContent = roomAvatar || buildInitials(roomName);
+    updateRoomReadState(roomId);
+
+    if (roomListeners.has(roomId)) {
+      roomListeners.get(roomId)();
+      roomListeners.delete(roomId);
+    }
+
+    const messagesRef = collection(db, 'chatRooms', roomId, 'messages');
+    const messageQuery = query(messagesRef, orderBy('createdAt', 'asc'));
+    const listener = onSnapshot(messageQuery, function (snapshot) {
+      const items = snapshot.docs.map(function (item) {
+        const data = item.data();
+        return {
+          id: item.id,
+          senderId: data.senderId,
+          senderName: data.senderName || 'Campus member',
+          text: data.text || '',
+          attachmentUrl: data.attachmentUrl || '',
+          attachmentType: data.attachmentType || '',
+          deletedAt: data.deletedAt || null,
+          editedAt: data.editedAt || null,
+          createdAt: data.createdAt || null
+        };
+      });
+      renderChatMessages(items);
+    }, function (error) {
+      console.error('Could not load messages for room:', error);
+    });
+    roomListeners.set(roomId, listener);
+  }
+
+  function renderChatMessages(items) {
+    const container = document.getElementById('chatMessages');
+    container.replaceChildren();
+    if (!items.length) {
+      const empty = document.createElement('div');
+      empty.className = 'demo-chat-empty';
+      empty.textContent = 'No messages yet. Say hello to start the conversation.';
+      container.appendChild(empty);
+      return;
+    }
+
+    items.forEach(function (item) {
+      const bubble = document.createElement('div');
+      const isMine = item.senderId === currentUser.uid;
+      bubble.className = 'chat-bubble' + (isMine ? ' mine' : '');
+
+      const textValue = item.deletedAt ? 'This message was deleted.' : (item.text || '');
+      if (textValue) {
+        const textNode = document.createElement('div');
+        textNode.textContent = textValue;
+        bubble.appendChild(textNode);
+      }
+
+      const attachment = renderAttachment(item);
+      if (attachment.childElementCount) {
+        bubble.appendChild(attachment);
+      }
+
+      const time = document.createElement('span');
+      time.className = 'chat-time';
+      time.textContent = item.editedAt && typeof item.editedAt.toDate === 'function' ? 'edited · ' + item.editedAt.toDate().toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' }) : (
+        item.createdAt && typeof item.createdAt.toDate === 'function'
+          ? item.createdAt.toDate().toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' })
+          : 'now'
+      );
+      bubble.appendChild(time);
+
+      if (isMine && !item.deletedAt) {
+        const actionRow = document.createElement('div');
+        actionRow.style.display = 'flex';
+        actionRow.style.gap = '8px';
+        actionRow.style.marginTop = '8px';
+        actionRow.style.justifyContent = 'flex-end';
+
+        const editBtn = document.createElement('button');
+        editBtn.type = 'button';
+        editBtn.textContent = 'Edit';
+        editBtn.style.fontSize = '10px';
+        editBtn.style.border = 'none';
+        editBtn.style.borderRadius = '999px';
+        editBtn.style.padding = '5px 8px';
+        editBtn.style.background = 'rgba(255,255,255,0.18)';
+        editBtn.style.color = 'inherit';
+        editBtn.addEventListener('click', function () {
+          const nextText = window.prompt('Edit your message', item.text || '');
+          if (nextText === null) return;
+          const trimmed = nextText.trim();
+          if (!trimmed) return;
+          updateDoc(doc(db, 'chatRooms', activeChatRoomId, 'messages', item.id), {
+            text: trimmed,
+            attachmentUrl: item.attachmentUrl || '',
+            editedAt: serverTimestamp()
+          }).catch(function (error) {
+            console.error('Could not edit message:', error);
+          });
+        });
+
+        const deleteBtn = document.createElement('button');
+        deleteBtn.type = 'button';
+        deleteBtn.textContent = 'Delete';
+        deleteBtn.style.fontSize = '10px';
+        deleteBtn.style.border = 'none';
+        deleteBtn.style.borderRadius = '999px';
+        deleteBtn.style.padding = '5px 8px';
+        deleteBtn.style.background = 'rgba(255,255,255,0.18)';
+        deleteBtn.style.color = 'inherit';
+        deleteBtn.addEventListener('click', function () {
+          updateDoc(doc(db, 'chatRooms', activeChatRoomId, 'messages', item.id), {
+            deletedAt: serverTimestamp(),
+            text: 'This message was deleted.'
+          }).catch(function (error) {
+            console.error('Could not delete message:', error);
+          });
+        });
+
+        actionRow.append(editBtn, deleteBtn);
+        bubble.appendChild(actionRow);
+      }
+
+      container.appendChild(bubble);
+    });
+    container.scrollTop = container.scrollHeight;
+  }
+
+  async function sendChatMessage(roomId, text, attachmentUrl, attachmentType) {
+    if (!roomId || !currentUser || (!text.trim() && !attachmentUrl)) return;
+    const roomRef = doc(db, 'chatRooms', roomId);
+    const roomSnap = await getDoc(roomRef);
+    if (!roomSnap.exists()) {
+      await setDoc(roomRef, {
+        id: roomId,
+        name: 'Campus Circle',
+        avatar: 'CC',
+        participants: [currentUser.uid],
+        lastMessage: text.trim() || (attachmentType === 'audio' ? 'Voice note' : 'Photo'),
+        lastMessageAt: serverTimestamp(),
+        createdAt: serverTimestamp(),
+        updatedAt: serverTimestamp(),
+        readBy: { [currentUser.uid]: serverTimestamp() },
+        unreadCount: 0
+      });
+    }
+
+    await addDoc(collection(roomRef, 'messages'), {
+      senderId: currentUser.uid,
+      senderName: currentUser.displayName || currentUser.email?.split('@')[0] || 'You',
+      text: text.trim(),
+      attachmentUrl: attachmentUrl || '',
+      attachmentType: attachmentType || '',
+      createdAt: serverTimestamp(),
+      editedAt: null,
+      deletedAt: null
+    });
+
+    const payload = {
+      lastMessage: text.trim() || (attachmentType === 'audio' ? 'Voice note' : 'Photo'),
+      lastMessageAt: serverTimestamp(),
+      updatedAt: serverTimestamp(),
+      name: roomSnap.exists() ? roomSnap.data().name || 'Campus Circle' : 'Campus Circle',
+      unreadCount: 0
+    };
+    await updateDoc(roomRef, payload);
+  }
+
+  function subscribeToChatRooms() {
+    if (!currentUser) return;
+    const q = query(chatRoomsRef, where('participants', 'array-contains', currentUser.uid));
+    onSnapshot(q, function (snapshot) {
+      const nextRooms = snapshot.docs.map(function (item) {
+        const data = item.data();
+        const lastRead = data.readBy && data.readBy[currentUser.uid];
+        const isUnread = !lastRead || (data.lastMessageAt && typeof data.lastMessageAt.toDate === 'function' && lastRead && lastRead.toDate && lastRead.toDate() < data.lastMessageAt.toDate());
+        return {
+          id: item.id,
+          name: data.name || 'Campus Circle',
+          avatar: data.avatar || buildInitials(data.name || 'Campus Circle'),
+          lastMessage: data.lastMessage || 'Start the conversation',
+          lastMessageAt: data.lastMessageAt || null,
+          unreadCount: isUnread ? 1 : Number(data.unreadCount || 0)
+        };
+      }).sort(function (a, b) {
+        const aTime = a.lastMessageAt && typeof a.lastMessageAt.toDate === 'function' ? a.lastMessageAt.toDate().getTime() : 0;
+        const bTime = b.lastMessageAt && typeof b.lastMessageAt.toDate === 'function' ? b.lastMessageAt.toDate().getTime() : 0;
+        return bTime - aTime;
+      });
+
+      chatRooms.length = 0;
+      nextRooms.forEach(function (room) { chatRooms.push(room); });
+      renderInboxList();
+
+      if (!activeChatRoomId && chatRooms.length) {
+        const firstRoom = chatRooms[0];
+        openChatRoom(firstRoom.id, firstRoom.name, firstRoom.avatar);
+      }
+    }, function (error) {
+      console.error('Could not load chat rooms:', error);
+    });
+  }
+
+  onAuthStateChanged(auth, async function (user) {
+    if (!user) {
+      window.location.href = 'htmldiary.html';
+      return;
+    }
+    currentUser = user;
+    trackPresence();
+    if (!unsubscribeFeed) {
+      unsubscribeFeed = onSnapshot(
+        query(postsRef, orderBy('createdAt', 'desc'), limit(60)),
+        function (snapshot) {
+          posts = snapshot.docs.map(function (item) {
+            return Object.assign({ id: item.id }, item.data());
+          });
+          renderFeed();
+        },
+        function (error) {
+          console.error('Could not load campus posts:', error);
+          feed.replaceChildren(messageCard(firestoreErrorMessage(error, 'load the campus feed')));
+        }
+      );
+    }
+
+    try {
+      await ensureGeneralInboxRoom();
+      subscribeToChatRooms();
+    } catch (error) {
+      console.error('Could not initialize chat rooms:', error);
+    }
+  });
+
+  function messageCard(text, className) {
+    const card = document.createElement('div');
+    card.className = 'card ' + (className || 'empty');
+    card.textContent = text;
+    return card;
+  }
+
+  function firestoreErrorMessage(error, action) {
+    if (error && (error.code === 'permission-denied' || error.code === 'storage/unauthorized')) {
+      return 'Firebase denied ' + action + '. Deploy firestore.rules and storage.rules to project ugdiary-23249, then reload.';
+    }
+    return 'Could not ' + action + '. Check your connection and try again.';
+  }
+
+  function timestampDate(value) {
+    if (value && typeof value.toDate === 'function') return value.toDate();
+    if (value) {
+      const date = new Date(value);
+      if (!Number.isNaN(date.getTime())) return date;
+    }
+    return new Date();
+  }
+
+  function relativeTime(value) {
+    const seconds = Math.max(0, Math.floor((Date.now() - timestampDate(value).getTime()) / 1000));
+    if (seconds < 60) return 'just now';
+    if (seconds < 3600) return Math.floor(seconds / 60) + 'm ago';
+    if (seconds < 86400) return Math.floor(seconds / 3600) + 'h ago';
+    if (seconds < 604800) return Math.floor(seconds / 86400) + 'd ago';
+    return timestampDate(value).toLocaleDateString();
+  }
+
+  function makeButton(text, className, label) {
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.className = className;
+    button.textContent = text;
+    if (label) button.setAttribute('aria-label', label);
+    return button;
+  }
+
+  function renderFeed() {
+    const term = search.value.trim().toLowerCase();
+    const shown = posts.filter(function (post) {
+      return (selectedCategory === 'All' || post.category === selectedCategory)
+        && (!term || String(post.text || '').toLowerCase().includes(term));
+    });
+    if (selectedSort === 'top') {
+      shown.sort(function (a, b) {
+        const scoreA = (a.upvotes || 0) - (a.downvotes || 0);
+        const scoreB = (b.upvotes || 0) - (b.downvotes || 0);
+        return scoreB - scoreA || timestampDate(b.createdAt) - timestampDate(a.createdAt);
+      });
+    }
+    feed.replaceChildren();
+    if (!shown.length) {
+      feed.appendChild(messageCard(posts.length ? 'No posts match this view. Try another category or search.' : 'No posts yet. Start the conversation!', 'empty'));
+      return;
+    }
+    shown.forEach(function (post) { feed.appendChild(renderPost(post)); });
+  }
+
+  function renderPost(post) {
+    const card = document.createElement('article');
+    card.className = 'card post';
+    const head = document.createElement('div');
+    head.className = 'post-head';
+    const avatar = document.createElement('div');
+    avatar.className = 'avatar';
+    avatar.setAttribute('aria-hidden', 'true');
+    avatar.textContent = '•';
+    const authorWrap = document.createElement('div');
+    const author = document.createElement('div');
+    author.className = 'post-author';
+    author.textContent = 'Anonymous';
+    const meta = document.createElement('div');
+    meta.className = 'post-meta';
+    meta.textContent = 'University of Ghana · ' + relativeTime(post.createdAt);
+    authorWrap.append(author, meta);
+    const tag = document.createElement('span');
+    tag.className = 'tag';
+    tag.textContent = post.category || 'Campus';
+    head.append(avatar, authorWrap, tag);
+
+    const text = document.createElement('p');
+    text.className = 'post-text';
+    text.textContent = post.text || '';
+
+    let mapToggle = null;
+    let mapPanel = null;
+    if (post.location && Number.isInteger(post.location.latitudeCell) && Number.isInteger(post.location.longitudeCell)) {
+      const locationLabel = document.createElement('div');
+      locationLabel.className = 'post-location';
+      locationLabel.textContent = '⌖ Approximate location · about 1 km grid area';
+      mapToggle = makeButton(openMaps.has(post.id) ? 'Hide map' : 'View approximate map', 'map-toggle');
+      mapPanel = document.createElement('div');
+      mapPanel.className = 'map-panel';
+      mapPanel.hidden = !openMaps.has(post.id);
+      mapPanel.setAttribute('role', 'region');
+      mapPanel.setAttribute('aria-label', 'Approximate post location');
+      card.append(head, text, locationLabel, mapToggle, mapPanel);
+    } else {
+      card.append(head, text);
+    }
+
+    if (post.imageUrl) {
+      const image = document.createElement('img');
+      image.className = 'post-media';
+      image.src = post.imageUrl;
+      image.alt = 'Photo attached to anonymous post';
+      image.loading = 'lazy';
+      card.appendChild(image);
+    }
+    if (post.audioUrl) {
+      const audio = document.createElement('audio');
+      audio.className = 'post-media';
+      audio.controls = true;
+      audio.preload = 'metadata';
+      audio.src = post.audioUrl;
+      card.appendChild(audio);
+    }
+
+    const actions = document.createElement('div');
+    actions.className = 'post-actions';
+    const votes = post.votes || {};
+    const ownVote = currentUser ? votes[currentUser.uid] : null;
+    const voteGroup = document.createElement('div');
+    voteGroup.className = 'vote-group';
+    const up = makeButton('▲ ' + (post.upvotes || 0), 'vote-btn' + (ownVote === 1 ? ' selected' : ''), 'Upvote post');
+    const down = makeButton('▼ ' + (post.downvotes || 0), 'vote-btn' + (ownVote === -1 ? ' selected' : ''), 'Downvote post');
+    up.setAttribute('aria-pressed', String(ownVote === 1));
+    down.setAttribute('aria-pressed', String(ownVote === -1));
+    up.addEventListener('click', function () { changeVote(post, 1); });
+    down.addEventListener('click', function () { changeVote(post, -1); });
+    voteGroup.append(up, down);
+    const replyState = commentsByPost.get(post.id);
+    const replies = makeButton('◯  ' + (replyState && replyState.items ? replyState.items.length + ' replies' : 'Reply'), 'action-btn', 'Show replies');
+    replies.setAttribute('aria-expanded', String(Boolean(replyState && replyState.open)));
+    replies.addEventListener('click', function () { toggleReplies(post.id); });
+    actions.append(voteGroup, replies);
+    card.append(actions);
+
+    if (replyState && replyState.open) card.appendChild(renderReplies(post.id, replyState));
+    if (mapToggle) {
+      mapToggle.addEventListener('click', function () {
+        if (openMaps.has(post.id)) {
+          openMaps.delete(post.id);
+        } else {
+          openMaps.add(post.id);
+        }
+        renderFeed();
+      });
+      if (openMaps.has(post.id)) renderPostMap(mapPanel, post.location);
+    }
+    return card;
+  }
+
+  function renderPostMap(container, location) {
+    if (googleMapsApiKey === 'YOUR_RESTRICTED_GOOGLE_MAPS_API_KEY') {
+      showMapMessage(container, 'Add a referrer-restricted Google Maps JavaScript API key in google-maps-config.js to view maps.');
+      return;
+    }
+    loadGoogleMaps().then(function (maps) {
+      if (!container.isConnected) return;
+      const center = {
+        lat: location.latitudeCell / 100,
+        lng: location.longitudeCell / 100
+      };
+      const map = new maps.Map(container, {
+        center: center,
+        zoom: 15,
+        clickableIcons: false,
+        mapTypeControl: false,
+        streetViewControl: false,
+        fullscreenControl: false
+      });
+      new maps.Rectangle({
+        map: map,
+        bounds: {
+          north: center.lat + 0.005,
+          south: center.lat - 0.005,
+          east: center.lng + 0.005,
+          west: center.lng - 0.005
+        },
+        fillColor: '#6744e8',
+        fillOpacity: 0.16,
+        strokeColor: '#6744e8',
+        strokeOpacity: 0.6,
+        strokeWeight: 1
+      });
+    }).catch(function (error) {
+      console.error('Could not load Google Maps:', error);
+      if (container.isConnected) showMapMessage(container, 'Google Maps could not load. Check the API key, enabled Maps JavaScript API, billing, and allowed website referrers.');
+    });
+  }
+
+  function showMapMessage(container, text) {
+    const message = document.createElement('div');
+    message.className = 'map-message';
+    message.textContent = text;
+    container.replaceChildren(message);
+  }
+
+  function loadGoogleMaps() {
+    if (window.google && window.google.maps) return Promise.resolve(window.google.maps);
+    if (mapsPromise) return mapsPromise;
+
+    mapsPromise = new Promise(function (resolve, reject) {
+      const callbackName = 'legonLoopMapsLoaded';
+      const script = document.createElement('script');
+      const params = new URLSearchParams({
+        key: googleMapsApiKey,
+        callback: callbackName,
+        loading: 'async'
+      });
+      window[callbackName] = function () {
+        delete window[callbackName];
+        resolve(window.google.maps);
+      };
+      script.async = true;
+      script.src = 'https://maps.googleapis.com/maps/api/js?' + params.toString();
+      script.onerror = function () {
+        delete window[callbackName];
+        mapsPromise = null;
+        reject(new Error('Google Maps JavaScript API failed to load.'));
+      };
+      document.head.appendChild(script);
+    });
+    return mapsPromise;
+  }
+
+  function setLocationStatus(text, isError) {
+    locationStatus.textContent = text;
+    locationStatus.style.color = isError ? 'var(--danger)' : '';
+  }
+
+  function locateForPost() {
+    selectedLocation = null;
+    if (!navigator.geolocation) {
+      shareLocation.checked = false;
+      setLocationStatus('This browser does not support location sharing.', true);
+      return;
+    }
+
+    shareLocation.disabled = true;
+    setLocationStatus('Getting your location. Your exact coordinates will not be published.', false);
+    navigator.geolocation.getCurrentPosition(function (position) {
+      selectedLocation = {
+        latitudeCell: Math.round(position.coords.latitude * 100),
+        longitudeCell: Math.round(position.coords.longitude * 100)
+      };
+      shareLocation.disabled = false;
+      setLocationStatus('Approximate location ready. Only an about 1 km area will be attached.', false);
+    }, function (error) {
+      shareLocation.checked = false;
+      shareLocation.disabled = false;
+      const messages = {
+        1: 'Location permission was denied. Allow it in your browser settings to attach a location.',
+        2: 'Your location is unavailable right now. Try again or post without it.',
+        3: 'Finding your location timed out. Try again or post without it.'
+      };
+      setLocationStatus(messages[error.code] || 'Could not get your location. Try again or post without it.', true);
+    }, {
+      enableHighAccuracy: false,
+      maximumAge: 30000,
+      timeout: 10000
+    });
+  }
+
+  async function changeVote(post, value) {
+    if (!currentUser || voting.has(post.id)) return;
+    voting.add(post.id);
+    try {
+      const postRef = doc(db, 'posts', post.id);
+      await runTransaction(db, async function (transaction) {
+        const snapshot = await transaction.get(postRef);
+        if (!snapshot.exists()) throw new Error('This post is no longer available.');
+        const data = snapshot.data();
+        const votes = Object.assign({}, data.votes || {});
+        const previous = votes[currentUser.uid] || 0;
+        const next = previous === value ? 0 : value;
+        let upvotes = data.upvotes || 0;
+        let downvotes = data.downvotes || 0;
+        if (previous === 1) upvotes -= 1;
+        if (previous === -1) downvotes -= 1;
+        if (next === 1) upvotes += 1;
+        if (next === -1) downvotes += 1;
+        if (next) votes[currentUser.uid] = next;
+        else delete votes[currentUser.uid];
+        transaction.update(postRef, { votes: votes, upvotes: upvotes, downvotes: downvotes });
+      });
+    } catch (error) {
+      console.error('Could not save vote:', error);
+      postError.textContent = firestoreErrorMessage(error, 'save your vote');
+    } finally {
+      voting.delete(post.id);
+    }
+  }
+
+  function toggleReplies(postId) {
+    let state = commentsByPost.get(postId);
+    if (!state) {
+      state = { items: [], open: true, unsubscribe: null, error: '' };
+      commentsByPost.set(postId, state);
+    } else {
+      state.open = !state.open;
+    }
+    if (state.open && !state.unsubscribe) {
+      state.unsubscribe = onSnapshot(
+        query(collection(db, 'posts', postId, 'comments'), orderBy('createdAt', 'asc')),
+        function (snapshot) {
+          state.items = snapshot.docs.map(function (item) {
+            return Object.assign({ id: item.id }, item.data());
+          });
+          state.error = '';
+          renderFeed();
+        },
+        function (error) {
+          console.error('Could not load replies:', error);
+          state.error = firestoreErrorMessage(error, 'load replies');
+          renderFeed();
+        }
+      );
+    }
+    renderFeed();
+  }
+
+  function renderReplies(postId, state) {
+    const panel = document.createElement('section');
+    panel.className = 'reply-panel';
+    panel.setAttribute('aria-label', 'Replies');
+    const list = document.createElement('div');
+    list.className = 'reply-list';
+    if (state.error) {
+      const error = document.createElement('p');
+      error.className = 'error';
+      error.textContent = state.error;
+      list.appendChild(error);
+    } else if (state.items.length) {
+      state.items.forEach(function (item) {
+        const row = document.createElement('div');
+        row.className = 'reply';
+        const avatar = document.createElement('div');
+        avatar.className = 'avatar';
+        avatar.setAttribute('aria-hidden', 'true');
+        avatar.textContent = '•';
+        const content = document.createElement('div');
+        content.className = 'reply-content';
+        const name = document.createElement('span');
+        name.className = 'reply-author';
+        name.textContent = 'Anonymous';
+        const time = document.createElement('span');
+        time.className = 'reply-time';
+        time.textContent = relativeTime(item.createdAt);
+        const body = document.createElement('span');
+        body.textContent = item.text || '';
+        content.append(name, time, document.createTextNode(' '), body);
+        if (item.audioUrl) {
+          const audio = document.createElement('audio');
+          audio.controls = true;
+          audio.preload = 'metadata';
+          audio.src = item.audioUrl;
+          audio.style.display = 'block';
+          audio.style.maxWidth = '100%';
+          audio.style.marginTop = '8px';
+          content.appendChild(audio);
+        }
+        row.append(avatar, content);
+        list.appendChild(row);
+      });
+    } else if (!state.error) {
+      const empty = document.createElement('div');
+      empty.className = 'post-meta';
+      empty.textContent = 'No replies yet. Be the first to respond.';
+      list.appendChild(empty);
+    }
+
+    const form = document.createElement('form');
+    form.className = 'reply-form';
+    const input = document.createElement('input');
+    input.type = 'text';
+    input.maxLength = 300;
+    input.placeholder = 'Write an anonymous reply…';
+    input.setAttribute('aria-label', 'Write an anonymous reply');
+    const recordButton = document.createElement('button');
+    recordButton.type = 'button';
+    recordButton.className = 'media-button';
+    recordButton.textContent = 'Record voice note';
+    const voiceStatus = document.createElement('span');
+    voiceStatus.className = 'media-status';
+    voiceStatus.textContent = state.voiceBlob ? 'Voice note ready. Record again to replace it.' : '';
+    voiceStatus.setAttribute('aria-live', 'polite');
+    setupVoiceRecorder(recordButton, voiceStatus, function (blob) { state.voiceBlob = blob; });
+    const button = document.createElement('button');
+    button.type = 'submit';
+    button.textContent = writingReply.has(postId) ? 'Sending…' : 'Reply';
+    button.disabled = writingReply.has(postId);
+    form.append(input, recordButton, button, voiceStatus);
+    const error = document.createElement('p');
+    error.className = 'error reply-error';
+    error.textContent = state.replyError || '';
+    form.addEventListener('submit', async function (event) {
+      event.preventDefault();
+      const text = input.value.trim();
+      if ((!text && !state.voiceBlob) || !currentUser || writingReply.has(postId)) return;
+      state.replyError = '';
+      writingReply.add(postId);
+      renderFeed();
+      try {
+        const audioUrl = state.voiceBlob ? await uploadMedia(state.voiceBlob, 'audio', 5 * 1024 * 1024) : '';
+        await addDoc(collection(db, 'posts', postId, 'comments'), {
+          authorId: currentUser.uid,
+          text: text,
+          audioUrl: audioUrl,
+          createdAt: serverTimestamp()
+        });
+        state.voiceBlob = null;
+      } catch (err) {
+        console.error('Could not save reply:', err);
+        state.replyError = firestoreErrorMessage(err, 'send your reply');
+      } finally {
+        writingReply.delete(postId);
+        renderFeed();
+      }
+    });
+    panel.append(list, form, error);
+    return panel;
+  }
+
+  postForm.addEventListener('submit', async function (event) {
+    event.preventDefault();
+    if (!currentUser) return;
+    const text = postText.value.trim();
+    if (!text && !selectedPostPhoto && !selectedPostVoice) {
+      postError.textContent = 'Write something, add a photo, or record a voice note before posting.';
+      postText.focus();
+      return;
+    }
+    if (shareLocation.checked && !selectedLocation) {
+      postError.textContent = 'Wait for your approximate location to be ready, or turn location sharing off.';
+      return;
+    }
+    postError.textContent = '';
+    postButton.disabled = true;
+    postButton.textContent = 'Posting…';
+    try {
+      const postData = {
+        authorId: currentUser.uid,
+        category: document.getElementById('postCategory').value,
+        campus: 'University of Ghana',
+        text: text,
+        votes: {},
+        upvotes: 0,
+        downvotes: 0,
+        createdAt: serverTimestamp()
+      };
+      if (selectedPostPhoto) {
+        document.getElementById('postPhotoStatus').textContent = 'Preparing photo…';
+        postData.imageUrl = await uploadMedia(selectedPostPhoto, 'images', 8 * 1024 * 1024);
+        document.getElementById('postPhotoStatus').textContent = 'Photo uploaded. Publishing post…';
+      }
+      if (selectedPostVoice) postData.audioUrl = await uploadMedia(selectedPostVoice, 'audio', 5 * 1024 * 1024);
+      if (selectedLocation) postData.location = selectedLocation;
+      await addDoc(postsRef, postData);
+      postForm.reset();
+      selectedPostPhoto = null;
+      selectedPostVoice = null;
+      document.getElementById('postPhotoStatus').textContent = '';
+      document.getElementById('postPhotoPreview').hidden = true;
+      document.getElementById('postPhotoPreview').removeAttribute('src');
+      document.getElementById('postVoiceStatus').textContent = '';
+      selectedLocation = null;
+      sessionStorage.removeItem('legonLoopDraft');
+      document.getElementById('charCount').textContent = '0 / 500';
+      setLocationStatus('Location stays off unless you opt in for this post.', false);
+      setScreen('feed');
+    } catch (error) {
+      console.error('Could not create post:', error);
+      if (selectedPostPhoto) {
+        document.getElementById('postPhotoStatus').textContent = error.message || 'Photo upload failed.';
+      }
+      postError.textContent = error.code ? firestoreErrorMessage(error, 'publish your post') : error.message || 'Could not publish your post. Try again.';
+    } finally {
+      postButton.disabled = false;
+      postButton.textContent = 'Post anonymously';
+    }
+  });
+
+  document.getElementById('postPhoto').addEventListener('change', function () {
+    selectedPostPhoto = this.files && this.files[0] || null;
+    const preview = document.getElementById('postPhotoPreview');
+    if (selectedPostPhoto) {
+      if (!selectedPostPhoto.type.startsWith('image/')) {
+        selectedPostPhoto = null;
+        this.value = '';
+        postError.textContent = 'Choose an image file for your post.';
+        return;
+      }
+      preview.src = URL.createObjectURL(selectedPostPhoto);
+      preview.hidden = false;
+      document.getElementById('postPhotoStatus').textContent =
+        (selectedPostPhoto.size / (1024 * 1024)).toFixed(1) + ' MB selected';
+      postError.textContent = '';
+    } else {
+      preview.hidden = true;
+      preview.removeAttribute('src');
+      document.getElementById('postPhotoStatus').textContent = '';
+    }
+  });
+
+  setupVoiceRecorder(document.getElementById('recordPostVoice'), document.getElementById('postVoiceStatus'), function (blob) {
+    selectedPostVoice = blob;
+  });
+
+  shareLocation.addEventListener('change', function () {
+    if (shareLocation.checked) {
+      locateForPost();
+    } else {
+      selectedLocation = null;
+      setLocationStatus('Location stays off unless you opt in for this post.', false);
+    }
+  });
+
+  postText.addEventListener('input', function () {
+    document.getElementById('charCount').textContent = postText.value.length + ' / 500';
+  });
+  search.addEventListener('input', renderFeed);
+  categories.addEventListener('click', function (event) {
+    const button = event.target.closest('[data-category]');
+    if (!button) return;
+    selectedCategory = button.dataset.category;
+    categories.querySelectorAll('[data-category]').forEach(function (item) {
+      item.classList.toggle('active', item === button);
+    });
+    renderFeed();
+  });
+  document.querySelectorAll('[data-sort]').forEach(function (button) {
+    button.addEventListener('click', function () {
+      selectedSort = button.dataset.sort;
+      document.querySelectorAll('[data-sort]').forEach(function (item) {
+        item.classList.toggle('active', item === button);
+      });
+      renderFeed();
+    });
+  });
+  document.getElementById('logout').addEventListener('click', async function () {
+    try {
+      await signOut(auth);
+    } catch (error) {
+      console.error('Could not sign out:', error);
+      postError.textContent = 'Could not log out. Please try again.';
+    }
+  });
+
+  function setScreen(screenName) {
+    document.querySelectorAll('[data-screen-panel]').forEach(function (panel) {
+      panel.hidden = panel.dataset.screenPanel !== screenName;
+    });
+    const activeTab = screenName === 'chat' ? 'inbox' : screenName;
+    document.querySelectorAll('.nav-btn').forEach(function (button) {
+      const active = button.dataset.screen === activeTab;
+      button.classList.toggle('active', active);
+      if (active) button.setAttribute('aria-current', 'page');
+      else button.removeAttribute('aria-current');
+    });
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  document.querySelectorAll('.nav-btn, .back-btn').forEach(function (button) {
+    button.addEventListener('click', function () {
+      setScreen(button.dataset.screen);
+    });
+  });
+
+  const savedDraft = sessionStorage.getItem('legonLoopDraft');
+  if (savedDraft) {
+    try {
+      const draft = JSON.parse(savedDraft);
+      postText.value = draft.text || '';
+      if (draft.category) document.getElementById('postCategory').value = draft.category;
+      document.getElementById('charCount').textContent = postText.value.length + ' / 500';
+    } catch (error) {
+      console.error('Could not restore saved post draft:', error);
+      sessionStorage.removeItem('legonLoopDraft');
+    }
+  }
+
+  document.getElementById('saveDraft').addEventListener('click', function () {
+    const draft = {
+      text: postText.value,
+      category: document.getElementById('postCategory').value
+    };
+    sessionStorage.setItem('legonLoopDraft', JSON.stringify(draft));
+    const button = document.getElementById('saveDraft');
+    button.textContent = '✓ Draft saved';
+    window.setTimeout(function () { button.textContent = 'Save draft'; }, 1800);
+  });
+
+  function setPresenceText(text) {
+    const chatPresence = document.getElementById('chatPresence');
+    if (chatPresence) chatPresence.textContent = text;
+  }
+
+  function trackPresence() {
+    if (!currentUser) return;
+    const presenceRef = doc(db, 'presence', currentUser.uid);
+    const status = {
+      userId: currentUser.uid,
+      email: currentUser.email || '',
+      isOnline: true,
+      lastSeen: serverTimestamp(),
+      updatedAt: serverTimestamp()
+    };
+    setDoc(presenceRef, status, { merge: true }).catch(function (error) {
+      console.error('Could not update presence:', error);
+    });
+    window.addEventListener('beforeunload', function () {
+      setDoc(presenceRef, { isOnline: false, lastSeen: serverTimestamp(), updatedAt: serverTimestamp() }, { merge: true }).catch(function () {});
+    });
+  }
+
+  const requestsScreen = document.getElementById('requestsScreen');
+  requestsScreen.addEventListener('click', async function (event) {
+    const tab = event.target.closest('[data-request-tab]');
+    if (tab) {
+      const sent = tab.dataset.requestTab === 'sent';
+      document.querySelectorAll('[data-request-tab]').forEach(function (item) {
+        item.classList.toggle('active', item === tab);
+      });
+      document.getElementById('receivedRequests').hidden = sent;
+      document.getElementById('sentRequests').hidden = !sent;
+      return;
+    }
+    const openChat = event.target.closest('[data-open-chat]');
+    if (openChat) {
+      const person = openChat.dataset.openChat;
+      const roomId = await ensureDemoRoom(person, person);
+      if (roomId) openChatRoom(roomId, person, buildInitials(person));
+      return;
+    }
+    const action = event.target.closest('[data-request-action]');
+    if (!action) return;
+    const card = action.closest('[data-demo-request]');
+    if (action.dataset.requestAction === 'decline') {
+      card.remove();
+      return;
+    }
+    const person = action.dataset.person;
+    const actions = card.querySelector('.request-actions');
+    actions.replaceChildren();
+    const connected = document.createElement('span');
+    connected.className = 'request-status';
+    connected.textContent = '✓ Connected';
+    const message = document.createElement('button');
+    message.type = 'button';
+    message.className = 'message-btn';
+    message.dataset.openChat = person;
+    message.textContent = 'Open chat';
+    actions.append(connected, message);
+
+    const roomId = await ensureDemoRoom(person, person);
+    if (roomId) {
+      const room = {
+        id: roomId,
+        name: person,
+        avatar: buildInitials(person),
+        lastMessage: 'New conversation started.',
+        lastMessageAt: new Date(),
+        unreadCount: 0
+      };
+      const existing = chatRooms.find(function (item) { return item.id === room.id; });
+      if (!existing) chatRooms.push(room);
+      renderInboxList();
+    }
+  });
+
+  function openDemoChat(person) {
+    const emojiByPerson = {
+      'Night Owl 27': '🦉',
+      'Moss Frog': '🐸',
+      'Library Ghost': '📚',
+      'Cosmic Bagel': '🥯'
+    };
+    const roomId = currentUser ? currentUser.uid + '-' + person.toLowerCase().replace(/[^a-z0-9]+/g, '-') : null;
+    if (roomId) {
+      openChatRoom(roomId, person, emojiByPerson[person] || '◉');
+      return;
+    }
+    document.getElementById('chatName').textContent = person;
+    document.getElementById('chatAvatar').textContent = emojiByPerson[person] || '◉';
+    setScreen('chat');
+  }
+
+  document.getElementById('inboxList').addEventListener('click', function (event) {
+    const room = event.target.closest('[data-chat-room-id]');
+    if (room) {
+      const roomId = room.dataset.chatRoomId;
+      const roomName = room.querySelector('.person-name')?.textContent || 'Campus Circle';
+      const roomAvatar = room.querySelector('.person-avatar')?.textContent || 'C';
+      openChatRoom(roomId, roomName, roomAvatar);
+      return;
+    }
+
+    const row = event.target.closest('[data-demo-chat]');
+    const connected = event.target.closest('[data-open-chat]');
+    if (row) openDemoChat(row.dataset.demoChat);
+    else if (connected) openDemoChat(connected.dataset.openChat);
+  });
+
+  function filterInbox() {
+    renderInboxList();
+  }
+
+  inboxSearch.addEventListener('input', filterInbox);
+  document.querySelectorAll('[data-inbox-filter]').forEach(function (button) {
+    button.addEventListener('click', function () {
+      inboxFilter = button.dataset.inboxFilter;
+      document.querySelectorAll('[data-inbox-filter]').forEach(function (item) {
+        item.classList.toggle('active', item === button);
+      });
+      renderInboxList();
+    });
+  });
+
+  document.getElementById('demoChatForm').addEventListener('submit', async function (event) {
+    event.preventDefault();
+    const input = document.getElementById('demoChatInput');
+    const attachment = document.getElementById('chatAttachment');
+    const voiceStatus = document.getElementById('chatVoiceStatus');
+    const text = input.value.trim();
+    if ((!text && !selectedChatVoice && !attachment.value.trim()) || !activeChatRoomId) return;
+    try {
+      const attachmentUrl = selectedChatVoice
+        ? await uploadMedia(selectedChatVoice, 'audio', 5 * 1024 * 1024)
+        : attachment.value.trim();
+      const attachmentType = selectedChatVoice ? 'audio' : (attachmentUrl ? 'image' : '');
+      await sendChatMessage(activeChatRoomId, text, attachmentUrl, attachmentType);
+      input.value = '';
+      attachment.value = '';
+      selectedChatVoice = null;
+      voiceStatus.textContent = '';
+      setPresenceText('Active now');
+    } catch (error) {
+      console.error('Could not send chat message:', error);
+      voiceStatus.textContent = error.code ? firestoreErrorMessage(error, 'send your message') : error.message || 'Could not send your message.';
+    }
+  });
+
+  setupVoiceRecorder(document.getElementById('recordChatVoice'), document.getElementById('chatVoiceStatus'), function (blob) {
+    selectedChatVoice = blob;
+  });
+
+  document.getElementById('demoChatInput').addEventListener('input', function () {
+    if (!currentUser || !activeChatRoomId) return;
+    setPresenceText(this.value.trim() ? 'typing…' : 'Active now');
+    if (typingTimer) window.clearTimeout(typingTimer);
+    typingTimer = window.setTimeout(function () {
+      setPresenceText('Active now');
+    }, 1200);
+  });
+</script>
+<script type="module" src="userprofile.js"></script>
+</body>
+</html>

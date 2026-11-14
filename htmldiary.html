@@ -1,0 +1,353 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Legon Loop | Campus community</title>
+    <link rel="icon" href="LEGONLOOP.png" type="image/png">
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600&family=Nunito:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --ink: #2d40a9;
+            --purple: #133472;
+            --paper: rgba(216, 207, 184, 0.96);
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            margin: 0;
+            padding: 24px;
+            display: grid;
+            place-items: center;
+            background:
+                linear-gradient(rgba(249, 246, 238, 0.54), rgba(241, 236, 250, 0.48)),
+                url("legon-tower-background.jpg") center / cover fixed no-repeat;
+            color: var(--ink);
+            font-family: "Nunito", system-ui, sans-serif;
+        }
+
+        .login {
+            display: grid;
+            gap: 24px;
+            width: 100%;
+            max-width: 880px;
+            align-items: center;
+            grid-template-columns: 1fr;
+        }
+
+        .scene svg {
+            display: block;
+            width: 100%;
+            height: auto;
+            overflow: visible;
+            -webkit-mask-image: radial-gradient(ellipse at 50% 52%, #000 44%, rgba(0, 0, 0, 0.82) 64%, transparent 88%);
+            mask-image: radial-gradient(ellipse at 50% 52%, #000 44%, rgba(0, 0, 0, 0.82) 64%, transparent 88%);
+        }
+
+        .card {
+            width: 100%;
+            max-width: 440px;
+            justify-self: start;
+            padding: 28px;
+            border: 1px solid rgba(103, 68, 232, 0.16);
+            border-radius: 24px;
+            background: var(--paper);
+            box-shadow: 0 12px 36px rgba(42, 33, 72, 0.16);
+        }
+
+        .emblem {
+            display: block;
+            width: 82px;
+            height: 82px;
+            margin: 0 auto 8px;
+            object-fit: contain;
+        }
+
+        .card h1 {
+            margin: 0 0 4px;
+            font-family: "Nunito", system-ui, sans-serif;
+            font-size: 2rem;
+            font-weight: 800;
+            letter-spacing: -0.05em;
+            text-align: center;
+        }
+
+        .card > p {
+            margin: 0 0 20px;
+            text-align: center;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: 600;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="password"] {
+            width: 100%;
+            margin-bottom: 16px;
+            padding: 12px;
+            border: 1px solid #e8e1d5;
+            border-radius: 12px;
+            background: #fffefa;
+            color: var(--ink);
+            font: inherit;
+        }
+
+        input:focus-visible,
+        button:focus-visible {
+            outline: 3px solid #1e5eac;
+            outline-offset: 2px;
+        }
+
+        button {
+            width: 100%;
+            padding: 13px;
+            border: 0;
+            border-radius: 13px;
+            background: var(--purple);
+            color: #fff;
+            cursor: pointer;
+            font: inherit;
+            font-weight: 800;
+            transition: transform 0.15s;
+        }
+
+        button:hover {
+            transform: translateY(-1px);
+            background: #1e56b9;
+        }
+
+        #signupBtn {
+            border: 1px solid #e7e1d5;
+            background: #fffdf8 !important;
+            color: var(--ink) !important;
+        }
+
+        #signupBtn:hover {
+            background: #f0ecf9 !important;
+        }
+
+        .levels {
+            margin: 22px 0 0;
+            padding: 16px 0 0;
+            border: 0;
+            border-top: 1px solid rgba(59, 42, 87, 0.25);
+        }
+
+        .levels legend {
+            padding: 0 8px 0 0;
+            font-weight: 600;
+        }
+
+        .level-options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px 20px;
+            margin: 4px 0 16px;
+        }
+
+        .level-options label {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            margin: 0;
+        }
+
+        .photo-credit {
+            margin: 18px 0 0;
+            font-size: 0.72rem;
+            text-align: center;
+        }
+
+        .photo-credit a {
+            color: inherit;
+        }
+
+        .scene .light {
+            transform-box: fill-box;
+            transform-origin: center;
+            animation: light-shift 18s ease-in-out infinite alternate;
+        }
+
+        .scene .canopy {
+            transform-box: fill-box;
+            transform-origin: bottom center;
+            animation: canopy-sway 12s ease-in-out infinite alternate;
+        }
+
+        .scene .page-lift {
+            transform-box: fill-box;
+            transform-origin: left center;
+            animation: page-lift 9s ease-in-out infinite;
+        }
+
+        .scene .leaf {
+            transform-box: fill-box;
+            transform-origin: center;
+            animation: leaf-drift 13s ease-in-out infinite;
+        }
+
+        .scene .leaf-b {
+            animation-delay: -6s;
+        }
+
+        .scene .ink-trace {
+            stroke-dasharray: 150;
+            stroke-dashoffset: 150;
+            animation: write-in 12s ease-in-out infinite;
+        }
+
+        @keyframes light-shift {
+            from { opacity: 0.45; transform: scale(0.96); }
+            to { opacity: 0.78; transform: scale(1.04); }
+        }
+
+        @keyframes canopy-sway {
+            from { transform: rotate(-1deg); }
+            to { transform: rotate(1.2deg); }
+        }
+
+        @keyframes page-lift {
+            0%, 100% { transform: rotate(0); }
+            48%, 62% { transform: rotate(-1.4deg); }
+        }
+
+        @keyframes leaf-drift {
+            0%, 100% { transform: translate(0, 0) rotate(-5deg); opacity: 0.48; }
+            50% { transform: translate(7px, -10px) rotate(8deg); opacity: 0.78; }
+        }
+
+        @keyframes write-in {
+            0%, 12% { stroke-dashoffset: 150; opacity: 0.25; }
+            38%, 78% { stroke-dashoffset: 0; opacity: 0.7; }
+            96%, 100% { stroke-dashoffset: 0; opacity: 0.25; }
+        }
+
+        @media (min-width: 760px) {
+            .login {
+                max-width: 1040px;
+                grid-template-columns: 1.1fr 1fr;
+            }
+
+            .card {
+                grid-column: 1;
+                grid-row: 1;
+            }
+
+            .scene {
+                grid-column: 2;
+                grid-row: 1;
+            }
+        }
+
+        @media (max-width: 759px) {
+            .card {
+                justify-self: center;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .scene .light,
+            .scene .canopy,
+            .scene .page-lift,
+            .scene .leaf,
+            .scene .ink-trace {
+                animation: none;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <main class="login">
+        <div class="scene">
+            <svg viewBox="0 0 420 460" role="img" aria-label="An open diary beneath a softly sketched campus canopy" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                    <radialGradient id="warmLight">
+                        <stop offset="0" stop-color="#f8e6c8" stop-opacity=".7"/>
+                        <stop offset="1" stop-color="#f8e6c8" stop-opacity="0"/>
+                    </radialGradient>
+                    <linearGradient id="inkWash" x1="0" x2="1" y1="0" y2="1">
+                        <stop offset="0" stop-color="#514457"/>
+                        <stop offset="1" stop-color="#73594f"/>
+                    </linearGradient>
+                </defs>
+
+                <ellipse class="light" cx="214" cy="210" rx="170" ry="176" fill="url(#warmLight)"/>
+
+                <g class="canopy" fill="none" stroke="#526047" stroke-linecap="round" opacity=".58">
+                    <path d="M12 328 C50 264 64 193 48 104" stroke-width="3"/>
+                    <path d="M47 187 C75 173 91 153 101 128 M45 220 C21 205 14 187 15 165 M53 156 C32 141 25 122 27 105" stroke-width="2"/>
+                    <path d="M404 333 C367 259 361 190 382 104" stroke-width="3"/>
+                    <path d="M376 204 C350 183 337 163 333 138 M373 158 C394 144 402 125 401 106 M370 245 C396 226 405 206 405 185" stroke-width="2"/>
+                </g>
+
+                <g fill="#687456" opacity=".55">
+                    <path d="M101 129 Q82 116 84 99 Q102 104 108 122 Q111 104 129 97 Q130 116 111 130Z"/>
+                    <path d="M18 164 Q0 151 4 136 Q20 142 25 158 Q31 143 47 141 Q45 158 27 166Z"/>
+                    <path d="M333 138 Q316 124 321 108 Q337 115 340 132 Q348 116 364 116 Q361 133 342 140Z"/>
+                    <path d="M405 185 Q389 170 395 155 Q410 163 412 180 Q421 165 436 167 Q431 184 413 188Z"/>
+                </g>
+
+                <ellipse cx="210" cy="410" rx="150" ry="15" fill="#554b4d" opacity=".12"/>
+                <path d="M55 317 Q133 279 209 310 Q288 279 365 317 L355 395 Q282 365 209 401 Q136 365 65 395Z" fill="#78645b" opacity=".32"/>
+                <path d="M65 310 Q137 278 207 309 L207 390 Q136 359 69 387Z" fill="#f3e8d7" fill-opacity=".68" stroke="#65544d" stroke-width="1.5" stroke-opacity=".7"/>
+                <path d="M213 309 Q283 278 355 310 L351 387 Q282 359 213 390Z" fill="#f3e8d7" fill-opacity=".62" stroke="#65544d" stroke-width="1.5" stroke-opacity=".7"/>
+                <path d="M209 310 C211 337 211 368 209 398" fill="none" stroke="#65544d" stroke-width="2" stroke-linecap="round" opacity=".55"/>
+
+                <g fill="none" stroke="#796a61" stroke-width="1.4" stroke-linecap="round" opacity=".56">
+                    <path d="M91 326 C124 313 153 313 180 323"/>
+                    <path d="M86 339 C120 326 152 328 180 338"/>
+                    <path d="M83 352 C116 340 150 342 180 352"/>
+                    <path d="M81 366 C116 354 150 357 179 367"/>
+                </g>
+
+                <g class="page-lift">
+                    <path d="M213 309 Q283 278 355 310 L351 387 Q282 359 213 390Z" fill="#f3e8d7" fill-opacity=".62" stroke="#65544d" stroke-width="1.5" stroke-opacity=".7"/>
+                    <path class="ink-trace" d="M238 326 C262 315 286 315 317 326 M235 341 C263 330 290 332 322 342 M232 356 C260 345 290 347 320 357 M230 371 C260 360 287 362 316 372" fill="none" stroke="#796a61" stroke-width="1.4" stroke-linecap="round"/>
+                </g>
+
+                <path d="M290 295 L342 267" fill="none" stroke="#514457" stroke-width="3" stroke-linecap="round" opacity=".7"/>
+                <path d="M342 267 L350 262 L346 272Z" fill="#8a6860" opacity=".8"/>
+
+                <g class="leaf" fill="#687456" opacity=".62">
+                    <path d="M78 247 C62 239 60 226 64 216 C77 220 84 231 78 247Z"/>
+                    <path d="M353 300 C369 290 372 277 368 267 C354 272 348 283 353 300Z"/>
+                </g>
+
+                <path class="ink-trace" d="M144 207 C162 194 176 215 190 204 C202 195 207 185 219 187" fill="none" stroke="url(#inkWash)" stroke-width="2.2" stroke-linecap="round"/>
+                <path d="M218 187 L226 183 L223 192Z" fill="#73594f" opacity=".65"/>
+            </svg>
+        </div>
+
+        <section class="card" aria-labelledby="diary-title">
+            <img class="emblem" src="University_of_Ghana.png" alt="University of Ghana emblem">
+            <h1 id="diary-title">Legon Loop</h1>
+            <p>Meet your campus community. Join the conversation anonymously.</p>
+
+            <form id="loginForm">
+                <label for="email">EMAIL:</label>
+                <input id="email" type="email" name="email" autocomplete="email" required>
+                <label for="password">Password:</label>
+                <input id="password" type="password" name="password" autocomplete="current-password" required>
+                     <p id="msg" role="alert" style="color:#b91c1c;font-weight:600;min-height:1.2em"></p>
+                <button type="submit">Join the conversation</button>
+                <button type="button" id="signupBtn" style="margin-top:10px;background:transparent;color:var(--ink)">Create account</button>
+            </form>
+
+            <p class="photo-credit">
+                Background photo: <a href="https://commons.wikimedia.org/wiki/File:Legon_Tower.JPG" target="_blank" rel="noopener noreferrer">Legon Tower</a>
+                by Rtevels, <a href="https://creativecommons.org/licenses/by-sa/3.0/" target="_blank" rel="noopener noreferrer">CC BY-SA 3.0</a>.
+            </p>
+        </section>
+    </main>
+        <script type="module" src="auth.js"></script>
+</body>
+</html>
