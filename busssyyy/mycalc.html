@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UG CALC</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            margin: 0;
+            color: #09376d;
+            font-family: Arial, sans-serif;
+        }
+
+        .page-background {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            overflow: hidden;
+            background: linear-gradient(135deg, #edf4fa, #dce9f2);
+        }
+
+        .page-background::before,
+        .page-background::after {
+            content: "";
+            position: absolute;
+            pointer-events: none;
+        }
+
+        .page-background::before {
+            inset: -40px;
+            background: url("UG logo default_0.png") 0 0 / 190px 190px repeat;
+            opacity: 0.1;
+            animation: pattern-drift 48s ease-in-out infinite alternate;
+            z-index: 1;
+        }
+
+        .ambient-orb {
+            position: absolute;
+            z-index: 2;
+            width: clamp(14rem, 30vw, 28rem);
+            aspect-ratio: 1;
+            border-radius: 50%;
+            filter: blur(55px);
+            opacity: 0.32;
+            will-change: transform;
+        }
+
+        .orb-one {
+            top: -12%;
+            left: -8%;
+            background: radial-gradient(circle, rgba(95, 155, 208, 0.75), transparent 68%);
+            animation: wander-one 19s ease-in-out -7s infinite alternate;
+        }
+
+        .orb-two {
+            right: -10%;
+            bottom: -18%;
+            background: radial-gradient(circle, rgba(218, 180, 95, 0.7), transparent 68%);
+            animation: wander-two 23s ease-in-out -13s infinite alternate;
+        }
+
+        .orb-three {
+            top: 38%;
+            left: 42%;
+            width: clamp(11rem, 22vw, 20rem);
+            background: radial-gradient(circle, rgba(137, 185, 218, 0.65), transparent 68%);
+            animation: wander-three 27s ease-in-out -18s infinite alternate;
+        }
+
+        .page-background::after {
+            inset: 0;
+            z-index: 3;
+            background:
+                radial-gradient(ellipse at 18% 22%, rgba(255, 255, 255, 0.36), transparent 52%),
+                radial-gradient(ellipse at 82% 76%, rgba(255, 255, 255, 0.22), transparent 48%);
+            animation: soft-glow 11s ease-in-out infinite alternate;
+            will-change: opacity;
+        }
+
+        .page-content {
+            position: relative;
+            z-index: 1;
+            display: grid;
+            min-height: 100vh;
+            place-items: center;
+            padding: 1.5rem;
+        }
+
+        .text-container {
+            width: min(100%, 480px);
+            padding: clamp(2rem, 7vw, 3.5rem) clamp(1.5rem, 6vw, 3rem);
+            text-align: center;
+            background: rgba(255, 255, 255, 0.88);
+            border: 1px solid rgba(255, 255, 255, 0.75);
+            border-top: 5px solid #d6ad55;
+            border-radius: 20px;
+            box-shadow: 0 24px 60px rgba(9, 35, 67, 0.28);
+            -webkit-backdrop-filter: blur(12px);
+            backdrop-filter: blur(12px);
+        }
+
+        .text-container h3 {
+            margin: 0 0 0.75rem;
+            color: #956f1f;
+            font-size: 0.9rem;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+        }
+
+        .text-container h1 {
+            margin: 0;
+            color: #09376d;
+            font-size: clamp(1.8rem, 6vw, 2.5rem);
+            line-height: 1.2;
+        }
+
+        .text-container h1 a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        .text-container h1 a:hover {
+            text-decoration: underline;
+            text-decoration-color: #d6ad55;
+            text-underline-offset: 0.18em;
+        }
+
+        .text-container h1 a:focus-visible {
+            outline: 3px solid #d6ad55;
+            outline-offset: 5px;
+            border-radius: 4px;
+        }
+
+        .page-action {
+            display: inline-block;
+            margin-top: 1.75rem;
+            padding: 0.9rem 1.4rem;
+            color: #fff;
+            font-weight: 700;
+            text-decoration: none;
+            background: #09376d;
+            border: 2px solid #09376d;
+            border-radius: 999px;
+            box-shadow: 0 8px 18px rgba(9, 55, 109, 0.2);
+            transition: background-color 180ms ease, color 180ms ease, transform 180ms ease;
+        }
+
+        .page-action:hover {
+            color: #09376d;
+            background: #fff;
+            transform: translateY(-2px);
+        }
+
+        .page-action:focus-visible {
+            outline: 3px solid #d6ad55;
+            outline-offset: 4px;
+        }
+
+        @keyframes pattern-drift {
+            from {
+                transform: translate3d(-18px, -12px, 0) rotate(-1deg);
+            }
+
+            to {
+                transform: translate3d(18px, 12px, 0) rotate(1deg);
+            }
+        }
+
+        @keyframes wander-one {
+            0% { transform: translate(-4vw, -2vh) scale(0.9); }
+            38% { transform: translate(17vw, 8vh) scale(1.12); }
+            72% { transform: translate(9vw, 24vh) scale(0.96); }
+            100% { transform: translate(25vw, 15vh) scale(1.08); }
+        }
+
+        @keyframes wander-two {
+            0% { transform: translate(2vw, 4vh) scale(1); }
+            32% { transform: translate(-18vw, -16vh) scale(0.88); }
+            68% { transform: translate(-8vw, -28vh) scale(1.14); }
+            100% { transform: translate(-24vw, -12vh) scale(0.96); }
+        }
+
+        @keyframes wander-three {
+            0% { transform: translate(-12vw, 10vh) scale(0.92); }
+            45% { transform: translate(12vw, -12vh) scale(1.1); }
+            78% { transform: translate(-8vw, -20vh) scale(1); }
+            100% { transform: translate(16vw, 8vh) scale(0.9); }
+        }
+
+        @keyframes soft-glow {
+            from {
+                opacity: 0.55;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .page-background::before,
+            .page-background::after,
+            .ambient-orb {
+                animation: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="page-background" aria-hidden="true">
+        <span class="ambient-orb orb-one"></span>
+        <span class="ambient-orb orb-two"></span>
+        <span class="ambient-orb orb-three"></span>
+    </div>
+    <main class="page-content">
+        <section class="text-container" aria-labelledby="page-title">
+            <h3>Welcome to UG Calc</h3>
+            <h1 id="page-title"><a href="cgpa-calculator.html">Check Your Grade Here</a></h1>
+            <a class="page-action" href="cgpa-calculator.html">Open CGPA Calculator</a>
+        </section>
+    </main>
+</body>
+</html>

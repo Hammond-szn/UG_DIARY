@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CGPA Calculator | UG Calc</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            margin: 0;
+            color: #09376d;
+            font-family: Arial, sans-serif;
+        }
+
+        .page-background {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            overflow: hidden;
+            background: linear-gradient(135deg, #edf4fa, #dce9f2);
+        }
+
+        .page-background::before,
+        .page-background::after {
+            content: "";
+            position: absolute;
+            pointer-events: none;
+        }
+
+        .page-background::before {
+            inset: -40px;
+            z-index: 1;
+            background: url("UG logo default_0.png") 0 0 / 190px 190px repeat;
+            opacity: 0.1;
+            animation: pattern-drift 48s ease-in-out infinite alternate;
+        }
+
+        .ambient-orb {
+            position: absolute;
+            z-index: 2;
+            width: clamp(14rem, 30vw, 28rem);
+            aspect-ratio: 1;
+            border-radius: 50%;
+            filter: blur(55px);
+            opacity: 0.32;
+            pointer-events: none;
+            will-change: transform;
+        }
+
+        .orb-one {
+            top: -12%;
+            left: -8%;
+            background: radial-gradient(circle, rgba(95, 155, 208, 0.75), transparent 68%);
+            animation: wander-one 19s ease-in-out -7s infinite alternate;
+        }
+
+        .orb-two {
+            right: -10%;
+            bottom: -18%;
+            background: radial-gradient(circle, rgba(218, 180, 95, 0.7), transparent 68%);
+            animation: wander-two 23s ease-in-out -13s infinite alternate;
+        }
+
+        .orb-three {
+            top: 38%;
+            left: 42%;
+            width: clamp(11rem, 22vw, 20rem);
+            background: radial-gradient(circle, rgba(137, 185, 218, 0.65), transparent 68%);
+            animation: wander-three 27s ease-in-out -18s infinite alternate;
+        }
+
+        .page-background::after {
+            inset: 0;
+            z-index: 3;
+            background:
+                radial-gradient(ellipse at 18% 22%, rgba(255, 255, 255, 0.36), transparent 52%),
+                radial-gradient(ellipse at 82% 76%, rgba(255, 255, 255, 0.22), transparent 48%);
+            animation: soft-glow 11s ease-in-out infinite alternate;
+            will-change: opacity;
+        }
+
+        .page-content {
+            position: relative;
+            z-index: 1;
+            display: grid;
+            min-height: 100vh;
+            place-items: center;
+            padding: 1.5rem;
+        }
+
+        .calculator-card {
+            width: min(100%, 560px);
+            padding: clamp(1.5rem, 6vw, 3rem);
+            background: rgba(255, 255, 255, 0.9);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            border-top: 5px solid #d6ad55;
+            border-radius: 20px;
+            box-shadow: 0 24px 60px rgba(9, 35, 67, 0.28);
+            -webkit-backdrop-filter: blur(12px);
+            backdrop-filter: blur(12px);
+        }
+
+        .eyebrow {
+            margin: 0 0 0.6rem;
+            color: #956f1f;
+            font-size: 0.82rem;
+            font-weight: 700;
+            letter-spacing: 0.14em;
+            text-align: center;
+            text-transform: uppercase;
+        }
+
+        h1 {
+            margin: 0;
+            color: #09376d;
+            font-size: clamp(1.8rem, 6vw, 2.4rem);
+            line-height: 1.2;
+            text-align: center;
+        }
+
+        .intro {
+            margin: 0.8rem 0 1.8rem;
+            color: #48627d;
+            line-height: 1.6;
+            text-align: center;
+        }
+
+        .grade-fields {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 1rem;
+        }
+
+        .grade-field label {
+            display: block;
+            margin-bottom: 0.45rem;
+            color: #173d63;
+            font-size: 0.95rem;
+            font-weight: 700;
+        }
+
+        .grade-field input {
+            width: 100%;
+            min-height: 48px;
+            padding: 0.7rem 0.8rem;
+            color: #09376d;
+            font: inherit;
+            background: rgba(255, 255, 255, 0.92);
+            border: 1px solid #b8c9d8;
+            border-radius: 10px;
+        }
+
+        .grade-field input:focus {
+            border-color: #09376d;
+            outline: 3px solid rgba(9, 55, 109, 0.14);
+        }
+
+        .field-help {
+            display: block;
+            margin-top: 0.35rem;
+            color: #5f7388;
+            font-size: 0.78rem;
+        }
+
+        .calculate-button,
+        .back-link {
+            display: block;
+            width: 100%;
+            min-height: 48px;
+            padding: 0.8rem 1rem;
+            border-radius: 999px;
+            font: inherit;
+            font-weight: 700;
+            text-align: center;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .calculate-button {
+            margin-top: 1.5rem;
+            color: #fff;
+            background: #09376d;
+            border: 2px solid #09376d;
+            box-shadow: 0 8px 18px rgba(9, 55, 109, 0.2);
+            transition: background-color 180ms ease, color 180ms ease, transform 180ms ease;
+        }
+
+        .calculate-button:hover {
+            color: #09376d;
+            background: #fff;
+            transform: translateY(-2px);
+        }
+
+        .calculate-button:focus-visible,
+        .back-link:focus-visible {
+            outline: 3px solid #d6ad55;
+            outline-offset: 4px;
+        }
+
+        .result {
+            margin-top: 1.25rem;
+            padding: 1rem;
+            color: #09376d;
+            text-align: center;
+            background: rgba(237, 244, 250, 0.9);
+            border: 1px solid #cfdeea;
+            border-radius: 12px;
+        }
+
+        .result[hidden] {
+            display: none;
+        }
+
+        .result-label {
+            display: block;
+            color: #48627d;
+            font-size: 0.9rem;
+        }
+
+        .result-value {
+            display: block;
+            margin: 0.2rem 0;
+            color: #09376d;
+            font-size: 2rem;
+            font-weight: 700;
+        }
+
+        .result-class {
+            color: #956f1f;
+            font-weight: 700;
+        }
+
+        .back-link {
+            margin-top: 0.75rem;
+            color: #09376d;
+            border: 1px solid transparent;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+
+        @keyframes pattern-drift {
+            from { transform: translate3d(-18px, -12px, 0) rotate(-1deg); }
+            to { transform: translate3d(18px, 12px, 0) rotate(1deg); }
+        }
+
+        @keyframes wander-one {
+            0% { transform: translate(-4vw, -2vh) scale(0.9); }
+            38% { transform: translate(17vw, 8vh) scale(1.12); }
+            72% { transform: translate(9vw, 24vh) scale(0.96); }
+            100% { transform: translate(25vw, 15vh) scale(1.08); }
+        }
+
+        @keyframes wander-two {
+            0% { transform: translate(2vw, 4vh) scale(1); }
+            32% { transform: translate(-18vw, -16vh) scale(0.88); }
+            68% { transform: translate(-8vw, -28vh) scale(1.14); }
+            100% { transform: translate(-24vw, -12vh) scale(0.96); }
+        }
+
+        @keyframes wander-three {
+            0% { transform: translate(-12vw, 10vh) scale(0.92); }
+            45% { transform: translate(12vw, -12vh) scale(1.1); }
+            78% { transform: translate(-8vw, -20vh) scale(1); }
+            100% { transform: translate(16vw, 8vh) scale(0.9); }
+        }
+
+        @keyframes soft-glow {
+            from { opacity: 0.55; }
+            to { opacity: 1; }
+        }
+
+        @media (max-width: 420px) {
+            .grade-fields {
+                grid-template-columns: 1fr;
+                gap: 0.8rem;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                scroll-behavior: auto !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="page-background" aria-hidden="true">
+        <span class="ambient-orb orb-one"></span>
+        <span class="ambient-orb orb-two"></span>
+        <span class="ambient-orb orb-three"></span>
+    </div>
+    <main class="page-content">
+        <section class="calculator-card" aria-labelledby="page-title">
+            <p class="eyebrow">University of Ghana</p>
+            <h1 id="page-title">CGPA Calculator</h1>
+            <p class="intro">Enter your grade point for each level to estimate your cumulative GPA.</p>
+
+            <form id="cgpa-form">
+                <div class="grade-fields">
+                    <div class="grade-field">
+                        <label for="level-100">Level 100</label>
+                        <input id="level-100" name="level100" type="number" min="0" max="4" step="any" inputmode="decimal" required>
+                        <small class="field-help">Grade point (0 to 4)</small>
+                    </div>
+                    <div class="grade-field">
+                        <label for="level-200">Level 200</label>
+                        <input id="level-200" name="level200" type="number" min="0" max="4" step="any" inputmode="decimal" required>
+                        <small class="field-help">Grade point (0 to 4)</small>
+                    </div>
+                    <div class="grade-field">
+                        <label for="level-300">Level 300</label>
+                        <input id="level-300" name="level300" type="number" min="0" max="4" step="any" inputmode="decimal" required>
+                        <small class="field-help">Weighted double</small>
+                    </div>
+                    <div class="grade-field">
+                        <label for="level-400">Level 400</label>
+                        <input id="level-400" name="level400" type="number" min="0" max="4" step="any" inputmode="decimal" required>
+                        <small class="field-help">Weighted double</small>
+                    </div>
+                </div>
+                <button class="calculate-button" type="submit">Calculate My CGPA</button>
+            </form>
+
+            <div class="result" id="result" role="status" aria-live="polite" hidden>
+                <span class="result-label">Your calculated CGPA</span>
+                <output class="result-value" id="cgpa-value" for="level-100 level-200 level-300 level-400"></output>
+                <span class="result-class" id="class-value"></span>
+            </div>
+            <a class="back-link" href="mycalc.html">Back to home</a>
+        </section>
+    </main>
+    <script>
+        const form = document.querySelector("#cgpa-form");
+        const result = document.querySelector("#result");
+        const cgpaValue = document.querySelector("#cgpa-value");
+        const classValue = document.querySelector("#class-value");
+
+        form.addEventListener("submit", (event) => {
+            event.preventDefault();
+
+            if (!form.reportValidity()) {
+                return;
+            }
+
+            const grades = new FormData(form);
+            const level100 = Number(grades.get("level100"));
+            const level200 = Number(grades.get("level200"));
+            const level300 = Number(grades.get("level300"));
+            const level400 = Number(grades.get("level400"));
+            const cgpa = (level100 + level200 + level300 * 2 + level400 * 2) / 6;
+
+            let classification;
+            if (cgpa >= 3.6) {
+                classification = "First Class";
+            } else if (cgpa >= 3.0) {
+                classification = "Second Class Upper";
+            } else if (cgpa >= 2.0) {
+                classification = "Second Class Lower";
+            } else if (cgpa >= 1.5) {
+                classification = "Third Class";
+            } else {
+                classification = "Pass";
+            }
+
+            cgpaValue.textContent = cgpa.toFixed(2);
+            classValue.textContent = classification;
+            result.hidden = false;
+        });
+    </script>
+</body>
+</html>

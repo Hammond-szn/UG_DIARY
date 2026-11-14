@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Learning OOP with UG Calc</title>
+    <style>
+        @page {
+            size: A4;
+            margin: 18mm;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            color: #20364d;
+            font-family: Arial, sans-serif;
+            font-size: 11pt;
+            line-height: 1.5;
+        }
+
+        h1, h2, h3 {
+            color: #09376d;
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 28pt;
+            line-height: 1.15;
+        }
+
+        h2 {
+            margin: 22px 0 8px;
+            padding-bottom: 5px;
+            border-bottom: 2px solid #d6ad55;
+            font-size: 17pt;
+        }
+
+        h3 {
+            margin: 14px 0 4px;
+            font-size: 12pt;
+        }
+
+        p {
+            margin: 7px 0;
+        }
+
+        .eyebrow {
+            margin-bottom: 8px;
+            color: #956f1f;
+            font-size: 9pt;
+            font-weight: bold;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .subtitle {
+            margin: 10px 0 22px;
+            color: #526a80;
+            font-size: 13pt;
+        }
+
+        .callout {
+            margin: 16px 0;
+            padding: 12px 15px;
+            background: #edf4fa;
+            border-left: 4px solid #d6ad55;
+        }
+
+        .term {
+            margin: 12px 0;
+        }
+
+        .term strong {
+            color: #09376d;
+        }
+
+        .page-two {
+            page-break-before: always;
+        }
+
+        pre {
+            margin: 12px 0;
+            padding: 16px;
+            color: #eef5fc;
+            background: #102b46;
+            border-radius: 8px;
+            font-family: Consolas, "Courier New", monospace;
+            font-size: 9pt;
+            line-height: 1.48;
+            white-space: pre-wrap;
+        }
+
+        code {
+            font-family: Consolas, "Courier New", monospace;
+        }
+
+        .footer {
+            margin-top: 20px;
+            padding-top: 8px;
+            color: #687d90;
+            border-top: 1px solid #d7e1ea;
+            font-size: 9pt;
+        }
+    </style>
+</head>
+<body>
+    <section>
+        <p class="eyebrow">UG Calc · Python learning guide</p>
+        <h1>Object-Oriented Programming</h1>
+        <p class="subtitle">Learn the core OOP ideas by turning your grade calculator into a Python class.</p>
+
+        <h2>1. What is OOP?</h2>
+        <p>Object-oriented programming (OOP) organizes a program around <strong>objects</strong>. An object keeps related data and the actions that use that data together.</p>
+        <p>In UG Calc, one calculator object can keep the four grade points and calculate a CGPA and class of degree from them.</p>
+        <div class="callout"><strong>Think of a class as a recipe and an object as a calculator made from that recipe.</strong> The class describes what it stores and what it can do.</div>
+
+        <h2>2. The main OOP terms</h2>
+        <div class="term"><strong>Class:</strong> The blueprint. <code>CGPACalculator</code> describes a calculator.</div>
+        <div class="term"><strong>Object:</strong> One usable instance of the class. <code>calculator</code> is an object containing a student's grades.</div>
+        <div class="term"><strong>Attributes:</strong> Data stored on an object, such as <code>self.level100</code> and <code>self.level400</code>.</div>
+        <div class="term"><strong>Methods:</strong> Functions that belong to a class, such as <code>calculate_cgpa()</code>.</div>
+        <div class="term"><strong>Constructor:</strong> <code>__init__</code> runs when an object is created and sets up its starting data.</div>
+        <div class="term"><strong><code>self</code>:</strong> Refers to the specific object using a method. It lets that method access the grades stored by that object.</div>
+
+        <h2>3. How this differs from the original</h2>
+        <p>Your original <code>syntax.py</code> asks for input, calculates the result, and prints it in sequence. That is a procedural approach.</p>
+        <p>With OOP, the grade data and calculation behavior are grouped in <code>CGPACalculator</code>. You can create another calculator object with a different student's grades without rewriting the calculation.</p>
+        <div class="callout"><strong>Formula:</strong> (Level 100 + Level 200 + 2 × Level 300 + 2 × Level 400) ÷ 6</div>
+    </section>
+
+    <section class="page-two">
+        <p class="eyebrow">UG Calc · Python learning guide</p>
+        <h1 style="font-size: 23pt;">Build the OOP Calculator</h1>
+        <p>This complete program defines the class, asks for the four grade points, creates an object, and prints the result.</p>
+<pre>class CGPACalculator:
+    def __init__(self, level100, level200, level300, level400):
+        self.level100 = level100
+        self.level200 = level200
+        self.level300 = level300
+        self.level400 = level400
+
+    def calculate_cgpa(self):
+        return (
+            self.level100
+            + self.level200
+            + self.level300 * 2
+            + self.level400 * 2
+        ) / 6
+
+    def get_classification(self):
+        cgpa = self.calculate_cgpa()
+
+        if cgpa &gt;= 3.6:
+            return "First Class"
+        elif cgpa &gt;= 3.0:
+            return "Second Class Upper"
+        elif cgpa &gt;= 2.0:
+            return "Second Class Lower"
+        elif cgpa &gt;= 1.5:
+            return "Third Class"
+        else:
+            return "Pass"
+
+
+level100 = float(input("Enter Level 100 grade: "))
+level200 = float(input("Enter Level 200 grade: "))
+level300 = float(input("Enter Level 300 grade: "))
+level400 = float(input("Enter Level 400 grade: "))
+
+calculator = CGPACalculator(level100, level200, level300, level400)
+
+cgpa = calculator.calculate_cgpa()
+classification = calculator.get_classification()
+
+print(f"Your CGPA is: {cgpa:.2f}")
+print(f"You are in: {classification}")</pre>
+
+        <h2>4. Follow the data through the program</h2>
+        <ol>
+            <li><code>input()</code> gets each grade as text; <code>float()</code> converts it to a number.</li>
+            <li><code>CGPACalculator(...)</code> creates the object. Python calls <code>__init__</code> and stores each value on <code>self</code>.</li>
+            <li><code>calculator.calculate_cgpa()</code> uses that object's grades and returns a number.</li>
+            <li><code>calculator.get_classification()</code> compares the CGPA with the class boundaries and returns a label.</li>
+            <li>The two <code>print()</code> calls show the returned values. <code>:.2f</code> displays the CGPA to two decimal places.</li>
+        </ol>
+
+        <h2>5. Try it yourself</h2>
+        <p>Save the code as a separate practice file, for example <code>oop_calculator.py</code>. Run it with Python and try different grade points. For a test object without prompts, use:</p>
+<pre>calculator = CGPACalculator(3.8, 3.2, 3.6, 4.0)
+print(calculator.calculate_cgpa())
+print(calculator.get_classification())</pre>
+        <p>This gives a CGPA of <strong>3.70</strong> and the classification <strong>First Class</strong>.</p>
+        <div class="callout"><strong>Remember:</strong> HTML and JavaScript power the web pages; this lesson practices OOP in the separate Python calculator.</div>
+        <p class="footer">Based on the formula and class thresholds in the UG Calc project's <code>syntax.py</code>.</p>
+    </section>
+</body>
+</html>
